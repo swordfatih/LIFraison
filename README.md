@@ -8,7 +8,7 @@ Duration of the PLD: 8 sessions of 4 hours
 
 ## Topic 
 
-> You must design and implement an application for optimising delivery tours in cities. For more sustainable
+> You must design and implement an application for optimising deliveryRequest tours in cities. For more sustainable
 cities, these deliveries are done with bicycles.
 
 ## Organization
