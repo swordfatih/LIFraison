@@ -25,4 +25,55 @@ public class CityMap {
         this.segments = segments;
         this.warehouse = warehouse;
     }
+
+    public void reset(){
+        this.intersections = new LinkedList<>();
+        this.segments = new LinkedList<>();
+        this.warehouse = null;
+    }
+
+    /**
+     * Add a new intersection to the city map.
+     * @param intersection The instersction to be added to the CityMap.
+     */
+    public void addIntersection(Intersection intersection){
+        intersections.push(intersection);
+    }
+
+    /**
+     * Add a new segment to the city map.
+     * @param segment The segment to be added to the CityMap.
+     */
+    public void addSegment(Segment segment){
+        segments.push(segment);
+    }
+
+    /**
+     * Set the warehouse of the CityMap.
+     * @param warehouse
+     */
+    public void setWarehouse(Warehouse warehouse){
+        this.warehouse = warehouse;
+    }
+    /**
+     *
+     * Compares two City maps. It returns true if, and only if,
+     * they have the same intersections, segments, and the warehouses
+     * are located on the same intersection.
+     *
+     * @param o the object with which to compare.
+     * @ return <code>true</code> this object is the same as the o argument.
+     *          <code>false</code> otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CityMap otherMap = (CityMap) o;
+        boolean equalIntersections = intersections.containsAll(otherMap.intersections) && otherMap.intersections.containsAll(intersections);
+        boolean equalSegments = segments.containsAll(otherMap.segments) && otherMap.segments.containsAll(segments);
+        boolean equalWarehouses = warehouse.equals(otherMap.warehouse);
+        return equalWarehouses && equalIntersections && equalSegments;
+    }
+
 }
