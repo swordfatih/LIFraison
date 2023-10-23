@@ -1,5 +1,7 @@
 package com.insa.lifraison.model;
 
+import java.util.Objects;
+
 /**
  * A directed edge connecting two {@link com.insa.lifraison.model.Intersection}, with its length and a name
  */
@@ -16,14 +18,12 @@ public class Segment {
         this.name = name;
     }
 
+    @Override
     public boolean equals(Object o) {
-        if(!(o instanceof Segment s)) {
-            return false;
-        }
-
-        return s.origin.equals(origin) &&
-                s.destination.equals(destination) &&
-                s.length == length &&
-                s.name.equals(name);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Segment segment = (Segment) o;
+        return Double.compare(length, segment.length) == 0 && Objects.equals(origin, segment.origin) && Objects.equals(destination, segment.destination) && Objects.equals(name, segment.name);
     }
+
 }
