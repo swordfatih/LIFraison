@@ -20,6 +20,8 @@ public class CityMap {
      */
     private Warehouse warehouse;
 
+    private LinkedList<DeliveryRequest> uncomputedDeliveries;
+
     public CityMap(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
         this.intersections = intersections;
         this.segments = segments;

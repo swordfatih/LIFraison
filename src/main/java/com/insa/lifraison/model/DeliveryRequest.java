@@ -19,4 +19,9 @@ public class DeliveryRequest {
         this.arrivalTime = arrivalTime;
         this.destination = destination;
     }
+
+    public DeliveryRequest(Intersection destination) {
+        this.destination = destination;
+
+    }
 }
