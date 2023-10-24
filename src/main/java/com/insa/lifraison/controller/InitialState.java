@@ -9,6 +9,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 public class InitialState implements State {
+    /**
+     * load a map from an XML file
+     * @param c the Controller
+     * @param m the city map
+     */
     @Override
     public void loadMap(Controller c, CityMap m){
         try{

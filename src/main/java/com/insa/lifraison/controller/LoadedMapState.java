@@ -31,9 +31,9 @@ public class LoadedMapState implements State {
     }
 
     @Override
-    public void loadDelivery(Controller c) {
+    public void loadDeliveries(Controller c, CityMap m) {
         try{
-            // deserialize an xml file
+            XMLdeserializer.loadDeliveries(m);
             c.setCurrentState(c.loadedDeliveryState);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());

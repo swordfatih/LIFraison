@@ -1,25 +1,26 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.model.Intersection;
 
 public interface State {
     public default void loadMap(Controller c, CityMap m){};
 
-    public default void loadDeliveries(){};
+    public default void loadDeliveries(Controller c, CityMap m){};
 
-    public default void addDelivery(){};
+    public default void addDelivery(Controller c){};
 
-    public default void leftClick(){};
+    public default void leftClick(Controller c, CityMap m, Intersection i){};
 
-    public default void rightClick(){};
+    public default void rightClick(Controller c, CityMap m){};
 
-    public default void confirm(){};
+    public default void confirm(Controller c, CityMap m){};
 
-    public default void cancel (){};
+    public default void deleteDelivery(Controller c){};
 
-    public default void deleteDelivery(){};
+    public default void compute(Controller c){};
 
-    public default void compute(){};
+    public default void tourCompute(Controller c){};
 
 
 }

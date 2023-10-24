@@ -1,7 +1,6 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import model.CityMap;
 
 public class Controller {
     private CityMap map;
@@ -9,7 +8,10 @@ public class Controller {
     protected final InitialState initialState = new InitialState();
     protected final LoadedMapState loadedMapState = new LoadedMapState();
     protected final AddDeliveryState1 addDeliveryState1 = new AddDeliveryState1();
+    protected final AddDeliveryState2 addDeliveryState2 = new AddDeliveryState2();
     protected final LoadedDeliveryState loadedDeliveryState = new LoadedDeliveryState();
+    protected final DeleteState1 deleteState1 = new DeleteState1();
+    protected final ComputeState1 computeState1 = new ComputeState1();
 
     /**
      * Create the controller of the application
@@ -24,7 +26,7 @@ public class Controller {
      * Change the current state
      * @param state new state
      */
-    protected void setCurrentState(State state){
+    protected void setCurrentState(State state) {
         this.currentState = state;
     }
 }
