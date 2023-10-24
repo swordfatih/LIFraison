@@ -1,6 +1,7 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.model.Intersection;
 
 public class Controller {
     private CityMap map;
@@ -29,4 +30,40 @@ public class Controller {
     protected void setCurrentState(State state) {
         this.currentState = state;
     }
+
+    public void loadMap(){
+        currentState.loadMap(this, map);
+    };
+
+    public void loadDeliveries(){
+        currentState.loadDeliveries(this, map);
+    };
+
+    public void addDelivery(){
+        currentState.addDelivery(this);
+    };
+
+    public void leftClick(Intersection i){
+        currentState.leftClick(this, map, i);
+    };
+
+    public void rightClick(){
+        currentState.rightClick(this, map);
+    };
+
+    public void confirm(){
+        currentState.confirm(this, map);
+    };
+
+    public void deleteDelivery(){
+        currentState.deleteDelivery(this);
+    };
+
+    public void compute(){
+        currentState.compute(this);
+    };
+
+    public void tourCompute(){
+        currentState.compute(this);
+    };
 }
