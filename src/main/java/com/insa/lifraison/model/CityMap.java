@@ -35,8 +35,8 @@ public class CityMap {
     }
 
     /**
-     * Compt the number of deliveries present on the map (in the list an the tours)
-     * @return the number of deliveries
+     * Sum the deliveries present in the city map and in tours
+     * @return the sum
      */
     public int getNumberDeliveries(){
         ///TODO : implementer
@@ -50,6 +50,16 @@ public class CityMap {
      */
     public boolean addDelivery(DeliveryRequest newDelivery){
         return uncomputedDeliveries.add(newDelivery);
+    }
+
+    /**
+     * Withdraw the delivery at this position if it exists
+     * @param i : the position where the delivery can be
+     * @return true if a delivery was a this position and was successfully remove
+     */
+    public boolean removeDeliveryAt(Intersection i){
+        ///TODO a implementer
+        return false;
     }
 
     /**
