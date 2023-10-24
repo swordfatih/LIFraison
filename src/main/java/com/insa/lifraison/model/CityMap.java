@@ -193,7 +193,12 @@ public class CityMap extends Observable {
         CityMap otherMap = (CityMap) o;
         boolean equalIntersections = intersections.containsAll(otherMap.intersections) && otherMap.intersections.containsAll(intersections);
         boolean equalSegments = segments.containsAll(otherMap.segments) && otherMap.segments.containsAll(segments);
-        boolean equalWarehouses = warehouse.equals(otherMap.warehouse);
+        boolean equalWarehouses;
+        if(warehouse != null) {
+            equalWarehouses = warehouse.equals(otherMap.warehouse);
+        } else {
+            equalWarehouses = otherMap.warehouse == null;
+        }
         return equalWarehouses && equalIntersections && equalSegments;
     }
 
