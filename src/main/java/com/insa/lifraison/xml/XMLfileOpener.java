@@ -1,10 +1,8 @@
 package com.insa.lifraison.xml;
 
 import java.io.File;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.*;
 
-public class XMLfileOpener extends FileFilter {// Singleton
+public class XMLfileOpener {// Singleton
 	
 	private static XMLfileOpener instance = null;
 	private XMLfileOpener(){}
@@ -13,21 +11,10 @@ public class XMLfileOpener extends FileFilter {// Singleton
 		return instance;
 	}
 
- 	public File open(boolean read) throws ExceptionXML{
- 		int returnVal;
- 		JFileChooser jFileChooserXML = new JFileChooser();
-        jFileChooserXML.setFileFilter(this);
-        jFileChooserXML.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (read)
-         	returnVal = jFileChooserXML.showOpenDialog(null);
-        else
-         	returnVal = jFileChooserXML.showSaveDialog(null);
-        if (returnVal != JFileChooser.APPROVE_OPTION) 
-        	throw new ExceptionXML("Problem when opening file");
-        return new File(jFileChooserXML.getSelectedFile().getAbsolutePath());
+ 	public File open(boolean read) throws ExceptionXML {
+        return new File("maps/smallMap.xml");
  	}
- 	
- 	@Override
+
     public boolean accept(File f) {
     	if (f == null) return false;
     	if (f.isDirectory()) return true;
@@ -36,7 +23,6 @@ public class XMLfileOpener extends FileFilter {// Singleton
     	return extension.contentEquals("xml");
     }
 
-	@Override
 	public String getDescription() {
 		return "XML file";
 	}
