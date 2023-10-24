@@ -24,4 +24,12 @@ public class DeliveryRequest {
         this.destination = destination;
 
     }
+
+    /**
+     * update the destination position
+     * @param newDestination the intersection where the DeliveryRequest will be
+     */
+    public void updateDesination(Intersection newDestination){
+        this.destination = newDestination;
+    }
 }

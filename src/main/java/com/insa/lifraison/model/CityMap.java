@@ -35,6 +35,24 @@ public class CityMap {
     }
 
     /**
+     * Compt the number of deliveries present on the map (in the list an the tours)
+     * @return the number of deliveries
+     */
+    public int getNumberDeliveries(){
+        ///TODO : implementer
+        return 0;
+    }
+
+    /**
+     * add a delivery to the uncomputedDeliveries list
+     * @param newDelivery the delivery you want to add
+     * @return succes of the adding
+     */
+    public boolean addDelivery(DeliveryRequest newDelivery){
+        return uncomputedDeliveries.add(newDelivery);
+    }
+
+    /**
      * Add a new intersection to the city map.
      * @param intersection The instersction to be added to the CityMap.
      */

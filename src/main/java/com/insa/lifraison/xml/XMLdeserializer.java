@@ -44,6 +44,10 @@ public class XMLdeserializer {
             throw new ExceptionXML("Wrong format");
     }
 
+    public static void loadDeliveries(CityMap map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+        ///TODO a implementer
+    }
+
     /**
      * Builds a CityMap from a XML node tree.
      * @param rootDOMNode The root of the XML file, which must be a <code>map</code> tag.
