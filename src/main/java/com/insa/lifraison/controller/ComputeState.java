@@ -1,6 +1,6 @@
 package com.insa.lifraison.controller;
 
-public class ComputeState1 implements State {
+public class ComputeState implements State {
 
     /**
      * go back to the loadedStateState when the tour is calculate

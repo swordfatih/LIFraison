@@ -3,7 +3,7 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.CityMap;
 
-public class DeleteState1 implements State {
+public class DeleteState implements State {
     /**
      * click on the Intersection you want to delete
      * @param c The controller
