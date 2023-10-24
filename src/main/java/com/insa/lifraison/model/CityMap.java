@@ -165,7 +165,7 @@ public class CityMap extends Observable {
 
     /**
      * Set the warehouse of the CityMap.
-     * @param warehouse
+     * @param warehouse warehouse to be set as the warehouse of the CityMap
      */
     public void setWarehouse(Warehouse warehouse){
         this.warehouse = warehouse;
