@@ -15,13 +15,13 @@ public class Tour {
     private ArrayList<DeliveryRequest> deliveries;
 
     /**
-     * list of {@link com.insa.lifraison.model.TourSegment} of the optimal tour after it is computed
+     * list of {@link TourStep} of the optimal tour after it is computed
      */
-    private List<TourSegment> tourSegments;
+    private List<TourStep> tourSteps;
 
     public Tour() {
         deliveries = new ArrayList<>();
-        tourSegments = new LinkedList<>();
+        tourSteps = new LinkedList<>();
     }
 
     public void addDelivery(DeliveryRequest deliveryRequest) {
