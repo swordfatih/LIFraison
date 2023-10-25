@@ -1,0 +1,15 @@
+@import "main.css";
+
+.background {
+    -fx-background: #FF8170;
+}
+
+.box {
+    -fx-border: black 1px;
+    -fx-background-color: white;
+    -fx-padding: 64px;
+}
+
+#label {
+    -fx-font-size: 32px;
+}

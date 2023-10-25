@@ -22,6 +22,10 @@ public class CityMap {
 
     private LinkedList<DeliveryRequest> uncomputedDeliveries;
 
+    public CityMap() {
+        reset();
+    }
+
     public CityMap(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
         this.intersections = intersections;
         this.segments = segments;

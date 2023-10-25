@@ -2,9 +2,12 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.view.View;
+
+import java.io.File;
 
 public interface State {
-    public default void loadMap(Controller c, CityMap m){};
+    public default void loadMap(Controller c, CityMap m, View view){};
 
     public default void loadDeliveries(Controller c, CityMap m){};
 
