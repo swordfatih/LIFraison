@@ -33,12 +33,16 @@ public class Intersection {
         return Double.compare(longitude, that.longitude) == 0 && Double.compare(latitude, that.latitude) == 0 && Objects.equals(id, that.id);
     }
 
-    public String toString(){
-        return "("+this.latitude+";"+this.longitude+")";
-    }
-
     public LinkedList<Double> getCoord(){
         return new LinkedList<>(List.of(this.latitude, this.longitude));
     }
 
+    @Override
+    public String toString() {
+        return "Intersection{" +
+                "id='" + id + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                '}';
+    }
 }

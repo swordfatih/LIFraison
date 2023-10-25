@@ -28,9 +28,29 @@ public class Segment {
         return Double.compare(length, segment.length) == 0 && Objects.equals(origin, segment.origin) && Objects.equals(destination, segment.destination) && Objects.equals(name, segment.name);
     }
 
-    public String toString(){
-        return "from"+this.origin.toString()+"to"+this.destination.toString();
+    public Intersection getOrigin() {
+        return origin;
     }
 
+    public Intersection getDestination() {
+        return destination;
+    }
 
+    public double getLength() {
+        return length;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Segment{" +
+                "origin=" + origin +
+                ", destination=" + destination +
+                ", length=" + length +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

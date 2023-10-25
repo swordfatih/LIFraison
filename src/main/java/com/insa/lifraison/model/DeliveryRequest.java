@@ -15,21 +15,32 @@ public class DeliveryRequest {
      */
     private Intersection destination;
 
-    public DeliveryRequest(LocalTime arrivalTime, Intersection destination) {
-        this.arrivalTime = arrivalTime;
+    public DeliveryRequest(Intersection destination) {
         this.destination = destination;
     }
 
-    public DeliveryRequest(Intersection destination) {
+    public DeliveryRequest(LocalTime arrivalTime, Intersection destination) {
+        this.arrivalTime = arrivalTime;
         this.destination = destination;
-
     }
 
     /**
      * update the destination position
      * @param newDestination the intersection where the DeliveryRequest will be
      */
-    public void updateDesination(Intersection newDestination){
+    public void updateDesination(Intersection newDestination) {
         this.destination = newDestination;
+    }
+
+    public Intersection getDestination() {
+        return destination;
+    }
+
+    public LocalTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 }
