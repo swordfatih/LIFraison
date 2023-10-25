@@ -9,7 +9,7 @@ group = "com.insa.lifraison"
 version = "1.0-SNAPSHOT"
 
 application {
-    mainClass = "com.insa.lifraison.Main"
+    mainClass = "com.insa.lifraison.MainApplication"
 }
 
 javafx {

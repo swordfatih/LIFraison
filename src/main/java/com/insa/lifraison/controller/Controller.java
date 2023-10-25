@@ -2,8 +2,10 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.view.ViewController;
 
 public class Controller {
+    private ViewController view;
     private CityMap map;
     private State currentState;
     protected final InitialState initialState = new InitialState();
@@ -16,11 +18,12 @@ public class Controller {
 
     /**
      * Create the controller of the application
-     * @param map the city map of the application
      */
-    public Controller(CityMap map) {
-        this.map = map;
+    public Controller(ViewController view) {
+        this.view = view;
         this.currentState = initialState;
+
+        this.view.setLabelText("Appelée ici");
     }
 
     /**

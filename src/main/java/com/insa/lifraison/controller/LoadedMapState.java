@@ -25,7 +25,7 @@ public class LoadedMapState implements State {
      * Change to state addDelivery
      * @param c
      */
-    @Override
+    /*@Override
     public void addDelivery(Controller c) {
         c.setCurrentState(c.addDeliveryState1);
     }
@@ -38,5 +38,5 @@ public class LoadedMapState implements State {
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());
         }
-    }
+    }*/
 }
