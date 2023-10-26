@@ -2,10 +2,13 @@ package com.insa.lifraison.view;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Segment;
+import com.insa.lifraison.model.Warehouse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 import java.io.File;
@@ -25,15 +28,6 @@ public class MapController extends ViewController {
 
     @FXML
     private Label label;
-
-    @FXML
-    private Label coord1;
-
-    @FXML
-    private Label coord2;
-
-    @FXML
-    private Label coord3;
 
     @FXML
     private Pane mapPane;
@@ -69,6 +63,14 @@ public class MapController extends ViewController {
         while (iterator.hasNext()){
             addSegmentLine(iterator.next());
         }
+
+        // create the warehouse
+        Warehouse warehouse = this.map.getWarehouse();
+        double xWarehouse = scale * warehouse.getIntersection().longitude + longitudeOffset;
+        double yWarehouse = -scale * warehouse.getIntersection().latitude + latitudeOffset;
+        Circle posWarehouse = new Circle(xWarehouse,yWarehouse,5);
+        posWarehouse.setFill(Color.RED);
+        this.mapPane.getChildren().add(posWarehouse);
 
     }
 

@@ -13,7 +13,7 @@
             <HBox alignment="CENTER">
                 <VBox styleClass="box">
                     <Label fx:id="label" text="Load Map File" />
-                    <Button text="Load" onAction="#loadMap"/>
+                    <Button styleClass="buttonLoad, text" text="Load" onAction="#loadMap"/>
                 </VBox>
             </HBox>
         </VBox>

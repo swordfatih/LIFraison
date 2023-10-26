@@ -116,6 +116,12 @@ public class CityMap {
     public void setWarehouse(Warehouse warehouse){
         this.warehouse = warehouse;
     }
+
+    /**
+     * Get the warehouse of the CityMap
+     * @return
+     */
+    public Warehouse getWarehouse(){return this.warehouse;}
     /**
      *
      * Compares two City maps. It returns true if, and only if,
