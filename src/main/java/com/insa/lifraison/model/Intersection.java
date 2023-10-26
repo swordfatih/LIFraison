@@ -21,6 +21,8 @@ public class Intersection {
         this.latitude = latitude;
     }
 
+    public double getLatitude(){return latitude;}
+    public double getLongitude(){return longitude;}
     public String getId() {
         return id;
     }

@@ -1,0 +1,9 @@
+<map>
+<warehouse address="2"/>
+<intersection id="1" latitude="45" longitude="45"/>
+<intersection id="2" latitude="50" longitude="53"/>
+<intersection id="3" latitude="10" longitude="20"/>
+<segment destination="2" length="10" name="Avenue Albert Einstein" origin="1"/>
+<segment destination="3" length="22" name="Avenue des Arts" origin="2"/>
+<segment destination="1" length="10" name="Avenue Albert Einstein" origin="2"/>
+</map>

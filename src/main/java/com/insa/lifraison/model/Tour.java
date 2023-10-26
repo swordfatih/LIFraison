@@ -3,6 +3,7 @@ package com.insa.lifraison.model;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Object that stores all the deliveries for a courier.
@@ -36,7 +37,19 @@ public class Tour {
         return deliveries;
     }
 
-    public void setTourSteps(LinkedList<TourStep> tourSteps) { this.tourSteps = tourSteps; }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tour tour = (Tour) o;
+        return Objects.equals(deliveries, tour.deliveries) && Objects.equals(tourSegments, tour.tourSegments);
+    }
+    
+    public void setTourSteps(LinkedList<TourStep> tourSteps) { 
+        this.tourSteps = tourSteps; 
+    }
 
-    public LinkedList<TourStep> getTourSteps() { return tourSteps; }
+    public LinkedList<TourStep> getTourSteps() { 
+        return tourSteps; 
+    }
 }

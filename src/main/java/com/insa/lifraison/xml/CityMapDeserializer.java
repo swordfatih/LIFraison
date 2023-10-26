@@ -20,11 +20,8 @@ import com.insa.lifraison.model.Segment;
 import com.insa.lifraison.model.Warehouse;
 import com.insa.lifraison.model.CityMap;
 
-import com.insa.lifraison.xml.ExceptionXML;
-import com.insa.lifraison.xml.XMLfileOpener;
 
-
-public class XMLdeserializer {
+public class CityMapDeserializer {
     /**
      * Open an XML file and create CityMap from this file.
      * @throws ParserConfigurationException
