@@ -3,6 +3,7 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.XMLdeserializer;
@@ -24,6 +25,9 @@ public class LoadedMapState implements State {
 
             XMLdeserializer.load(m, file);
             c.setCurrentState(c.loadedMapState);
+
+            view.<MapController>getController("map").setMap(m, file);
+            view.navigate("map");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
         }

@@ -1,6 +1,11 @@
 package com.insa.lifraison.model;
 
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 /**
  * Object that stores all the intersections and segments in the city,
@@ -22,6 +27,8 @@ public class CityMap {
 
     private LinkedList<DeliveryRequest> uncomputedDeliveries;
 
+    private double minLatitude, maxLatitude, minLongitude, maxLongitude;
+
     public CityMap() {
         reset();
     }
@@ -30,12 +37,17 @@ public class CityMap {
         this.intersections = intersections;
         this.segments = segments;
         this.warehouse = warehouse;
+        this.updateMinMax();
     }
 
     public void reset(){
         this.intersections = new LinkedList<>();
         this.segments = new LinkedList<>();
         this.warehouse = null;
+        this.minLatitude = Double.MAX_VALUE;
+        this.minLongitude = Double.MAX_VALUE;
+        this.maxLatitude = Double.MIN_VALUE;
+        this.maxLongitude = Double.MIN_VALUE;
     }
 
     /**
@@ -47,6 +59,17 @@ public class CityMap {
         return 0;
     }
 
+    /**
+     *
+     * @return iterator of segments
+     */
+    public Iterator<Segment> getSegmentsIterator() {
+        return segments.iterator();
+    }
+
+    public LinkedList<Segment> getSegments() {
+        return this.segments;
+    }
     /**
      * add a delivery to the uncomputedDeliveries list
      * @param newDelivery the delivery you want to add
@@ -72,6 +95,10 @@ public class CityMap {
      */
     public void addIntersection(Intersection intersection){
         intersections.push(intersection);
+        minLongitude = min(minLongitude, intersection.longitude);
+        maxLongitude = max(maxLongitude, intersection.longitude);
+        minLatitude = min(minLatitude, intersection.latitude);
+        maxLatitude = max(maxLatitude, intersection.latitude);
     }
 
     /**
@@ -108,6 +135,39 @@ public class CityMap {
         boolean equalSegments = segments.containsAll(otherMap.segments) && otherMap.segments.containsAll(segments);
         boolean equalWarehouses = warehouse.equals(otherMap.warehouse);
         return equalWarehouses && equalIntersections && equalSegments;
+    }
+
+    public void updateMinMax(){
+        if(!this.intersections.isEmpty()){
+            minLatitude = intersections.get(0).latitude;
+            maxLatitude = intersections.get(0).latitude;
+            minLongitude = intersections.get(0).longitude;
+            maxLongitude = intersections.get(0).longitude;
+            for(Intersection i : intersections ){
+                minLatitude = min(minLatitude, i.latitude);
+                maxLatitude = max(maxLatitude, i.latitude);
+
+                minLongitude = min(minLongitude, i.longitude);
+                maxLongitude = max(maxLongitude, i.longitude);
+            }
+
+        }
+    }
+
+    public double getMinLatitude(){
+        return minLatitude;
+    }
+
+    public double getMaxLatitude(){
+        return maxLatitude;
+    }
+
+    public double getMinLongitude(){
+        return minLongitude;
+    }
+
+    public double getMaxLongitude(){
+        return maxLongitude;
     }
 
 }

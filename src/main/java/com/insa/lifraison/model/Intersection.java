@@ -1,5 +1,7 @@
 package com.insa.lifraison.model;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,8 +12,8 @@ public class Intersection {
      * Unique identifier of the intersection
      */
     protected final String id;
-    protected final double longitude;
-    protected final double latitude;
+    public final double longitude;
+    public final double latitude;
 
     public Intersection(String id, double longitude, double latitude) {
         this.id = id;
@@ -29,6 +31,14 @@ public class Intersection {
         if (o == null || getClass() != o.getClass()) return false;
         Intersection that = (Intersection) o;
         return Double.compare(longitude, that.longitude) == 0 && Double.compare(latitude, that.latitude) == 0 && Objects.equals(id, that.id);
+    }
+
+    public String toString(){
+        return "("+this.latitude+";"+this.longitude+")";
+    }
+
+    public LinkedList<Double> getCoord(){
+        return new LinkedList<>(List.of(this.latitude, this.longitude));
     }
 
 }
