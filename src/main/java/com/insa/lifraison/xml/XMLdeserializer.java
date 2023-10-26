@@ -32,16 +32,19 @@ public class XMLdeserializer {
      * @throws IOException
      * @throws ExceptionXML
      */
-    public static void load(CityMap map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
-        File xml = XMLfileOpener.getInstance().open(true);
+    public static void load(CityMap map, File file) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = docBuilder.parse(xml);
+        Document document = docBuilder.parse(file);
         Element root = document.getDocumentElement();
         if (root.getNodeName().equals("map")) {
             buildFromDOMXML(root, map);
         }
         else
             throw new ExceptionXML("Wrong format");
+    }
+
+    public static void loadDeliveries(CityMap map) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+        ///TODO a implementer
     }
 
     /**

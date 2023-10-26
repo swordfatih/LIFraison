@@ -1,0 +1,24 @@
+@import "main.css";
+
+.background {
+    -fx-background: #FF8170;
+}
+
+.box {
+    -fx-border: black 1px;
+    -fx-background-color: white;
+    -fx-padding: 64px;
+}
+
+.buttonLoad {
+    -fx-background-color: #FFF;
+    -fx-border-color: #2CD997;
+    -fx-border-width: 2px;
+    -fx-border-radius: 100px;
+    -fx-background-radius: 100px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 0, 4, 4, 0);
+}
+
+#label {
+    -fx-font-size: 32px;
+}

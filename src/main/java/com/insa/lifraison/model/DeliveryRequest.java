@@ -19,4 +19,17 @@ public class DeliveryRequest {
         this.arrivalTime = arrivalTime;
         this.destination = destination;
     }
+
+    public DeliveryRequest(Intersection destination) {
+        this.destination = destination;
+
+    }
+
+    /**
+     * update the destination position
+     * @param newDestination the intersection where the DeliveryRequest will be
+     */
+    public void updateDesination(Intersection newDestination){
+        this.destination = newDestination;
+    }
 }
