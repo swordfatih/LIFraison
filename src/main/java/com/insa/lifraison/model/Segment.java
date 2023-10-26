@@ -20,6 +20,21 @@ public class Segment {
         this.name = name;
     }
 
+    public Intersection getOrigin(){
+        return origin;
+    }
+    public Intersection getDestination(){
+        return destination;
+    }
+
+    public double getLength(){
+        return length;
+    }
+
+    public String getName(){
+        return name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

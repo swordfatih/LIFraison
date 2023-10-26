@@ -13,8 +13,6 @@ public class DeliveryRequest {
     private LocalTime timeWindowStart;
     private LocalTime timeWindowEnd;
 
-    private boolean isAdded;
-
     /**
      * Point to which this delivery must be made
      */

@@ -1,10 +1,13 @@
 package com.insa.lifraison.xml;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,7 +33,6 @@ public class TourDeserializer {
             buildFromDOMXML(root, tours, map_intersections);
         } else
             throw new ExceptionXML("Wrong format");
-
         return tours;
     }
 
