@@ -2,8 +2,13 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.view.View;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 
 public class Controller {
+    private View view;
     private CityMap map;
     private State currentState;
     protected final InitialState initialState = new InitialState();
@@ -16,11 +21,14 @@ public class Controller {
 
     /**
      * Create the controller of the application
-     * @param map the city map of the application
      */
-    public Controller(CityMap map) {
-        this.map = map;
+    public Controller() {
         this.currentState = initialState;
+        this.map = new CityMap();
+    }
+
+    public void setView(View view) {
+        this.view = view;
     }
 
     /**
@@ -35,7 +43,7 @@ public class Controller {
      * Method called after a click on the "load Map" button
      */
     public void loadMap(){
-        currentState.loadMap(this, map);
+        currentState.loadMap(this, map, view);
     };
 
     /**
