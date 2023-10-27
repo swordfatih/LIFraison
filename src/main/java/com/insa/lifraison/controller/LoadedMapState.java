@@ -50,7 +50,7 @@ public class LoadedMapState implements State {
             fileChooser.getExtensionFilters().add(extFilter);
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            TourDeserializer.load(m.getIntersections(), file);
+            m.addTours(TourDeserializer.load(m.getIntersections(), file));
             c.setCurrentState(c.loadedDeliveryState);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());

@@ -27,7 +27,7 @@ public class CityMap extends Observable {
      */
     private Warehouse warehouse;
 
-    private LinkedList<DeliveryRequest> uncomputedDeliveries;
+    private LinkedList<Tour> tours;
 
     private double minLatitude, maxLatitude, minLongitude, maxLongitude;
 
@@ -39,19 +39,25 @@ public class CityMap extends Observable {
         this.intersections = intersections;
         this.segments = segments;
         this.warehouse = warehouse;
-        this.uncomputedDeliveries = new LinkedList<>();
         this.updateMinMax();
+        this.tours = new LinkedList<>();
+        Tour tour = new Tour();
+        tours.add(tour);
+        this.notifyObservers(NotifType.ADD, tour);
     }
 
     public void reset(){
         this.intersections = new LinkedList<>();
         this.segments = new LinkedList<>();
-        this.uncomputedDeliveries = new LinkedList<>();
         this.warehouse = null;
         this.minLatitude = Double.MAX_VALUE;
         this.minLongitude = Double.MAX_VALUE;
         this.maxLatitude = Double.MIN_VALUE;
         this.maxLongitude = Double.MIN_VALUE;
+        this.tours = new LinkedList<>();
+        Tour tour = new Tour();
+        tours.add(tour);
+        this.notifyObservers(NotifType.ADD, tour);
         this.notifyObservers(NotifType.UPDATE, this);
     }
 
@@ -72,7 +78,9 @@ public class CityMap extends Observable {
         return segments.iterator();
     }
 
-    public Iterator<DeliveryRequest> getUncomputedDeliveriesIterator() {return uncomputedDeliveries.iterator();}
+    public Iterator<Tour> getToursIterator() {
+        return tours.iterator();
+    }
 
     public LinkedList<Segment> getSegments() {
         return this.segments;
@@ -83,9 +91,16 @@ public class CityMap extends Observable {
      * @return succes of the adding
      */
     public boolean addDelivery(DeliveryRequest newDelivery){
-        boolean hasChanged = uncomputedDeliveries.add(newDelivery);
+        boolean hasChanged = tours.get(0).addDelivery(newDelivery);
         if(hasChanged) notifyObservers(NotifType.ADD, newDelivery);
         return hasChanged;
+    }
+
+    public void addTours(Collection<Tour> tours) {
+        for(Tour t : tours) {
+            this.tours.add(t);
+            notifyObservers(NotifType.ADD, t);
+        }
     }
 
     /**

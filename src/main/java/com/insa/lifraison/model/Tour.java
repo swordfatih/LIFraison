@@ -2,10 +2,7 @@ package com.insa.lifraison.model;
 
 import com.insa.lifraison.observer.Observable;
 
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Object that stores all the deliveries for a courier.
@@ -25,6 +22,10 @@ public class Tour extends Observable {
     public Tour() {
         deliveries = new ArrayList<>();
         tourSteps = new LinkedList<>();
+    }
+
+    public Iterator<DeliveryRequest> getDeliveriesIterator() {
+        return deliveries.iterator();
     }
 
     public boolean addDelivery(DeliveryRequest deliveryRequest) {

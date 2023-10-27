@@ -1,9 +1,6 @@
 package com.insa.lifraison.view;
 
-import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.model.DeliveryRequest;
-import com.insa.lifraison.model.Segment;
-import com.insa.lifraison.model.Warehouse;
+import com.insa.lifraison.model.*;
 import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
 import javafx.event.ActionEvent;
@@ -50,6 +47,21 @@ public class MapController extends ViewController implements Observer {
     }
 
     public void update(Observable.NotifType notifType, Object arg){
+        if(notifType == Observable.NotifType.ADD) {
+            if(arg instanceof Tour) {
+                Tour tour = (Tour) arg;
+                tour.addObserver(this);
+                Iterator<DeliveryRequest> deliveriesIterator = tour.getDeliveriesIterator();
+                while (deliveriesIterator.hasNext()) {
+                    addDeliveryPoint(deliveriesIterator.next(), Color.GRAY);
+                }
+                return;
+            }
+            if(arg instanceof DeliveryRequest) {
+                addDeliveryPoint((DeliveryRequest)arg, Color.GRAY);
+                return;
+            }
+        }
             updateMapPane();
     }
 
@@ -82,9 +94,12 @@ public class MapController extends ViewController implements Observer {
             this.mapPane.getChildren().add(posWarehouse);
         }
 
-        Iterator<DeliveryRequest> uncomputedDeliveryIterator = this.map.getUncomputedDeliveriesIterator();
-        while(uncomputedDeliveryIterator.hasNext()) {
-            addDeliveryPoint(uncomputedDeliveryIterator.next(), Color.GRAY);
+        Iterator<Tour> toursIterator = this.map.getToursIterator();
+        while(toursIterator.hasNext()) {
+            Iterator<DeliveryRequest> deliveriesIterator = toursIterator.next().getDeliveriesIterator();
+            while (deliveriesIterator.hasNext()) {
+                addDeliveryPoint(deliveriesIterator.next(), Color.GRAY);
+            }
         }
     }
 
