@@ -1,13 +1,10 @@
 package com.insa.lifraison.xml;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,15 +21,17 @@ import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
 
 public class TourDeserializer {
-    public static void load(ArrayList<Tour> tours, LinkedList<Intersection> map_intersections) throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
-        File xml = XMLfileOpener.getInstance().open(true);
+    public static ArrayList<Tour> load(LinkedList<Intersection> map_intersections, File file) throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
+        ArrayList<Tour> tours = new ArrayList<>();
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document = docBuilder.parse(xml);
+        Document document = docBuilder.parse(file);
         Element root = document.getDocumentElement();
         if (root.getNodeName().equals("tours_map")) {
             buildFromDOMXML(root, tours, map_intersections);
         } else
             throw new ExceptionXML("Wrong format");
+
+        return tours;
     }
 
     /**

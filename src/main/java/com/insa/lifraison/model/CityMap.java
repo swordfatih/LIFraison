@@ -197,6 +197,7 @@ public class CityMap {
             return tour.getTourSteps();
         }
 
+
         deliveries.add(0, new DeliveryRequest(warehouse.getIntersection()));
 
         ArrayList<ArrayList<Double>> adjMatrix = new ArrayList<>();
@@ -264,5 +265,9 @@ public class CityMap {
                 }
             }
         }
+    }
+
+    public LinkedList<Intersection> getIntersections() {
+        return intersections;
     }
 }

@@ -41,9 +41,8 @@ public class TourSerializer {// Singleton
      * @throws TransformerException
      * @throws ExceptionXML
      */
-    public void save(List<Tour> tours) throws ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, ExceptionXML{
-        File xml = XMLfileOpener.getInstance().open(false);
-        StreamResult result = new StreamResult(xml);
+    public void save(List<Tour> tours, File file) throws ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, ExceptionXML{
+        StreamResult result = new StreamResult(file);
         document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         document.appendChild(createToursElt(tours,document));
         DOMSource source = new DOMSource(document);

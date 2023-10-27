@@ -50,7 +50,7 @@ public class Controller {
      * Method called after a click on the "load Deliveries" button
      */
     public void loadDeliveries(){
-        currentState.loadDeliveries(this, map);
+        currentState.loadDeliveries(this, map, view);
     };
 
     /**

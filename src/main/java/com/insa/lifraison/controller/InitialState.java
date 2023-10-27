@@ -4,7 +4,7 @@ import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
-import com.insa.lifraison.xml.XMLdeserializer;
+import com.insa.lifraison.xml.CityMapDeserializer;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -26,7 +26,7 @@ public class InitialState implements State {
             fileChooser.getExtensionFilters().add(extFilter);
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            XMLdeserializer.load(m, file);
+            CityMapDeserializer.load(m, file);
             c.setCurrentState(c.loadedMapState);
 
             view.<MapController>getController("map").setMap(m, file);

@@ -42,7 +42,7 @@ public class Tour {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tour tour = (Tour) o;
-        return Objects.equals(deliveries, tour.deliveries) && Objects.equals(tourSegments, tour.tourSegments);
+        return Objects.equals(deliveries, tour.deliveries) && Objects.equals(tourSteps, tour.tourSteps);
     }
     
     public void setTourSteps(LinkedList<TourStep> tourSteps) { 

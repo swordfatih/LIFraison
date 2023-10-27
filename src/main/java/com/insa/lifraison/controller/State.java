@@ -9,7 +9,7 @@ import java.io.File;
 public interface State {
     public default void loadMap(Controller c, CityMap m, View view){};
 
-    public default void loadDeliveries(Controller c, CityMap m){};
+    public default void loadDeliveries(Controller c, CityMap m, View view){};
 
     public default void addDelivery(Controller c){};
 

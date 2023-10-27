@@ -20,10 +20,8 @@ import static java.lang.Math.min;
 
 public class MapController extends ViewController {
     private CityMap map;
-
     private double scale;
     private double latitudeOffset;
-
     private double longitudeOffset;
 
     @FXML
@@ -42,6 +40,7 @@ public class MapController extends ViewController {
 
         this.controller.loadMap();
     }
+
     public void setMap(CityMap map, File file) {
         this.map = map;
 
@@ -71,7 +70,6 @@ public class MapController extends ViewController {
         Circle posWarehouse = new Circle(xWarehouse,yWarehouse,5);
         posWarehouse.setFill(Color.RED);
         this.mapPane.getChildren().add(posWarehouse);
-
     }
 
     public void addSegmentLine(Segment segment){
@@ -81,5 +79,12 @@ public class MapController extends ViewController {
         double xDest = scale * segment.destination.longitude + longitudeOffset;
         System.out.println(xOrigin+"; "+ yOrigin);
         this.mapPane.getChildren().add(new Line(xOrigin,yOrigin,xDest,yDest));
+    }
+
+    @FXML
+    private void loadDeliveries(ActionEvent event) {
+        event.consume();
+
+        this.controller.loadDeliveries();
     }
 }

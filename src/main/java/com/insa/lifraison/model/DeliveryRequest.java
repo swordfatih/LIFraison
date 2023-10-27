@@ -24,6 +24,10 @@ public class DeliveryRequest {
         this.destination = destination;
     }
 
+    public DeliveryRequest(Intersection destination) {
+        this.destination = destination;
+    }
+
     public LocalTime getTimeWindowStart(){
         return timeWindowStart;
     }
@@ -33,6 +37,18 @@ public class DeliveryRequest {
 
     public Intersection getDestination(){
         return destination;
+    }
+
+    public void setTimeWindowStart(LocalTime timeWindowStart) {
+        this.timeWindowStart = timeWindowStart;
+    }
+
+    public void setTimeWindowEnd(LocalTime timeWindowEnd) {
+        this.timeWindowEnd = timeWindowEnd;
+    }
+
+    public void setDestination(Intersection destination) {
+        this.destination = destination;
     }
 
     @Override
