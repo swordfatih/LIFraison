@@ -28,7 +28,10 @@ public class MapController extends ViewController implements Observer {
     private Label label;
 
     @FXML
-    private Pane mapPane;
+    private Pane mapBackground;
+
+    @FXML
+    private Pane mapForeground;
 
     public void initialize() {
         label.setText("Map page");
@@ -46,26 +49,19 @@ public class MapController extends ViewController implements Observer {
         this.map.addObserver(this);
     }
 
-    public void update(Observable.NotifType notifType, Object arg){
-        if(notifType == Observable.NotifType.ADD) {
-            if(arg instanceof Tour) {
-                Tour tour = (Tour) arg;
-                tour.addObserver(this);
-                Iterator<DeliveryRequest> deliveriesIterator = tour.getDeliveriesIterator();
-                while (deliveriesIterator.hasNext()) {
-                    addDeliveryPoint(deliveriesIterator.next(), Color.GRAY);
-                }
-                return;
+    public void update(Observable.NotifType notifType){
+        switch (notifType) {
+            case FULL_UPDATE -> {
+                updateBackground();
+                updateForeground();
             }
-            if(arg instanceof DeliveryRequest) {
-                addDeliveryPoint((DeliveryRequest)arg, Color.GRAY);
-                return;
+            case LIGHT_UPDATE -> {
+                updateForeground();
             }
         }
-            updateMapPane();
     }
 
-    public void updateMapPane(){
+    public void updateBackground(){
         //computing scale
         double sizeLatitude = this.map.getMaxLatitude()-this.map.getMinLatitude();
         double sizeLongitude = this.map.getMaxLongitude()-this.map.getMinLongitude();
@@ -75,7 +71,7 @@ public class MapController extends ViewController implements Observer {
         longitudeOffset = -scale * this.map.getMinLongitude();
         latitudeOffset = scale * this.map.getMaxLatitude();
 
-        this.mapPane.getChildren().clear();
+        this.mapBackground.getChildren().clear();
 
         //adding map segments
         Iterator<Segment> segmentIterator = this.map.getSegmentsIterator();
@@ -91,10 +87,12 @@ public class MapController extends ViewController implements Observer {
             double yWarehouse = -scale * warehouse.getIntersection().latitude + latitudeOffset;
             Circle posWarehouse = new Circle(xWarehouse, yWarehouse, 5);
             posWarehouse.setFill(Color.RED);
-            this.mapPane.getChildren().add(posWarehouse);
+            this.mapBackground.getChildren().add(posWarehouse);
         }
+    }
 
-        Iterator<Tour> toursIterator = this.map.getToursIterator();
+    void updateForeground(){
+    Iterator<Tour> toursIterator = this.map.getToursIterator();
         while(toursIterator.hasNext()) {
             Iterator<DeliveryRequest> deliveriesIterator = toursIterator.next().getDeliveriesIterator();
             while (deliveriesIterator.hasNext()) {
@@ -108,7 +106,7 @@ public class MapController extends ViewController implements Observer {
         double xOrigin = scale * segment.origin.longitude + longitudeOffset;
         double yDest = -scale * segment.destination.latitude + latitudeOffset;
         double xDest = scale * segment.destination.longitude + longitudeOffset;
-        this.mapPane.getChildren().add(new Line(xOrigin,yOrigin,xDest,yDest));
+        this.mapBackground.getChildren().add(new Line(xOrigin,yOrigin,xDest,yDest));
     }
 
     @FXML
@@ -122,6 +120,6 @@ public class MapController extends ViewController implements Observer {
         double xCoordinate = scale * delivery.getDestination().longitude + longitudeOffset;
         Circle deliveryPoint = new Circle(xCoordinate,yCoordinate,5);
         deliveryPoint.setFill(color);
-        this.mapPane.getChildren().add(deliveryPoint);
+        this.mapForeground.getChildren().add(deliveryPoint);
     }
 }

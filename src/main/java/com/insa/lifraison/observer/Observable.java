@@ -6,9 +6,8 @@ import java.util.ArrayList;
 
 public class Observable {
     public enum NotifType {
-        ADD,
-        REMOVE,
-        UPDATE
+        FULL_UPDATE,
+        LIGHT_UPDATE
     }
 
     private Collection<Observer> observers;
@@ -21,8 +20,8 @@ public class Observable {
             observers.add(o);
         }
     }
-    public void notifyObservers(NotifType type, Object arg){
+    public void notifyObservers(NotifType type){
         for (Observer o : observers)
-            o.update(type, arg);
+            o.update(type);
     }
 }

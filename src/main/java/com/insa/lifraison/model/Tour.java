@@ -8,7 +8,7 @@ import java.util.*;
  * Object that stores all the deliveries for a courier.
  * Provides a method that can calculate the optimal solution for the tour.
  */
-public class Tour extends Observable {
+public class Tour {
     /**
      * list of {@link DeliveryRequest} assigned to the courier
      */
@@ -29,15 +29,11 @@ public class Tour extends Observable {
     }
 
     public boolean addDelivery(DeliveryRequest deliveryRequest) {
-        boolean change = deliveries.add(deliveryRequest);
-        if(change) notifyObservers(NotifType.ADD, deliveryRequest);
-        return change;
+        return deliveries.add(deliveryRequest);
     }
 
     public boolean removeDelivery(DeliveryRequest deliveryRequest) {
-        boolean change = deliveries.remove(deliveryRequest);
-        if(change) notifyObservers(NotifType.REMOVE, deliveryRequest);
-        return change;
+        return deliveries.remove(deliveryRequest);
     }
 
     public ArrayList<DeliveryRequest> getDeliveries() {
