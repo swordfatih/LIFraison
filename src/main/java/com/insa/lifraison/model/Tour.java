@@ -1,5 +1,7 @@
 package com.insa.lifraison.model;
 
+import com.insa.lifraison.observer.Observable;
+
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.Objects;
  * Object that stores all the deliveries for a courier.
  * Provides a method that can calculate the optimal solution for the tour.
  */
-public class Tour {
+public class Tour extends Observable {
     /**
      * list of {@link DeliveryRequest} assigned to the courier
      */
@@ -25,12 +27,16 @@ public class Tour {
         tourSteps = new LinkedList<>();
     }
 
-    public void addDelivery(DeliveryRequest deliveryRequest) {
-        deliveries.add(deliveryRequest);
+    public boolean addDelivery(DeliveryRequest deliveryRequest) {
+        boolean change = deliveries.add(deliveryRequest);
+        if(change) notifyObservers(NotifType.ADD, deliveryRequest);
+        return change;
     }
 
     public boolean removeDelivery(DeliveryRequest deliveryRequest) {
-        return deliveries.remove(deliveryRequest);
+        boolean change = deliveries.remove(deliveryRequest);
+        if(change) notifyObservers(NotifType.REMOVE, deliveryRequest);
+        return change;
     }
 
     public ArrayList<DeliveryRequest> getDeliveries() {
