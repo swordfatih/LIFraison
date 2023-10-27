@@ -17,4 +17,16 @@ public class TourStep {
         this.departure = departure;
         this.arrival = arrival;
     }
+
+    public LinkedList<Segment> getSegments() {
+        return segments;
+    }
+
+    public LocalTime getDeparture() {
+        return departure;
+    }
+
+    public LocalTime getArrival() {
+        return arrival;
+    }
 }

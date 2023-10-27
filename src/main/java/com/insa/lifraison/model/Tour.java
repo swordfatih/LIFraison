@@ -17,7 +17,7 @@ public class Tour {
     /**
      * list of {@link TourStep} of the optimal tour after it is computed
      */
-    private List<TourStep> tourSteps;
+    private LinkedList<TourStep> tourSteps;
 
     public Tour() {
         deliveries = new ArrayList<>();
@@ -31,4 +31,12 @@ public class Tour {
     public boolean removeDelivery(DeliveryRequest deliveryRequest) {
         return deliveries.remove(deliveryRequest);
     }
+
+    public ArrayList<DeliveryRequest> getDeliveries() {
+        return deliveries;
+    }
+
+    public void setTourSteps(LinkedList<TourStep> tourSteps) { this.tourSteps = tourSteps; }
+
+    public LinkedList<TourStep> getTourSteps() { return tourSteps; }
 }

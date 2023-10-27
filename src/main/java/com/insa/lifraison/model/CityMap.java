@@ -1,11 +1,11 @@
 package com.insa.lifraison.model;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import com.insa.lifraison.utils.*;
+import java.time.LocalTime;
 
 /**
  * Object that stores all the intersections and segments in the city,
@@ -91,7 +91,7 @@ public class CityMap {
 
     /**
      * Add a new intersection to the city map.
-     * @param intersection The instersction to be added to the CityMap.
+     * @param intersection The intersection to be added to the CityMap.
      */
     public void addIntersection(Intersection intersection){
         intersections.push(intersection);
@@ -176,4 +176,93 @@ public class CityMap {
         return maxLongitude;
     }
 
+    public LinkedList<TourStep> computePath(Tour tour) {
+        HashMap<String, Integer> idMap = new HashMap<>();
+        int length = intersections.size();
+        for(Intersection inter : intersections) {
+            idMap.put(inter.getId(), idMap.size());
+        }
+        ArrayList<ArrayList<Edge>> adjList = new ArrayList<>(Collections.nCopies(length, new ArrayList<>()));
+        for(Segment segment : segments) {
+            int originIndex = idMap.get(segment.getOrigin().getId());
+            int destinationIndex = idMap.get(segment.getDestination().getId());
+            adjList.get(originIndex)
+                    .add(new Edge(originIndex, destinationIndex, segment.getLength(), segment));
+        }
+
+        ArrayList<DeliveryRequest> deliveries = tour.getDeliveries();
+
+        if(deliveries.isEmpty()) {
+            tour.setTourSteps(new LinkedList<>());
+            return tour.getTourSteps();
+        }
+
+        deliveries.add(0, new DeliveryRequest(warehouse.getIntersection()));
+
+        ArrayList<ArrayList<Double>> adjMatrix = new ArrayList<>();
+        ArrayList<ArrayList<Edge>> parentSegments = new ArrayList<>();
+
+        for(DeliveryRequest deliveryRequest : deliveries) {
+            ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(length, Double.MAX_VALUE));
+            ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(length, null));
+            int index = idMap.get(deliveryRequest.getDestination().getId());
+            distances.set(index, 0.0);
+            Dijkstra(index, adjList, distances, parents);
+            adjMatrix.add(new ArrayList<>());
+            for (DeliveryRequest delivery : deliveries) {
+                adjMatrix.get(adjMatrix.size() - 1)
+                        .add(distances.get(idMap.get(delivery.getDestination().getId())));
+            }
+            parentSegments.add(parents);
+        }
+
+        Graph graph = new Graph(adjMatrix);
+        TSP solver = new TSP();
+        solver.searchSolution(Constants.tspMaximumTimeMillis, graph);
+
+        LinkedList<TourStep> tourSteps = new LinkedList<>();
+
+        for(int i = 0; i < deliveries.size(); i++) {
+            int currentNode = solver.getSolution(i), nextNode = 0;
+            if(i + 1 != deliveries.size()) {
+                nextNode = solver.getSolution(i + 1);
+            }
+
+            LinkedList<Segment> path = new LinkedList<>();
+            double pathLength = 0;
+            while(nextNode != currentNode) {
+                Edge parentEdge = parentSegments.get(currentNode).get(nextNode);
+                path.add(0, parentEdge.getSegment());
+                nextNode = parentEdge.getOrigin();
+                pathLength += parentEdge.getLength();
+            }
+
+            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().getDeparture());
+            int hourDuration = (int)Math.floor(pathLength / Constants.courierSpeed);
+            int minutesDuration = (int)Math.ceil(60.0 * (pathLength - Constants.courierSpeed*hourDuration) / Constants.courierSpeed);
+            LocalTime endTime = startTime.plusHours(hourDuration).plusMinutes(minutesDuration);
+            tourSteps.add(new TourStep(path, startTime, endTime));
+        }
+
+        tour.setTourSteps(tourSteps);
+        return tourSteps;
+    }
+
+    private void Dijkstra(int root, ArrayList<ArrayList<Edge>> adjList, ArrayList<Double> distances, ArrayList<Edge> parent) {
+        PriorityQueue<Node> priority_queue = new PriorityQueue<>();
+        priority_queue.add(new Node(root, 0));
+        while(!priority_queue.isEmpty()) {
+            Node currentNode = priority_queue.poll();
+            if(currentNode.getDistance() > distances.get(currentNode.getIndex())) {
+                continue;
+            }
+            for(Edge edge : adjList.get(currentNode.getIndex())) {
+                if(distances.get(edge.getDestination()) > currentNode.getDistance() + edge.getLength()) {
+                    distances.set(edge.getDestination(), currentNode.getDistance() + edge.getLength());
+                    parent.set(edge.getDestination(), edge);
+                    priority_queue.add(new Node(edge.getDestination(), distances.get(edge.getDestination())));
+                }
+            }
+        }
+    }
 }
