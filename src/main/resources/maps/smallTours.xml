@@ -1,0 +1,12 @@
+<tours_map>
+    <tour>
+        <delivery destination="25175791" time_window_start="09:00" time_window_end="10:00"/>
+        <delivery destination="2129259178" time_window_start="09:30" time_window_end="10:30"/>
+        <delivery destination="26086130" time_window_start="10:00" time_window_end="11:00"/>
+    </tour>
+    <tour>
+        <delivery destination="25175791" time_window_start="08:30" time_window_end="09:30"/>
+        <delivery destination="26086130" time_window_start="09:00" time_window_end="10:00"/>
+        <delivery destination="2129259176" time_window_start="09:30" time_window_end="10:30"/>
+    </tour>
+</tours_map>
