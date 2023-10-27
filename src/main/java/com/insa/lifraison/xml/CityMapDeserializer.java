@@ -57,19 +57,21 @@ public class CityMapDeserializer {
 
         NodeList IntersectionList = rootDOMNode.getElementsByTagName("intersection");
         HashMap<String, Intersection> intersectionMap = new HashMap<>();
+        LinkedList<Intersection> intersections = new LinkedList<>();
         for (int i = 0; i < IntersectionList.getLength(); i++) {
             Intersection currentIntersection = createIntersection((Element) IntersectionList.item(i));
             intersectionMap.put(currentIntersection.getId(), currentIntersection);
-            map.addIntersection(currentIntersection);
+            intersections.add(currentIntersection);
         }
         NodeList segmentNodeList = rootDOMNode.getElementsByTagName("segment");
         LinkedList<Segment> segmentList = new LinkedList<>();
         for (int i = 0; i < segmentNodeList.getLength(); i++) {
             Segment currentSegment = createSegment((Element) segmentNodeList.item(i), intersectionMap);
-            map.addSegment(currentSegment);
+            segmentList.add(currentSegment);
         }
         NodeList warehouseNodes = rootDOMNode.getElementsByTagName("warehouse");
-        map.setWarehouse(createWarehouse((Element) warehouseNodes.item(0),intersectionMap));
+        Warehouse warehouse= createWarehouse((Element) warehouseNodes.item(0),intersectionMap);
+        map.setIntersectionsSegmentsWarehouse(intersections, segmentList, warehouse);
     }
     private static Intersection createIntersection(Element elt) throws ExceptionXML{
         String id = elt.getAttribute("id");

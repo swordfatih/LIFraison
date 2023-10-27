@@ -24,12 +24,12 @@ public class InitialState implements State {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
             CityMapDeserializer.load(m, file);
             c.setCurrentState(c.loadedMapState);
 
-            view.<MapController>getController("map").setMap(m, file);
             view.navigate("map");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());

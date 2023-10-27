@@ -1,5 +1,7 @@
 package com.insa.lifraison.model;
 
+import com.insa.lifraison.observer.Observable;
+
 import java.util.*;
 
 import static java.lang.Math.max;
@@ -11,7 +13,7 @@ import java.time.LocalTime;
  * Object that stores all the intersections and segments in the city,
  * as well as the warehouse instance.
  */
-public class CityMap {
+public class CityMap extends Observable {
     /**
      * List of all {@link com.insa.lifraison.model.Intersection} of the city
      */
@@ -25,7 +27,7 @@ public class CityMap {
      */
     private Warehouse warehouse;
 
-    private LinkedList<DeliveryRequest> uncomputedDeliveries;
+    private LinkedList<Tour> tours;
 
     private double minLatitude, maxLatitude, minLongitude, maxLongitude;
 
@@ -38,6 +40,10 @@ public class CityMap {
         this.segments = segments;
         this.warehouse = warehouse;
         this.updateMinMax();
+        this.tours = new LinkedList<>();
+        Tour tour = new Tour();
+        tours.add(tour);
+        this.notifyObservers(NotifType.ADD, tour);
     }
 
     public void reset(){
@@ -48,6 +54,11 @@ public class CityMap {
         this.minLongitude = Double.MAX_VALUE;
         this.maxLatitude = Double.MIN_VALUE;
         this.maxLongitude = Double.MIN_VALUE;
+        this.tours = new LinkedList<>();
+        Tour tour = new Tour();
+        tours.add(tour);
+        this.notifyObservers(NotifType.ADD, tour);
+        this.notifyObservers(NotifType.UPDATE, this);
     }
 
     /**
@@ -67,6 +78,10 @@ public class CityMap {
         return segments.iterator();
     }
 
+    public Iterator<Tour> getToursIterator() {
+        return tours.iterator();
+    }
+
     public LinkedList<Segment> getSegments() {
         return this.segments;
     }
@@ -76,7 +91,16 @@ public class CityMap {
      * @return succes of the adding
      */
     public boolean addDelivery(DeliveryRequest newDelivery){
-        return uncomputedDeliveries.add(newDelivery);
+        boolean hasChanged = tours.get(0).addDelivery(newDelivery);
+        if(hasChanged) notifyObservers(NotifType.ADD, newDelivery);
+        return hasChanged;
+    }
+
+    public void addTours(Collection<Tour> tours) {
+        for(Tour t : tours) {
+            this.tours.add(t);
+            notifyObservers(NotifType.ADD, t);
+        }
     }
 
     /**
@@ -107,6 +131,14 @@ public class CityMap {
      */
     public void addSegment(Segment segment){
         segments.push(segment);
+    }
+
+    public void setIntersectionsSegmentsWarehouse(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
+        this.intersections = intersections;
+        this.segments = segments;
+        this.warehouse = warehouse;
+        this.updateMinMax();
+        this.notifyObservers(NotifType.UPDATE, this);
     }
 
     /**

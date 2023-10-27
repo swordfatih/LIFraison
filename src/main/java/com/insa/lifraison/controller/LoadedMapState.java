@@ -22,12 +22,12 @@ public class LoadedMapState implements State {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
             CityMapDeserializer.load(m, file);
             c.setCurrentState(c.loadedMapState);
 
-            view.<MapController>getController("map").setMap(m, file);
             view.navigate("map");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
@@ -49,9 +49,10 @@ public class LoadedMapState implements State {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            TourDeserializer.load(m.getIntersections(), file);
+            m.addTours(TourDeserializer.load(m.getIntersections(), file));
             c.setCurrentState(c.loadedDeliveryState);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());
