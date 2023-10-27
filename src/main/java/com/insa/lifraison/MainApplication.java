@@ -19,15 +19,6 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Controller controller = new Controller();
-        View view = new View(stage, controller);
-        controller.setView(view);
-
-        view.loadScene("home", "home.fxml", "style/home.css");
-        view.loadScene("map", "map.fxml", "style/map.css");
-
-        stage.setTitle("LIFraison");
-        view.navigate("home");
-        stage.show();
+        Controller controller = new Controller(stage);
     }
 }

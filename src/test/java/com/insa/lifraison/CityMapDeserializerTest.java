@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.insa.lifraison.xml.XMLdeserializer;
+import com.insa.lifraison.xml.CityMapDeserializer;
 import org.xml.sax.SAXException;
 
 /**
  * Dry test class
  */
-public class XMLdeserializerTest {
+public class CityMapDeserializerTest {
     /**
      * Tests the construction of a CityMap from a XML document.
      * @throws ParserConfigurationException
@@ -48,12 +48,12 @@ public class XMLdeserializerTest {
         CityMap targetMap = new CityMap(targetIntersections, targetSegments,targetWarehouse);
 
         CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
-        File XMLFile = new File("./src/test/java/com/insa/lifraison/DeserializerTest.xml");
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapTests.xml");
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
         if (root.getNodeName().equals("map")) {
-            XMLdeserializer.buildFromDOMXML(root, mapFromXML);
+            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
         }
 
         assertEquals(targetMap, mapFromXML);

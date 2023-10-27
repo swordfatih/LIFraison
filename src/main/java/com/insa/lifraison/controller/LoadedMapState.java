@@ -6,7 +6,8 @@ import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
-import com.insa.lifraison.xml.XMLdeserializer;
+import com.insa.lifraison.xml.CityMapDeserializer;
+import com.insa.lifraison.xml.TourDeserializer;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -21,12 +22,12 @@ public class LoadedMapState implements State {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            XMLdeserializer.load(m, file);
+            CityMapDeserializer.load(m, file);
             c.setCurrentState(c.loadedMapState);
 
-            view.<MapController>getController("map").setMap(m, file);
             view.navigate("map");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
@@ -43,9 +44,15 @@ public class LoadedMapState implements State {
     }
 
     @Override
-    public void loadDeliveries(Controller c, CityMap m) {
+    public void loadDeliveries(Controller c, CityMap m, View view) {
         try{
-            XMLdeserializer.loadDeliveries(m);
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.setInitialDirectory(new File("."));
+            File file = fileChooser.showOpenDialog(view.getStage());
+
+            m.addTours(TourDeserializer.load(m.getIntersections(), file));
             c.setCurrentState(c.loadedDeliveryState);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());

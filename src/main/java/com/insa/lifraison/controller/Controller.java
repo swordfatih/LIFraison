@@ -2,8 +2,10 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 
@@ -22,9 +24,17 @@ public class Controller {
     /**
      * Create the controller of the application
      */
-    public Controller() {
+    public Controller(Stage stage) {
         this.currentState = initialState;
         this.map = new CityMap();
+        this.view = new View(stage, this);
+
+        view.loadScene("home", "home.fxml", "style/home.css");
+        view.loadScene("map", "map.fxml", "style/map.css");
+        view.<MapController>getController("map").setMap(this.map);
+        stage.setTitle("LIFraison");
+        view.navigate("home");
+        stage.show();
     }
 
     public void setView(View view) {
@@ -50,7 +60,7 @@ public class Controller {
      * Method called after a click on the "load Deliveries" button
      */
     public void loadDeliveries(){
-        currentState.loadDeliveries(this, map);
+        currentState.loadDeliveries(this, map, view);
     };
 
     /**
