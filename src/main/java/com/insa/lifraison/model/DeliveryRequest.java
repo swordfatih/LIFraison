@@ -36,7 +36,7 @@ public class DeliveryRequest {
     }
 
     public Intersection getDestination(){
-        return destination;
+        return this.destination;
     }
 
     public void setTimeWindowStart(LocalTime timeWindowStart) {

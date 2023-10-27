@@ -1,5 +1,7 @@
 package com.insa.lifraison.model;
 
+import com.insa.lifraison.observer.Observable;
+
 import java.util.*;
 
 import static java.lang.Math.max;
@@ -11,7 +13,7 @@ import java.time.LocalTime;
  * Object that stores all the intersections and segments in the city,
  * as well as the warehouse instance.
  */
-public class CityMap {
+public class CityMap extends Observable {
     /**
      * List of all {@link com.insa.lifraison.model.Intersection} of the city
      */
@@ -37,17 +39,20 @@ public class CityMap {
         this.intersections = intersections;
         this.segments = segments;
         this.warehouse = warehouse;
+        this.uncomputedDeliveries = new LinkedList<>();
         this.updateMinMax();
     }
 
     public void reset(){
         this.intersections = new LinkedList<>();
         this.segments = new LinkedList<>();
+        this.uncomputedDeliveries = new LinkedList<>();
         this.warehouse = null;
         this.minLatitude = Double.MAX_VALUE;
         this.minLongitude = Double.MAX_VALUE;
         this.maxLatitude = Double.MIN_VALUE;
         this.maxLongitude = Double.MIN_VALUE;
+        this.notifyObservers(NotifType.UPDATE, this);
     }
 
     /**
@@ -67,6 +72,8 @@ public class CityMap {
         return segments.iterator();
     }
 
+    public Iterator<DeliveryRequest> getUncomputedDeliveriesIterator() {return uncomputedDeliveries.iterator();}
+
     public LinkedList<Segment> getSegments() {
         return this.segments;
     }
@@ -76,7 +83,9 @@ public class CityMap {
      * @return succes of the adding
      */
     public boolean addDelivery(DeliveryRequest newDelivery){
-        return uncomputedDeliveries.add(newDelivery);
+        boolean hasChanged = uncomputedDeliveries.add(newDelivery);
+        if(hasChanged) notifyObservers(NotifType.ADD, newDelivery);
+        return hasChanged;
     }
 
     /**
@@ -107,6 +116,14 @@ public class CityMap {
      */
     public void addSegment(Segment segment){
         segments.push(segment);
+    }
+
+    public void setIntersectionsSegmentsWarehouse(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
+        this.intersections = intersections;
+        this.segments = segments;
+        this.warehouse = warehouse;
+        this.updateMinMax();
+        this.notifyObservers(NotifType.UPDATE, this);
     }
 
     /**

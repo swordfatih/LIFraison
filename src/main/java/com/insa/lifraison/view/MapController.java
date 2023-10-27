@@ -1,8 +1,11 @@
 package com.insa.lifraison.view;
 
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Segment;
 import com.insa.lifraison.model.Warehouse;
+import com.insa.lifraison.observer.Observable;
+import com.insa.lifraison.observer.Observer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -18,7 +21,7 @@ import java.util.LinkedList;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class MapController extends ViewController {
+public class MapController extends ViewController implements Observer {
     private CityMap map;
     private double scale;
     private double latitudeOffset;
@@ -41,14 +44,17 @@ public class MapController extends ViewController {
         this.controller.loadMap();
     }
 
-    public void setMap(CityMap map, File file) {
+    public void setMap(CityMap map) {
         this.map = map;
+        this.map.addObserver(this);
+    }
 
-        this.label.setText(file.getAbsolutePath());
+    public void update(Observable.NotifType notifType, Object arg){
+            updateMapPane();
+    }
 
-        // find min max
-
-        // find small one
+    public void updateMapPane(){
+        //computing scale
         double sizeLatitude = this.map.getMaxLatitude()-this.map.getMinLatitude();
         double sizeLongitude = this.map.getMaxLongitude()-this.map.getMinLongitude();
         double XScale = 940.0 / sizeLongitude;
@@ -58,18 +64,28 @@ public class MapController extends ViewController {
         latitudeOffset = scale * this.map.getMaxLatitude();
 
         this.mapPane.getChildren().clear();
-        Iterator<Segment> iterator = this.map.getSegmentsIterator();
-        while (iterator.hasNext()){
-            addSegmentLine(iterator.next());
+
+        //adding map segments
+        Iterator<Segment> segmentIterator = this.map.getSegmentsIterator();
+        while (segmentIterator.hasNext()){
+            addSegmentLine(segmentIterator.next());
         }
 
-        // create the warehouse
+        // adding the warehouse
         Warehouse warehouse = this.map.getWarehouse();
-        double xWarehouse = scale * warehouse.getIntersection().longitude + longitudeOffset;
-        double yWarehouse = -scale * warehouse.getIntersection().latitude + latitudeOffset;
-        Circle posWarehouse = new Circle(xWarehouse,yWarehouse,5);
-        posWarehouse.setFill(Color.RED);
-        this.mapPane.getChildren().add(posWarehouse);
+
+        if(warehouse != null) {
+            double xWarehouse = scale * warehouse.getIntersection().longitude + longitudeOffset;
+            double yWarehouse = -scale * warehouse.getIntersection().latitude + latitudeOffset;
+            Circle posWarehouse = new Circle(xWarehouse, yWarehouse, 5);
+            posWarehouse.setFill(Color.RED);
+            this.mapPane.getChildren().add(posWarehouse);
+        }
+
+        Iterator<DeliveryRequest> uncomputedDeliveryIterator = this.map.getUncomputedDeliveriesIterator();
+        while(uncomputedDeliveryIterator.hasNext()) {
+            addDeliveryPoint(uncomputedDeliveryIterator.next(), Color.GRAY);
+        }
     }
 
     public void addSegmentLine(Segment segment){
@@ -77,7 +93,6 @@ public class MapController extends ViewController {
         double xOrigin = scale * segment.origin.longitude + longitudeOffset;
         double yDest = -scale * segment.destination.latitude + latitudeOffset;
         double xDest = scale * segment.destination.longitude + longitudeOffset;
-        System.out.println(xOrigin+"; "+ yOrigin);
         this.mapPane.getChildren().add(new Line(xOrigin,yOrigin,xDest,yDest));
     }
 
@@ -86,5 +101,12 @@ public class MapController extends ViewController {
         event.consume();
 
         this.controller.loadDeliveries();
+    }
+    public void addDeliveryPoint(DeliveryRequest delivery, Color color){
+        double yCoordinate = -scale * delivery.getDestination().latitude + latitudeOffset;
+        double xCoordinate = scale * delivery.getDestination().longitude + longitudeOffset;
+        Circle deliveryPoint = new Circle(xCoordinate,yCoordinate,5);
+        deliveryPoint.setFill(color);
+        this.mapPane.getChildren().add(deliveryPoint);
     }
 }

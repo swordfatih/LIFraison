@@ -27,7 +27,6 @@ public class LoadedMapState implements State {
             CityMapDeserializer.load(m, file);
             c.setCurrentState(c.loadedMapState);
 
-            view.<MapController>getController("map").setMap(m, file);
             view.navigate("map");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
