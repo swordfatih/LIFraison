@@ -4,9 +4,16 @@ import com.insa.lifraison.model.*;
 import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -32,6 +39,9 @@ public class MapController extends ViewController implements Observer {
 
     @FXML
     private Pane mapForeground;
+
+    @FXML
+    private VBox informations;
 
     public void initialize() {
         label.setText("Map page");
@@ -92,11 +102,18 @@ public class MapController extends ViewController implements Observer {
     }
 
     void updateForeground(){
-    Iterator<Tour> toursIterator = this.map.getToursIterator();
+        this.mapForeground.getChildren().clear();
+        Iterator<Tour> toursIterator = this.map.getToursIterator();
         while(toursIterator.hasNext()) {
             Iterator<DeliveryRequest> deliveriesIterator = toursIterator.next().getDeliveriesIterator();
             while (deliveriesIterator.hasNext()) {
-                addDeliveryPoint(deliveriesIterator.next(), Color.GRAY);
+                DeliveryRequest newDelivery = deliveriesIterator.next();
+                if(newDelivery.getIsAdded()){
+                addDeliveryPoint(newDelivery, Color.PURPLE);
+                }else{
+                    addDeliveryPoint(newDelivery, Color.GRAY);
+                }
+
             }
         }
     }
@@ -115,6 +132,7 @@ public class MapController extends ViewController implements Observer {
 
         this.controller.loadDeliveries();
     }
+
     public void addDeliveryPoint(DeliveryRequest delivery, Color color){
         double yCoordinate = -scale * delivery.getDestination().latitude + latitudeOffset;
         double xCoordinate = scale * delivery.getDestination().longitude + longitudeOffset;
@@ -122,4 +140,76 @@ public class MapController extends ViewController implements Observer {
         deliveryPoint.setFill(color);
         this.mapForeground.getChildren().add(deliveryPoint);
     }
+
+    /**
+     * Go to state AddDelivery in the controller and add informations about this state
+     * @param event user click on the button addDelivery
+     */
+    @FXML
+    private void addDelivery(ActionEvent event){
+        Label info = new Label("Click anywhere on the map to create a new delivery");
+        Button confirm = new Button("confirm");
+        confirm.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.confirm();
+            }
+        });
+        informations.getChildren().addAll(info, confirm);
+        event.consume();
+
+        this.controller.addDelivery();
+    }
+
+    public void clearInformations(){
+        informations.getChildren().clear();
+    }
+
+    /**
+     * Give the intersection clicked by the user to the controller
+     * @param event mouseListener on the map
+     */
+    public void mapClick(MouseEvent event){
+        // left click
+        if(event.getButton() == MouseButton.PRIMARY){
+            Double longitudePos = (event.getSceneX() -320 - longitudeOffset) / scale;
+            Double latitudePos = -(event.getSceneY() - latitudeOffset) / scale;
+
+            Intersection intersection = getCloserIntersection(longitudePos, latitudePos);
+
+            if(intersection != null){
+                this.controller.leftClick(intersection);
+
+            }
+        } else if(event.getButton() == MouseButton.SECONDARY){
+            this.controller.rightClick();
+        }
+    }
+
+    /**
+     * Find the closer intersection to a point
+     * @param longitude
+     * @param latitude
+     * @return intersectionMin the closer intersection in term of distance
+     */
+    private Intersection getCloserIntersection(double longitude, double latitude){
+        if(!map.getIntersections().isEmpty()){
+            double distanceMin = Double.MAX_VALUE;
+            double distanceTmp;
+            Intersection intersectionMin = null;
+
+            for(Intersection intersection : map.getIntersections()) {
+                distanceTmp = Math.sqrt(Math.pow(intersection.latitude-latitude,2)+Math.pow(intersection.longitude - longitude, 2));
+                
+                if(distanceTmp < distanceMin){
+                    distanceMin = distanceTmp;
+                    intersectionMin = intersection;
+                }
+            }
+            return intersectionMin;
+        }
+        return null;
+
+    }
+
 }

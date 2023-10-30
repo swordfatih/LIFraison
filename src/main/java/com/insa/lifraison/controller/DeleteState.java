@@ -2,6 +2,7 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.view.View;
 
 public class DeleteState implements State {
     /**
@@ -23,11 +24,13 @@ public class DeleteState implements State {
 
     /**
      * Cancel the action
-     * @param c the controller
-     * @param m the cityMap
+     *
+     * @param c    the controller
+     * @param m    the cityMap
+     * @param view
      */
     @Override
-    public void rightClick(Controller c, CityMap m){
+    public void rightClick(Controller c, CityMap m, View view){
         c.setCurrentState(c.loadedDeliveryState);
     }
 }

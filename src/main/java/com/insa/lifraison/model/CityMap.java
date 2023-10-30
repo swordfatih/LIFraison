@@ -94,6 +94,11 @@ public class CityMap extends Observable {
         return hasChanged;
     }
 
+    public void modifyDelivery(DeliveryRequest delivery, Intersection newIntersection){
+        delivery.setDestination(newIntersection);
+        notifyObservers(NotifType.LIGHT_UPDATE);
+    }
+
     public void addTours(Collection<Tour> tours) {
         for(Tour t : tours) {
             this.tours.add(t);
@@ -106,8 +111,11 @@ public class CityMap extends Observable {
      * @param i : the position where the delivery can be
      * @return true if a delivery was a this position and was successfully remove
      */
-    public boolean removeDeliveryAt(Intersection i){
-        ///TODO a implementer
+    public boolean removeDeliveryAt(Intersection i){ return false; }
+
+    public boolean removeDelivery(DeliveryRequest oldDelivery){
+        boolean hasChanged = tours.get(0).removeDelivery(oldDelivery);
+        if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
         return false;
     }
 
