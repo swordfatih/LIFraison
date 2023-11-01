@@ -43,7 +43,6 @@ public class CityMap extends Observable {
         this.tours = new LinkedList<>();
         Tour tour = new Tour();
         tours.add(tour);
-        this.notifyObservers(NotifType.ADD, tour);
     }
 
     public void reset(){
@@ -57,8 +56,7 @@ public class CityMap extends Observable {
         this.tours = new LinkedList<>();
         Tour tour = new Tour();
         tours.add(tour);
-        this.notifyObservers(NotifType.ADD, tour);
-        this.notifyObservers(NotifType.UPDATE, this);
+        this.notifyObservers(NotifType.FULL_UPDATE);
     }
 
     /**
@@ -92,15 +90,15 @@ public class CityMap extends Observable {
      */
     public boolean addDelivery(DeliveryRequest newDelivery){
         boolean hasChanged = tours.get(0).addDelivery(newDelivery);
-        if(hasChanged) notifyObservers(NotifType.ADD, newDelivery);
+        if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
         return hasChanged;
     }
 
     public void addTours(Collection<Tour> tours) {
         for(Tour t : tours) {
             this.tours.add(t);
-            notifyObservers(NotifType.ADD, t);
         }
+        notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
     /**
@@ -138,7 +136,7 @@ public class CityMap extends Observable {
         this.segments = segments;
         this.warehouse = warehouse;
         this.updateMinMax();
-        this.notifyObservers(NotifType.UPDATE, this);
+        this.notifyObservers(NotifType.FULL_UPDATE);
     }
 
     /**
