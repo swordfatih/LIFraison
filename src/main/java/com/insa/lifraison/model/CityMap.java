@@ -80,6 +80,8 @@ public class CityMap extends Observable {
         return tours.iterator();
     }
 
+    public LinkedList<Tour> getTours() {return tours;}
+
     public LinkedList<Segment> getSegments() {
         return this.segments;
     }
