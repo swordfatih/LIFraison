@@ -112,6 +112,18 @@ public class CityMap extends Observable {
     }
 
     /**
+     * Withdraw the delivery  if it exists
+     * @param i : the position where the delivery can be
+     * @return true if a delivery was successfully remove
+     */
+    public boolean removeDelivery(DeliveryRequest deliveryRequest){
+        ///TODO a implementer pour plusieurs tours
+        boolean hasChanged = this.tours.get(0).removeDelivery(deliveryRequest);
+        if(hasChanged) this.notifyObservers(NotifType.LIGHT_UPDATE);
+        return hasChanged;
+    }
+
+    /**
      * Add a new intersection to the city map.
      * @param intersection The intersection to be added to the CityMap.
      */
