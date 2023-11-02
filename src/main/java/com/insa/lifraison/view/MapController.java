@@ -12,7 +12,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import static java.lang.Math.max;
@@ -74,39 +73,39 @@ public class MapController extends ViewController implements Observer {
         this.mapBackground.getChildren().clear();
 
         //adding map segments
-        Iterator<Segment> segmentIterator = this.map.getSegmentsIterator();
-        while (segmentIterator.hasNext()){
-            addSegmentLine(segmentIterator.next());
+        for (Segment segment : this.map.getSegments()){
+            addSegmentLine(this.mapBackground, segment, Color.BLACK);
         }
 
         // adding the warehouse
         Warehouse warehouse = this.map.getWarehouse();
 
         if(warehouse != null) {
-            double xWarehouse = scale * warehouse.getIntersection().longitude + longitudeOffset;
-            double yWarehouse = -scale * warehouse.getIntersection().latitude + latitudeOffset;
-            Circle posWarehouse = new Circle(xWarehouse, yWarehouse, 5);
-            posWarehouse.setFill(Color.RED);
-            this.mapBackground.getChildren().add(posWarehouse);
+            addIntersectionPoint(this.mapBackground, warehouse.getIntersection(), Color.RED);
         }
     }
 
     void updateForeground(){
-    Iterator<Tour> toursIterator = this.map.getToursIterator();
-        while(toursIterator.hasNext()) {
-            Iterator<DeliveryRequest> deliveriesIterator = toursIterator.next().getDeliveriesIterator();
-            while (deliveriesIterator.hasNext()) {
-                addDeliveryPoint(deliveriesIterator.next(), Color.GRAY);
+        for(Tour tour : map.getTours()) {
+            for(TourStep tourStep : tour.getTourSteps()) {
+                for(Segment segment : tourStep.getSegments()) {
+                    addSegmentLine(this.mapForeground, segment, Color.GRAY);
+                }
+            }
+            for(DeliveryRequest delivery : tour.getDeliveries()) {
+                addIntersectionPoint(this.mapForeground, delivery.getDestination(), Color.GRAY);
             }
         }
     }
 
-    public void addSegmentLine(Segment segment){
+    public void addSegmentLine(Pane pane, Segment segment, Color color){
         double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
         double xOrigin = scale * segment.origin.longitude + longitudeOffset;
         double yDest = -scale * segment.destination.latitude + latitudeOffset;
         double xDest = scale * segment.destination.longitude + longitudeOffset;
-        this.mapBackground.getChildren().add(new Line(xOrigin,yOrigin,xDest,yDest));
+        Line line = new Line(xOrigin,yOrigin,xDest,yDest);
+        line.setFill(color);
+        pane.getChildren().add(line);
     }
 
     @FXML
@@ -115,11 +114,12 @@ public class MapController extends ViewController implements Observer {
 
         this.controller.loadDeliveries();
     }
-    public void addDeliveryPoint(DeliveryRequest delivery, Color color){
-        double yCoordinate = -scale * delivery.getDestination().latitude + latitudeOffset;
-        double xCoordinate = scale * delivery.getDestination().longitude + longitudeOffset;
+    public void addIntersectionPoint(Pane pane, Intersection intersection, Color color){
+        double yCoordinate = -scale * intersection.latitude + latitudeOffset;
+        double xCoordinate = scale * intersection.longitude + longitudeOffset;
         Circle deliveryPoint = new Circle(xCoordinate,yCoordinate,5);
         deliveryPoint.setFill(color);
+        deliveryPoint.setId(intersection.getId());
         this.mapForeground.getChildren().add(deliveryPoint);
     }
 }

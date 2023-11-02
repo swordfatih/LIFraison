@@ -68,16 +68,8 @@ public class CityMap extends Observable {
         return 0;
     }
 
-    /**
-     *
-     * @return iterator of segments
-     */
-    public Iterator<Segment> getSegmentsIterator() {
-        return segments.iterator();
-    }
-
-    public Iterator<Tour> getToursIterator() {
-        return tours.iterator();
+    public LinkedList<Tour> getTours() {
+        return tours;
     }
 
     public LinkedList<Segment> getSegments() {
