@@ -29,6 +29,8 @@ public class CityMap extends Observable {
 
     private LinkedList<Tour> tours;
 
+    private DeliveryRequest selectedDelivery;
+
     private double minLatitude, maxLatitude, minLongitude, maxLongitude;
 
     public CityMap() {
@@ -42,6 +44,7 @@ public class CityMap extends Observable {
         this.updateMinMax();
         this.tours = new LinkedList<>();
         Tour tour = new Tour();
+        this.selectedDelivery = null;
         tours.add(tour);
     }
 
@@ -56,6 +59,7 @@ public class CityMap extends Observable {
         this.tours = new LinkedList<>();
         Tour tour = new Tour();
         tours.add(tour);
+        this.selectedDelivery = null;
         this.notifyObservers(NotifType.FULL_UPDATE);
     }
 
@@ -64,8 +68,11 @@ public class CityMap extends Observable {
      * @return the sum
      */
     public int getNumberDeliveries(){
-        ///TODO : implementer
-        return 0;
+        int sum = 0;
+        for (Tour tour : tours) {
+            sum += tour.getDeliveries().size();
+        }
+        return sum;
     }
 
     public LinkedList<Tour> getTours() { return tours; }
@@ -93,7 +100,7 @@ public class CityMap extends Observable {
         boolean hasChanged = this.tours.remove(tour);
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
     }
-    public void modifyDelivery(DeliveryRequest delivery, Intersection newIntersection){
+    public void moveDelivery(DeliveryRequest delivery, Intersection newIntersection){
         delivery.setDestination(newIntersection);
         notifyObservers(NotifType.LIGHT_UPDATE);
     }
@@ -120,10 +127,13 @@ public class CityMap extends Observable {
      * @return true if a delivery was successfully remove
      */
     public boolean removeDelivery(DeliveryRequest deliveryRequest){
-        ///TODO a implementer pour plusieurs tours
-        boolean hasChanged = this.tours.get(0).removeDelivery(deliveryRequest);
-        if(hasChanged) this.notifyObservers(NotifType.LIGHT_UPDATE);
-        return hasChanged;
+        for(Tour tour : this.tours){
+            if(tour.removeDelivery(deliveryRequest)) {
+                this.notifyObservers(NotifType.LIGHT_UPDATE);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -186,6 +196,10 @@ public class CityMap extends Observable {
         boolean equalSegments = segments.containsAll(otherMap.segments) && otherMap.segments.containsAll(segments);
         boolean equalWarehouses = warehouse.equals(otherMap.warehouse);
         return equalWarehouses && equalIntersections && equalSegments;
+    }
+
+    public DeliveryRequest getSelectedDelivery() {
+        return this.selectedDelivery;
     }
 
     public void updateMinMax(){
@@ -310,6 +324,65 @@ public class CityMap extends Observable {
                 }
             }
         }
+    }
+
+    /**
+     * Find the closest intersection to a point
+     * @param longitude
+     * @param latitude
+     * @return intersectionMin the closer intersection in term of distance
+     */
+    public Intersection getClosestIntersection(double longitude, double latitude){
+        if(!this.intersections.isEmpty()){
+            double distanceMin = Double.MAX_VALUE;
+            double distanceTmp;
+            Intersection intersectionMin = null;
+
+            for(Intersection intersection : this.intersections) {
+                distanceTmp = Math.sqrt(Math.pow(intersection.latitude-latitude,2)+Math.pow(intersection.longitude - longitude, 2));
+
+                if(distanceTmp < distanceMin){
+                    distanceMin = distanceTmp;
+                    intersectionMin = intersection;
+                }
+            }
+            return intersectionMin;
+        }
+        return null;
+
+    }
+
+    /**
+     * Find the closest delivery to a point
+     * @param longitude
+     * @param latitude
+     * @return intersectionMin the closer intersection in term of distance
+     */
+    public DeliveryRequest getClosestDelivery(double longitude, double latitude){
+        double distanceMin = Double.MAX_VALUE;
+        DeliveryRequest deliveryMin = null;
+        for(Tour tour : this.tours) {
+            for(DeliveryRequest delivery : tour.getDeliveries()) {
+                Intersection intersection = delivery.getDestination();
+                double distanceTmp = Math.sqrt(Math.pow(intersection.latitude - latitude, 2) + Math.pow(intersection.longitude - longitude, 2));
+                if (distanceTmp < distanceMin) {
+                    distanceMin = distanceTmp;
+                    deliveryMin = delivery;
+                }
+            }
+        }
+        return deliveryMin;
+
+    }
+
+    public void selectDelivery(DeliveryRequest delivery) {
+        this.selectedDelivery = delivery;
+        this.notifyObservers(NotifType.LIGHT_UPDATE);
+    }
+
+    public void clearDeliverySelection() {
+        this.selectedDelivery = null;
+        this.notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
     public LinkedList<Intersection> getIntersections() {

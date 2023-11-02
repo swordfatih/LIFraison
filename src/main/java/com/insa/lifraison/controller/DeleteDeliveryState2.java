@@ -6,31 +6,42 @@ import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 
-public class AddDeliveryState1 implements State {
+public class DeleteDeliveryState2 implements State {
     /**
-     * click on the intersection where you want to add a delivery request
-     * @param c the controller
+     * click on the Intersection you want to delete
+     * @param c The controller
      * @param m the cityMap
-     * @param i the Intersection where the user clicks
+     * @param i the Intersection
      */
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, ListOfCommands l){
-        c.addDeliveryState2.entryAction(i, m, l);
-        c.setCurrentState(c.addDeliveryState2);
+        m.selectDelivery(d);
     }
 
     /**
-     * cancel the action
-     * @param c the Controller
-     * @param m the city map
+     * Cancel the action
+     *
+     * @param c    the controller
+     * @param m    the cityMap
+     * @param view
      */
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
+        m.clearDeliverySelection();
+        view.<MapController>getController("map").clearInformations();
+        c.setCurrentState(c.loadedDeliveryState);
+    }
+
+    @Override
+    public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
+        l.add(new ReverseCommand(new AddDeliveryCommand(m, m.getSelectedDelivery())));
+        m.clearDeliverySelection();
         view.<MapController>getController("map").clearInformations();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
         } else {
             c.setCurrentState(c.loadedMapState);
+            System.out.println("retour a l'etat sans delivery");
         }
     }
 }

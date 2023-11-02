@@ -23,6 +23,23 @@
                 <GridPane.rowIndex>1</GridPane.rowIndex>
                 <GridPane.columnIndex>0</GridPane.columnIndex>
             </Button>
+            <Button text="Delete Delivery" onAction="#deleteDelivery">
+                <GridPane.rowIndex>1</GridPane.rowIndex>
+                <GridPane.columnIndex>1</GridPane.columnIndex>
+            </Button>
+            <Button text="Undo" onAction="#undo">
+                <GridPane.rowIndex>2</GridPane.rowIndex>
+                <GridPane.columnIndex>0</GridPane.columnIndex>
+            </Button>
+            <Button text="Redo" onAction="#redo">
+                <GridPane.rowIndex>2</GridPane.rowIndex>
+                <GridPane.columnIndex>1</GridPane.columnIndex>
+            </Button>
+            <Button text="Compute Plan" onAction="#computePlan">
+                <GridPane.rowIndex>3</GridPane.rowIndex>
+                <GridPane.columnIndex>0</GridPane.columnIndex>
+                <GridPane.columnSpan>2</GridPane.columnSpan>
+            </Button>
         </GridPane>
         <VBox>
 

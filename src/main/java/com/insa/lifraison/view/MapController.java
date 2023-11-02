@@ -104,7 +104,7 @@ public class MapController extends ViewController implements Observer {
             }
             for(DeliveryRequest delivery : tour.getDeliveries()) {
                 Color color;
-                if(delivery.getIsAdded()) {
+                if(delivery == map.getSelectedDelivery()) {
                     color = Color.PURPLE;
                 } else {
                     color = Color.GRAY;
@@ -145,18 +145,62 @@ public class MapController extends ViewController implements Observer {
      */
     @FXML
     private void addDelivery(ActionEvent event){
+        event.consume();
+
+        this.controller.addDelivery();
+    }
+
+    public void displayAddDeliveryInformations() {
+        informations.getChildren().clear();
         Label info = new Label("Click anywhere on the map to create a new delivery");
         Button confirm = new Button("confirm");
         confirm.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                event.consume();
                 controller.confirm();
             }
         });
         informations.getChildren().addAll(info, confirm);
+    }
+
+    @FXML
+    private void deleteDelivery(ActionEvent event) {
         event.consume();
 
-        this.controller.addDelivery();
+        this.controller.deleteDelivery();
+    }
+
+    public void displayDeleteDeliveryInformations() {
+        informations.getChildren().clear();
+        Label info = new Label("Click on the map to select a delivery to delete");
+        Button confirm = new Button("confirm");
+        confirm.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                event.consume();
+                controller.confirm();
+            }
+        });
+        informations.getChildren().addAll(info, confirm);
+    }
+
+    @FXML
+    private void undo(ActionEvent event) {
+        event.consume();
+        this.controller.undo();
+    }
+
+    @FXML
+    private void redo(ActionEvent event) {
+        event.consume();
+        this.controller.redo();
+    }
+
+    @FXML
+    private void computePlan(ActionEvent event) {
+        event.consume();
+        this.controller.computePlan();
     }
 
     public void clearInformations(){
@@ -173,41 +217,13 @@ public class MapController extends ViewController implements Observer {
             Double longitudePos = (event.getSceneX() -320 - longitudeOffset) / scale;
             Double latitudePos = -(event.getSceneY() - latitudeOffset) / scale;
 
-            Intersection intersection = getCloserIntersection(longitudePos, latitudePos);
+            Intersection intersection = this.map.getClosestIntersection(longitudePos, latitudePos);
+            DeliveryRequest delivery = this.map.getClosestDelivery(longitudePos, latitudePos);
+            this.controller.leftClick(intersection, delivery);
 
-            if(intersection != null){
-                this.controller.leftClick(intersection);
-
-            }
         } else if(event.getButton() == MouseButton.SECONDARY){
             this.controller.rightClick();
         }
-    }
-
-    /**
-     * Find the closer intersection to a point
-     * @param longitude
-     * @param latitude
-     * @return intersectionMin the closer intersection in term of distance
-     */
-    private Intersection getCloserIntersection(double longitude, double latitude){
-        if(!map.getIntersections().isEmpty()){
-            double distanceMin = Double.MAX_VALUE;
-            double distanceTmp;
-            Intersection intersectionMin = null;
-
-            for(Intersection intersection : map.getIntersections()) {
-                distanceTmp = Math.sqrt(Math.pow(intersection.latitude-latitude,2)+Math.pow(intersection.longitude - longitude, 2));
-                
-                if(distanceTmp < distanceMin){
-                    distanceMin = distanceTmp;
-                    intersectionMin = intersection;
-                }
-            }
-            return intersectionMin;
-        }
-        return null;
-
     }
 
 }

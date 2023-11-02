@@ -24,12 +24,7 @@ public class DeliveryRequest {
         this.timeWindowStart = timeWindowStart;
         this.timeWindowEnd = timeWindowEnd;
         this.destination = destination;
-        this.isAdded = false;
     }
-
-    public boolean getIsAdded(){return isAdded;}
-
-    public void setIsAdded(boolean added){this.isAdded = added;}
 
     public DeliveryRequest(Intersection destination) {
         this.destination = destination;

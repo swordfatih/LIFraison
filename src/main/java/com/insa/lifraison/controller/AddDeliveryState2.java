@@ -3,6 +3,7 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 
@@ -16,8 +17,8 @@ public class AddDeliveryState2 implements State {
      * @param i the intersection the user have just clicked
      */
     @Override
-    public void leftClick(Controller c, CityMap m, Intersection i){
-        m.modifyDelivery(currentDelivery, i);
+    public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, ListOfCommands l){
+        m.moveDelivery(currentDelivery, i);
     }
 
     /**
@@ -26,8 +27,8 @@ public class AddDeliveryState2 implements State {
      * @param m the City map
      */
     @Override
-    public void rightClick(Controller c, CityMap m, View view){
-        m.removeDelivery(currentDelivery);
+    public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
+        l.cancel();
         view.<MapController>getController("map").clearInformations();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
@@ -37,16 +38,16 @@ public class AddDeliveryState2 implements State {
     }
 
     @Override
-    public void confirm(Controller c, CityMap m, View view){
-        currentDelivery.setIsAdded(false);
-
+    public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
+        m.clearDeliverySelection();
+        m.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
         view.<MapController>getController("map").clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }
 
-    protected void createDelivery(Intersection i, CityMap m){
+    protected void entryAction(Intersection i, CityMap m, ListOfCommands l){
         currentDelivery = new DeliveryRequest(i);
-        currentDelivery.setIsAdded(true);
-        m.addDelivery(currentDelivery);
+        m.selectDelivery(currentDelivery);
+        l.add(new AddDeliveryCommand(m, currentDelivery));
     }
 }
