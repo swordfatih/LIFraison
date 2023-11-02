@@ -95,10 +95,13 @@ public class CityMap extends Observable {
     }
 
     public void addTours(Collection<Tour> tours) {
-        for(Tour t : tours) {
-            this.tours.add(t);
-        }
-        notifyObservers(NotifType.LIGHT_UPDATE);
+        boolean hasChanged = this.tours.addAll(tours);
+        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+    }
+
+    public void removeTours(Collection<Tour> tours) {
+        boolean hasChanged = this.tours.removeAll(tours);
+        if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
     /**
