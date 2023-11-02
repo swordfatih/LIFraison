@@ -7,6 +7,11 @@ public class AddTourCommand implements Command {
     private CityMap cityMap;
     private Tour tour;
 
+    /**
+     * Create the command which adds a Tour to a CityMap
+     * @param cityMap the map to which tour is added
+     * @param tour the tour added to cityMap
+     */
     public AddTourCommand(CityMap cityMap, Tour tour) {
         this.cityMap = cityMap;
         this.tour = tour;
