@@ -94,6 +94,15 @@ public class CityMap extends Observable {
         return hasChanged;
     }
 
+    public void addTour(Tour tour) {
+        boolean hasChanged = this.tours.add(tour);
+        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+    }
+
+    public void removeTour(Tour tour) {
+        boolean hasChanged = this.tours.remove(tour);
+        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+    }
     public void addTours(Collection<Tour> tours) {
         boolean hasChanged = this.tours.addAll(tours);
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
