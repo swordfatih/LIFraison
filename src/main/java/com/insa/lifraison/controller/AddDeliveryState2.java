@@ -3,6 +3,8 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.view.MapController;
+import com.insa.lifraison.view.View;
 
 public class AddDeliveryState2 implements State {
     private DeliveryRequest currentDelivery;
@@ -15,7 +17,7 @@ public class AddDeliveryState2 implements State {
      */
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i){
-        currentDelivery.setDestination(i);
+        m.modifyDelivery(currentDelivery, i);
     }
 
     /**
@@ -24,7 +26,9 @@ public class AddDeliveryState2 implements State {
      * @param m the City map
      */
     @Override
-    public void rightClick(Controller c, CityMap m){
+    public void rightClick(Controller c, CityMap m, View view){
+        m.removeDelivery(currentDelivery);
+        view.<MapController>getController("map").clearInformations();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
         } else {
@@ -33,12 +37,16 @@ public class AddDeliveryState2 implements State {
     }
 
     @Override
-    public void confirm(Controller c, CityMap m){
-        m.addDelivery(currentDelivery);
+    public void confirm(Controller c, CityMap m, View view){
+        currentDelivery.setIsAdded(false);
+
+        view.<MapController>getController("map").clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }
 
-    protected void createDelivery(Intersection i){
+    protected void createDelivery(Intersection i, CityMap m){
         currentDelivery = new DeliveryRequest(i);
+        currentDelivery.setIsAdded(true);
+        m.addDelivery(currentDelivery);
     }
 }

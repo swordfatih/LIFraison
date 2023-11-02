@@ -19,18 +19,19 @@
                 <GridPane.rowIndex>0</GridPane.rowIndex>
                 <GridPane.columnIndex>1</GridPane.columnIndex>
             </Button>
+            <Button text="Add Delivery" onAction="#addDelivery">
+                <GridPane.rowIndex>1</GridPane.rowIndex>
+                <GridPane.columnIndex>0</GridPane.columnIndex>
+            </Button>
         </GridPane>
         <VBox>
 
         </VBox>
-        <VBox>
+        <VBox fx:id="informations">
             <Label fx:id="label" text="Label" />
-            <Label fx:id="coord1" text="coord1" />
-            <Label fx:id="coord2" text="Label" />
-            <Label fx:id="coord3" text="Label" />
         </VBox>
     </VBox>
-    <StackPane fx:id="mapPane">
+    <StackPane fx:id="mapPane" onMouseClicked="#mapClick">
         <Pane fx:id="mapBackground">
 
         </Pane>

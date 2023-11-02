@@ -24,10 +24,6 @@ public class Tour {
         tourSteps = new LinkedList<>();
     }
 
-    public Iterator<DeliveryRequest> getDeliveriesIterator() {
-        return deliveries.iterator();
-    }
-
     public boolean addDelivery(DeliveryRequest deliveryRequest) {
         return deliveries.add(deliveryRequest);
     }

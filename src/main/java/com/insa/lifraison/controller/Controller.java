@@ -82,14 +82,14 @@ public class Controller {
      * Method called after a right Click
      */
     public void rightClick(){
-        currentState.rightClick(this, map);
+        currentState.rightClick(this, map, view);
     };
 
     /**
      * Method called after a click on the "Confirm" button
      */
     public void confirm(){
-        currentState.confirm(this, map);
+        currentState.confirm(this, map, view);
     };
 
     /**

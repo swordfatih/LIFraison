@@ -4,15 +4,21 @@ import com.insa.lifraison.model.*;
 import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import static java.lang.Math.max;
@@ -32,6 +38,9 @@ public class MapController extends ViewController implements Observer {
 
     @FXML
     private Pane mapForeground;
+
+    @FXML
+    private VBox informations;
 
     public void initialize() {
         label.setText("Map page");
@@ -74,39 +83,45 @@ public class MapController extends ViewController implements Observer {
         this.mapBackground.getChildren().clear();
 
         //adding map segments
-        Iterator<Segment> segmentIterator = this.map.getSegmentsIterator();
-        while (segmentIterator.hasNext()){
-            addSegmentLine(segmentIterator.next());
+        for (Segment segment : this.map.getSegments()){
+            addSegmentLine(this.mapBackground, segment, Color.BLACK);
         }
 
         // adding the warehouse
         Warehouse warehouse = this.map.getWarehouse();
-
         if(warehouse != null) {
-            double xWarehouse = scale * warehouse.getIntersection().longitude + longitudeOffset;
-            double yWarehouse = -scale * warehouse.getIntersection().latitude + latitudeOffset;
-            Circle posWarehouse = new Circle(xWarehouse, yWarehouse, 5);
-            posWarehouse.setFill(Color.RED);
-            this.mapBackground.getChildren().add(posWarehouse);
+            addIntersectionPoint(this.mapBackground, warehouse.getIntersection(), Color.RED);
         }
     }
 
     void updateForeground(){
-    Iterator<Tour> toursIterator = this.map.getToursIterator();
-        while(toursIterator.hasNext()) {
-            Iterator<DeliveryRequest> deliveriesIterator = toursIterator.next().getDeliveriesIterator();
-            while (deliveriesIterator.hasNext()) {
-                addDeliveryPoint(deliveriesIterator.next(), Color.GRAY);
+        this.mapForeground.getChildren().clear();
+        for(Tour tour : map.getTours()) {
+            for(TourStep tourStep : tour.getTourSteps()) {
+                for(Segment segment : tourStep.getSegments()) {
+                    addSegmentLine(this.mapForeground, segment, Color.GRAY);
+                }
+            }
+            for(DeliveryRequest delivery : tour.getDeliveries()) {
+                Color color;
+                if(delivery.getIsAdded()) {
+                    color = Color.PURPLE;
+                } else {
+                    color = Color.GRAY;
+                }
+                addIntersectionPoint(this.mapForeground, delivery.getDestination(), color);
             }
         }
     }
 
-    public void addSegmentLine(Segment segment){
+    public void addSegmentLine(Pane pane, Segment segment, Color color){
         double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
         double xOrigin = scale * segment.origin.longitude + longitudeOffset;
         double yDest = -scale * segment.destination.latitude + latitudeOffset;
         double xDest = scale * segment.destination.longitude + longitudeOffset;
-        this.mapBackground.getChildren().add(new Line(xOrigin,yOrigin,xDest,yDest));
+        Line line = new Line(xOrigin,yOrigin,xDest,yDest);
+        line.setFill(color);
+        pane.getChildren().add(line);
     }
 
     @FXML
@@ -115,11 +130,84 @@ public class MapController extends ViewController implements Observer {
 
         this.controller.loadDeliveries();
     }
-    public void addDeliveryPoint(DeliveryRequest delivery, Color color){
-        double yCoordinate = -scale * delivery.getDestination().latitude + latitudeOffset;
-        double xCoordinate = scale * delivery.getDestination().longitude + longitudeOffset;
+    public void addIntersectionPoint(Pane pane, Intersection intersection, Color color){
+        double yCoordinate = -scale * intersection.latitude + latitudeOffset;
+        double xCoordinate = scale * intersection.longitude + longitudeOffset;
         Circle deliveryPoint = new Circle(xCoordinate,yCoordinate,5);
         deliveryPoint.setFill(color);
-        this.mapForeground.getChildren().add(deliveryPoint);
+        deliveryPoint.setId(intersection.getId());
+        pane.getChildren().add(deliveryPoint);
     }
+
+    /**
+     * Go to state AddDelivery in the controller and add informations about this state
+     * @param event user click on the button addDelivery
+     */
+    @FXML
+    private void addDelivery(ActionEvent event){
+        Label info = new Label("Click anywhere on the map to create a new delivery");
+        Button confirm = new Button("confirm");
+        confirm.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.confirm();
+            }
+        });
+        informations.getChildren().addAll(info, confirm);
+        event.consume();
+
+        this.controller.addDelivery();
+    }
+
+    public void clearInformations(){
+        informations.getChildren().clear();
+    }
+
+    /**
+     * Give the intersection clicked by the user to the controller
+     * @param event mouseListener on the map
+     */
+    public void mapClick(MouseEvent event){
+        // left click
+        if(event.getButton() == MouseButton.PRIMARY){
+            Double longitudePos = (event.getSceneX() -320 - longitudeOffset) / scale;
+            Double latitudePos = -(event.getSceneY() - latitudeOffset) / scale;
+
+            Intersection intersection = getCloserIntersection(longitudePos, latitudePos);
+
+            if(intersection != null){
+                this.controller.leftClick(intersection);
+
+            }
+        } else if(event.getButton() == MouseButton.SECONDARY){
+            this.controller.rightClick();
+        }
+    }
+
+    /**
+     * Find the closer intersection to a point
+     * @param longitude
+     * @param latitude
+     * @return intersectionMin the closer intersection in term of distance
+     */
+    private Intersection getCloserIntersection(double longitude, double latitude){
+        if(!map.getIntersections().isEmpty()){
+            double distanceMin = Double.MAX_VALUE;
+            double distanceTmp;
+            Intersection intersectionMin = null;
+
+            for(Intersection intersection : map.getIntersections()) {
+                distanceTmp = Math.sqrt(Math.pow(intersection.latitude-latitude,2)+Math.pow(intersection.longitude - longitude, 2));
+                
+                if(distanceTmp < distanceMin){
+                    distanceMin = distanceTmp;
+                    intersectionMin = intersection;
+                }
+            }
+            return intersectionMin;
+        }
+        return null;
+
+    }
+
 }

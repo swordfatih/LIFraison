@@ -26,7 +26,7 @@ public class LoadedDeliveryState implements State{
             fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            TourDeserializer.load(m.getIntersections(), file);
+            m.addTours(TourDeserializer.load(m.getIntersections(), file));
             c.setCurrentState(c.loadedDeliveryState);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());

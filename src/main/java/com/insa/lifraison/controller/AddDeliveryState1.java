@@ -3,6 +3,8 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.view.MapController;
+import com.insa.lifraison.view.View;
 
 public class AddDeliveryState1 implements State {
     /**
@@ -13,7 +15,7 @@ public class AddDeliveryState1 implements State {
      */
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i){
-        c.addDeliveryState2.createDelivery(i);
+        c.addDeliveryState2.createDelivery(i, m);
         c.setCurrentState(c.addDeliveryState2);
     }
 
@@ -23,7 +25,8 @@ public class AddDeliveryState1 implements State {
      * @param m the city map
      */
     @Override
-    public void rightClick(Controller c, CityMap m){
+    public void rightClick(Controller c, CityMap m, View view){
+        view.<MapController>getController("map").clearInformations();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
         } else {

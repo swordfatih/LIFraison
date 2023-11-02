@@ -68,19 +68,7 @@ public class CityMap extends Observable {
         return 0;
     }
 
-    /**
-     *
-     * @return iterator of segments
-     */
-    public Iterator<Segment> getSegmentsIterator() {
-        return segments.iterator();
-    }
-
-    public Iterator<Tour> getToursIterator() {
-        return tours.iterator();
-    }
-
-    public LinkedList<Tour> getTours() {return tours;}
+    public LinkedList<Tour> getTours() { return tours; }
 
     public LinkedList<Segment> getSegments() {
         return this.segments;
@@ -105,6 +93,10 @@ public class CityMap extends Observable {
         boolean hasChanged = this.tours.remove(tour);
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
     }
+    public void modifyDelivery(DeliveryRequest delivery, Intersection newIntersection){
+        delivery.setDestination(newIntersection);
+        notifyObservers(NotifType.LIGHT_UPDATE);
+    }
     public void addTours(Collection<Tour> tours) {
         boolean hasChanged = this.tours.addAll(tours);
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
@@ -120,10 +112,7 @@ public class CityMap extends Observable {
      * @param i : the position where the delivery can be
      * @return true if a delivery was a this position and was successfully remove
      */
-    public boolean removeDeliveryAt(Intersection i){
-        ///TODO a implementer
-        return false;
-    }
+    public boolean removeDeliveryAt(Intersection i){ return false; }
 
     /**
      * Withdraw the delivery  if it exists
