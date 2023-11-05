@@ -90,7 +90,6 @@ public class CityMap extends Observable {
         if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
         return hasChanged;
     }
-
     public void addTour(Tour tour) {
         boolean hasChanged = this.tours.add(tour);
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
@@ -117,13 +116,13 @@ public class CityMap extends Observable {
     /**
      * Withdraw the delivery at this position if it exists
      * @param i : the position where the delivery can be
-     * @return true if a delivery was a this position and was successfully remove
+     * @return true if a delivery was at this position and was successfully remove
      */
     public boolean removeDeliveryAt(Intersection i){ return false; }
 
     /**
      * Withdraw the delivery  if it exists
-     * @param i : the position where the delivery can be
+     * @param deliveryRequest : the position where the delivery can be
      * @return true if a delivery was successfully remove
      */
     public boolean removeDelivery(DeliveryRequest deliveryRequest){
@@ -241,7 +240,10 @@ public class CityMap extends Observable {
         for(Intersection inter : intersections) {
             idMap.put(inter.getId(), idMap.size());
         }
-        ArrayList<ArrayList<Edge>> adjList = new ArrayList<>(Collections.nCopies(length, new ArrayList<>()));
+        ArrayList<ArrayList<Edge>> adjList = new ArrayList<>();
+        for(int i = 0; i < length; i++) {
+            adjList.add(new ArrayList<>());
+        }
         for(Segment segment : segments) {
             int originIndex = idMap.get(segment.getOrigin().getId());
             int destinationIndex = idMap.get(segment.getDestination().getId());
@@ -256,11 +258,11 @@ public class CityMap extends Observable {
             return tour.getTourSteps();
         }
 
-
         deliveries.add(0, new DeliveryRequest(warehouse.getIntersection()));
 
         ArrayList<ArrayList<Double>> adjMatrix = new ArrayList<>();
         ArrayList<ArrayList<Edge>> parentSegments = new ArrayList<>();
+        ArrayList<Integer> graphIndices = new ArrayList<>();
 
         for(DeliveryRequest deliveryRequest : deliveries) {
             ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(length, Double.MAX_VALUE));
@@ -274,6 +276,7 @@ public class CityMap extends Observable {
                         .add(distances.get(idMap.get(delivery.getDestination().getId())));
             }
             parentSegments.add(parents);
+            graphIndices.add(index);
         }
 
         Graph graph = new Graph(adjMatrix);
@@ -283,14 +286,14 @@ public class CityMap extends Observable {
         LinkedList<TourStep> tourSteps = new LinkedList<>();
 
         for(int i = 0; i < deliveries.size(); i++) {
-            int currentNode = solver.getSolution(i), nextNode = 0;
+            int currentNode = solver.getSolution(i), nextNode = graphIndices.get(0);
             if(i + 1 != deliveries.size()) {
-                nextNode = solver.getSolution(i + 1);
+                nextNode = graphIndices.get(solver.getSolution(i + 1));
             }
 
             LinkedList<Segment> path = new LinkedList<>();
             double pathLength = 0;
-            while(nextNode != currentNode) {
+            while(nextNode != graphIndices.get(currentNode)) {
                 Edge parentEdge = parentSegments.get(currentNode).get(nextNode);
                 path.add(0, parentEdge.getSegment());
                 nextNode = parentEdge.getOrigin();
@@ -330,7 +333,7 @@ public class CityMap extends Observable {
      * Find the closest intersection to a point
      * @param longitude
      * @param latitude
-     * @return intersectionMin the closer intersection in term of distance
+     * @return intersectionMin the closer intersection in terms of distance
      */
     public Intersection getClosestIntersection(double longitude, double latitude){
         if(!this.intersections.isEmpty()){
@@ -356,7 +359,7 @@ public class CityMap extends Observable {
      * Find the closest delivery to a point
      * @param longitude
      * @param latitude
-     * @return intersectionMin the closer intersection in term of distance
+     * @return intersectionMin the closer intersection in terms of distance
      */
     public DeliveryRequest getClosestDelivery(double longitude, double latitude){
         double distanceMin = Double.MAX_VALUE;
