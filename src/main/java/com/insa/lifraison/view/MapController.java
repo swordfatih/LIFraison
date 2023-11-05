@@ -99,7 +99,7 @@ public class MapController extends ViewController implements Observer {
         for(Tour tour : map.getTours()) {
             for(TourStep tourStep : tour.getTourSteps()) {
                 for(Segment segment : tourStep.getSegments()) {
-                    addSegmentLine(this.mapForeground, segment, Color.GRAY);
+                    addSegmentLine(this.mapForeground, segment, Color.BLUE);
                 }
             }
             for(DeliveryRequest delivery : tour.getDeliveries()) {
@@ -107,7 +107,7 @@ public class MapController extends ViewController implements Observer {
                 if(delivery == map.getSelectedDelivery()) {
                     color = Color.PURPLE;
                 } else {
-                    color = Color.GRAY;
+                    color = Color.BLUE;
                 }
                 addIntersectionPoint(this.mapForeground, delivery.getDestination(), color);
             }
@@ -120,7 +120,7 @@ public class MapController extends ViewController implements Observer {
         double yDest = -scale * segment.destination.latitude + latitudeOffset;
         double xDest = scale * segment.destination.longitude + longitudeOffset;
         Line line = new Line(xOrigin,yOrigin,xDest,yDest);
-        line.setFill(color);
+        line.setStroke(color);
         pane.getChildren().add(line);
     }
 

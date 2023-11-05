@@ -3,6 +3,7 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.model.TourStep;
+import com.insa.lifraison.observer.Observable;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ public class ComputePlanCommand implements Command {
             tours.add(tour.getTourSteps());
             tour.setTourSteps(cityMap.computePath(tour));
         }
+        cityMap.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
     }
 
     @Override
@@ -35,5 +37,6 @@ public class ComputePlanCommand implements Command {
         for(int i = 0; i < tours.size(); i++) {
             cityMap.getTours().get(i).setTourSteps(tours.get(i));
         }
+        cityMap.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
     }
 }
