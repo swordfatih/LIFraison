@@ -41,7 +41,7 @@ public class TourSerializer {// Singleton
      * @throws TransformerException
      * @throws ExceptionXML
      */
-    public void save(List<Tour> tours, File file) throws ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, ExceptionXML{
+    public void save(LinkedList<Tour> tours, File file) throws ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, ExceptionXML{
         StreamResult result = new StreamResult(file);
         document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         document.appendChild(createToursElt(tours,document));
@@ -51,7 +51,7 @@ public class TourSerializer {// Singleton
         xformer.transform(source, result);
     }
 
-    public Element createToursElt(List<Tour> tours, Document doc) {
+    public Element createToursElt(LinkedList<Tour> tours, Document doc) {
         Element root = doc.createElement("tours_map");
         for(Tour t : tours){
             Element tourNode = doc.createElement("tour");

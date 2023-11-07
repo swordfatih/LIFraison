@@ -11,4 +11,5 @@ module lifraison {
     exports com.insa.lifraison.model;
     exports com.insa.lifraison.view;
     exports com.insa.lifraison;
+    exports com.insa.lifraison.observer;
 }

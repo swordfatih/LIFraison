@@ -41,7 +41,7 @@ public class LoadedMapState implements State {
      */
     @Override
     public void addDelivery(Controller c, View view) {
-        view.<MapController>getController("map").displayAddDeliveryInformations();
+        view.<MapController>getController("map").informations.displayAddDeliveryInformations();
         c.setCurrentState(c.addDeliveryState1);
     }
     @Override

@@ -28,7 +28,7 @@ public class DeleteDeliveryState2 implements State {
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
         m.clearDeliverySelection();
-        view.<MapController>getController("map").clearInformations();
+        view.<MapController>getController("map").informations.clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }
 
@@ -36,7 +36,7 @@ public class DeleteDeliveryState2 implements State {
     public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
         l.add(new ReverseCommand(new AddDeliveryCommand(m, m.getSelectedDelivery())));
         m.clearDeliverySelection();
-        view.<MapController>getController("map").clearInformations();
+        view.<MapController>getController("map").informations.clearInformations();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
         } else {

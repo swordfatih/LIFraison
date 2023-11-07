@@ -1,7 +1,6 @@
 package com.insa.lifraison.view;
 
 import com.insa.lifraison.controller.Controller;
-import com.insa.lifraison.view.ViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,6 +36,7 @@ public class View {
 
             ViewController controller = loader.getController();
             controller.setController(this.controller);
+
 
             this.scenes.put(name, new Pair<>(scene, controller));
         } catch (IOException e) {

@@ -120,4 +120,6 @@ public class Controller {
     public void redo(){
         currentState.redo(this, map, listOfCommands);
     };
+
+    public void save(){ currentState.save( map, view);};
 }

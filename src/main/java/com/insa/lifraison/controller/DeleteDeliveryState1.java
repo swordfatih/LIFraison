@@ -28,13 +28,13 @@ public class DeleteDeliveryState1 implements State {
      */
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
-        view.<MapController>getController("map").clearInformations();
+        view.<MapController>getController("map").informations.clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }
 
     @Override
     public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
-        view.<MapController>getController("map").clearInformations();
+        view.<MapController>getController("map").informations.clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }
 }

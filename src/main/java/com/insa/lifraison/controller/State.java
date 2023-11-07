@@ -26,4 +26,6 @@ public interface State {
 
     public default void redo(Controller c, CityMap m, ListOfCommands l){};
 
+    public default void save(CityMap m, View view){};
+
 }
