@@ -250,10 +250,10 @@ public class CityMap extends Observable {
             adjList.add(new ArrayList<>());
         }
         for(Segment segment : segments) {
-            int originIndex = idMap.get(segment.getOrigin().id);
-            int destinationIndex = idMap.get(segment.getDestination().id);
+            int originIndex = idMap.get(segment.origin.id);
+            int destinationIndex = idMap.get(segment.destination.id);
             adjList.get(originIndex)
-                    .add(new Edge(originIndex, destinationIndex, segment.getLength(), segment));
+                    .add(new Edge(originIndex, destinationIndex, segment.length, segment));
         }
 
         ArrayList<DeliveryRequest> deliveries = tour.getDeliveries();

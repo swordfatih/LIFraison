@@ -12,21 +12,30 @@ public class SegmentTest {
      * Tests the construction and equality test of Segment.
      */
     @Test
-    void TestSegment() {
-        Intersection inter1 = new Intersection("test1", 0.34, 0.53);
-        Intersection inter2 = new Intersection("test1", 0.34, 0.53);
-        Intersection inter3 = new Intersection("test2", 0.23, 0.58);
-        Intersection inter4 = new Intersection("test2", 0.23, 0.58);
-        Intersection inter5 = new Intersection("test3", 0.98, 1.43);
-        Intersection inter6 = new Intersection("test4", 0.32, 1.33);
+    void constructorTest() {
+        Intersection origin = new Intersection("origin", 0.34, 0.53);
+        Intersection destination = new Intersection("destination", 0.24, 0.12);
+        double length = 2.3;
+        String name = "segment";
 
-        Segment segment1 = new Segment(inter1, inter3, 23.5, "rue test");
-        Segment segment2 = new Segment(inter2, inter4, 23.5, "rue test");
-        Segment segment3 = new Segment(inter5, inter6, 24.5, "avenue test");
-        Segment segment4 = new Segment(inter3, inter1, 23.5, "rue test");
+        Segment segment = new Segment(origin, destination, length, name);
 
-        assertEquals(segment1, segment2);
-        assertNotEquals(segment1, segment3);
-        assertNotEquals(segment1, segment4);
+        assertEquals(origin, segment.origin);
+        assertEquals(destination, segment.destination);
+        assertEquals(length, segment.length);
+        assertEquals(name, segment.name);
+    }
+
+    @Test
+    void toStringTest() {
+        Intersection origin = new Intersection("origin", 0.34, 0.53);
+        Intersection destination = new Intersection("destination", 0.24, 0.12);
+        double length = 2.3;
+        String name = "segment";
+
+        Segment segment = new Segment(origin, destination, length, name);
+
+        String toString = "Segment{origin=" + origin + ", destination=" + destination + ", length=" + length + ", name='" + name + "'}";
+        assertEquals(toString, segment.toString());
     }
 }

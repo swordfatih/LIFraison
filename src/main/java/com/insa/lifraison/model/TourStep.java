@@ -21,7 +21,7 @@ public class TourStep {
     public double getLength() {
         double length = 0;
         for(Segment segment : this.segments) {
-            length += segment.getLength();
+            length += segment.length;
         }
         return length;
     }
