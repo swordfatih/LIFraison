@@ -1,11 +1,13 @@
 package com.insa.lifraison;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.xml.ExceptionXML;
+import com.insa.lifraison.xml.TourDeserializer;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -73,5 +75,28 @@ public class TourSerializerTest {
         Element root = document.getDocumentElement();
 
         assertTrue(tourXML.isEqualNode(root));
+    }
+    @Test
+    void testTourSerializerNoTime() throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
+        ArrayList<Tour> toursSources = new ArrayList<>();
+        LinkedList<Intersection> deliveryList1 = new LinkedList<>();
+        deliveryList1.add(new Intersection("1",45,45));
+        deliveryList1.add(new Intersection("2",53,50));
+        deliveryList1.add(new Intersection("3",20,10));
+        Tour sourceTour1 = new Tour();
+        for(Intersection inter : deliveryList1){
+            sourceTour1.addDelivery(new DeliveryRequest(inter));
+        }
+        toursSources.add(sourceTour1);
+
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/TourTestNoTime.xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        Document testDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        Element serializedTour = TourSerializer.getInstance().createToursElt(toursSources,testDocument);
+
+        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+        Document document = docBuilder.parse(XMLFile);
+        Element root = document.getDocumentElement();
+        assertTrue(serializedTour.isEqualNode(root));
     }
 }

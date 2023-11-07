@@ -1,7 +1,11 @@
 package com.insa.lifraison.xml;
 
 import java.io.File;
-import java.util.*;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -69,9 +73,21 @@ public class TourSerializer {// Singleton
 
     private Element buildDeliveryNode(DeliveryRequest delRequest, Document doc) {
         Element deliveryNode = doc.createElement("delivery");
-        createAttribute(deliveryNode,"destination",delRequest.getDestination().id,doc);
-        createAttribute(deliveryNode,"time_window_start",delRequest.getTimeWindowStart().toString(),doc);
-        createAttribute(deliveryNode,"time_window_end",delRequest.getTimeWindowEnd().toString(),doc);
+
+        createAttribute(deliveryNode,"destination",delRequest.getDestination().getId(),doc);
+        LocalTime startTime = delRequest.getTimeWindowStart();
+        String startTimeString = "";
+        if(startTime!=null){
+            startTimeString = startTime.toString();
+        }
+
+        LocalTime endTime = delRequest.getTimeWindowStart();
+        String endTimeString = "";
+        if(endTime!=null){
+            endTimeString = endTime.toString();
+        }
+        createAttribute(deliveryNode,"time_window_start",startTimeString,doc);
+        createAttribute(deliveryNode,"time_window_end",endTimeString,doc);
         return deliveryNode;
     }
 }

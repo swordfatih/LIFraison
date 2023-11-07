@@ -18,6 +18,12 @@ public class DeliveryRequest {
      */
     private Intersection destination;
 
+    public DeliveryRequest(Intersection destination) {
+        this.timeWindowStart = null;
+        this.timeWindowEnd = null;
+        this.destination = destination;
+    }
+
     public DeliveryRequest(LocalTime timeWindowStart, LocalTime timeWindowEnd, Intersection destination) {
         this.timeWindowStart = timeWindowStart;
         this.timeWindowEnd = timeWindowEnd;

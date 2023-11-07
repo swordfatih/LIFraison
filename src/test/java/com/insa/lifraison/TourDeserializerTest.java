@@ -71,8 +71,6 @@ public class TourDeserializerTest {
         }
         cityIntersections.push(deliveryList2.get(2));
 
-        Document testDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        Element tourXML = TourSerializer.getInstance().createToursElt(toursSources,testDocument);
         File XMLFile = new File("./src/test/java/com/insa/lifraison/TourTests.xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
@@ -81,8 +79,32 @@ public class TourDeserializerTest {
         Element root = document.getDocumentElement();
         ArrayList<Tour> tourFromXML = new ArrayList<>();
         TourDeserializer.buildFromDOMXML(root, tourFromXML, cityIntersections);
+        assertEquals(tourFromXML, toursSources);
+    }
+    @Test
+    void testTourDeserializerEmptyTime() throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
 
 
+        ArrayList<Tour> toursSources = new ArrayList<>();
+
+        LinkedList<Intersection> deliveryList1 = new LinkedList<>();
+        deliveryList1.add(new Intersection("1",45,45));
+        deliveryList1.add(new Intersection("2",53,50));
+        deliveryList1.add(new Intersection("3",20,10));
+        Tour sourceTour1 = new Tour();
+        for(Intersection inter : deliveryList1){
+            sourceTour1.addDelivery(new DeliveryRequest(inter));
+        }
+        toursSources.add(sourceTour1);
+
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/TourTestNoTime.xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+
+        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+        Document document = docBuilder.parse(XMLFile);
+        Element root = document.getDocumentElement();
+        ArrayList<Tour> tourFromXML = new ArrayList<>();
+        TourDeserializer.buildFromDOMXML(root, tourFromXML, deliveryList1);
         assertEquals(tourFromXML, toursSources);
     }
 }

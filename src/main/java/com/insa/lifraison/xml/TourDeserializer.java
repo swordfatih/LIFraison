@@ -64,8 +64,16 @@ public class TourDeserializer {
     }
 
     private static DeliveryRequest createDeliveryRequest(Element deliveryNode, LinkedList<Intersection> map_intersections) {
-        LocalTime timeWindowStart = LocalTime.parse(deliveryNode.getAttribute("time_window_start"));
-        LocalTime timeWindowEnd = LocalTime.parse(deliveryNode.getAttribute("time_window_end"));
+        String timeWindowStartAttribute = deliveryNode.getAttribute("time_window_start");
+        LocalTime timeWindowStart = null;
+        if(!timeWindowStartAttribute.isEmpty()){
+            timeWindowStart = LocalTime.parse(timeWindowStartAttribute);
+        }
+        String timeWindowEndAttribute = deliveryNode.getAttribute("time_window_start");
+        LocalTime timeWindowEnd = null;
+        if(!timeWindowEndAttribute.isEmpty()){
+            timeWindowEnd = LocalTime.parse(timeWindowEndAttribute);
+        }
         String intersection_id = deliveryNode.getAttribute("destination");
         Optional<Intersection> intersectionOption = map_intersections.stream().filter(x -> x.id.equals(intersection_id)).findAny();
         Intersection destination = null;
