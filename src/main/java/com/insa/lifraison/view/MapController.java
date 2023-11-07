@@ -6,22 +6,14 @@ import com.insa.lifraison.observer.Observer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-
-import java.io.File;
-import java.util.LinkedList;
-
-import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class MapController extends ViewController implements Observer {
@@ -42,8 +34,23 @@ public class MapController extends ViewController implements Observer {
     @FXML
     private VBox informations;
 
+    @FXML
+    private Button undoButton;
+
+    @FXML
+    private Button redoButton;
+
     public void initialize() {
-        label.setText("Map page");
+        KeyCombination kcUndo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        KeyCombination kcRedo = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
+
+        // on Scene loaded event
+        undoButton.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+            if (oldScene == null && newScene != null) {
+                newScene.getAccelerators().put(kcUndo, () -> this.controller.undo());
+                newScene.getAccelerators().put(kcRedo, () -> this.controller.redo());
+            }
+        });
     }
 
     @FXML
