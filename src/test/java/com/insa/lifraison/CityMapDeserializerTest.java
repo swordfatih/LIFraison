@@ -2,6 +2,7 @@ package com.insa.lifraison;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Intersection;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import com.insa.lifraison.xml.CityMapDeserializer;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Dry test class
@@ -57,5 +59,62 @@ public class CityMapDeserializerTest {
         }
 
         assertEquals(targetMap, mapFromXML);
+    }
+
+    @Test
+    void testXMLDeserializerInvalidWarehouse() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+        CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapInvalidWarehouse.xml");
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = docBuilder.parse(XMLFile);
+        Element root = document.getDocumentElement();
+        try {
+            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+            fail("Expected exception due to invalid warehouse");
+        } catch(ExceptionXML e){
+            assertEquals(e.getMessage(),"Unknown warehouse address: '4'.");
+        }
+    }
+    @Test
+    void testXMLDeserializerInvalidSegmentIntersection() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+        CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapInvalidSegmentInter.xml");
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = docBuilder.parse(XMLFile);
+        Element root = document.getDocumentElement();
+        try {
+            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+            fail("Expected exception due to invalid segment");
+        } catch(ExceptionXML e){
+            assertEquals(e.getMessage(),"Unknown intersection destination: '4'.");
+        }
+    }
+    @Test
+    void testXMLDeserializerNegativeSegmentLength() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+        CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapNegativeLength.xml");
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = docBuilder.parse(XMLFile);
+        Element root = document.getDocumentElement();
+        try {
+            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+            fail("Expected exception due to negative length");
+        } catch(ExceptionXML e){
+            assertEquals(e.getMessage(),"Length cannot be negative: '-3.0'.");
+        }
+    }
+    @Test
+    void testXMLDeserializerInvalidSegmentLength() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+        CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapInvalidLength.xml");
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = docBuilder.parse(XMLFile);
+        Element root = document.getDocumentElement();
+        try {
+            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+            fail("Expected exception due to invalid length");
+        } catch(ExceptionXML e){
+            assertEquals(e.getMessage(),"Length is not a number: 'three'.");
+        }
     }
 }
