@@ -243,15 +243,15 @@ public class CityMap extends Observable {
         HashMap<String, Integer> idMap = new HashMap<>();
         int length = intersections.size();
         for(Intersection inter : intersections) {
-            idMap.put(inter.getId(), idMap.size());
+            idMap.put(inter.id, idMap.size());
         }
         ArrayList<ArrayList<Edge>> adjList = new ArrayList<>();
         for(int i = 0; i < length; i++) {
             adjList.add(new ArrayList<>());
         }
         for(Segment segment : segments) {
-            int originIndex = idMap.get(segment.getOrigin().getId());
-            int destinationIndex = idMap.get(segment.getDestination().getId());
+            int originIndex = idMap.get(segment.getOrigin().id);
+            int destinationIndex = idMap.get(segment.getDestination().id);
             adjList.get(originIndex)
                     .add(new Edge(originIndex, destinationIndex, segment.getLength(), segment));
         }
@@ -272,13 +272,13 @@ public class CityMap extends Observable {
         for(DeliveryRequest deliveryRequest : deliveries) {
             ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(length, Double.MAX_VALUE));
             ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(length, null));
-            int index = idMap.get(deliveryRequest.getDestination().getId());
+            int index = idMap.get(deliveryRequest.getDestination().id);
             distances.set(index, 0.0);
             Dijkstra(index, adjList, distances, parents);
             adjMatrix.add(new ArrayList<>());
             for (DeliveryRequest delivery : deliveries) {
                 adjMatrix.get(adjMatrix.size() - 1)
-                        .add(distances.get(idMap.get(delivery.getDestination().getId())));
+                        .add(distances.get(idMap.get(delivery.getDestination().id)));
             }
             parentSegments.add(parents);
             graphIndices.add(index);

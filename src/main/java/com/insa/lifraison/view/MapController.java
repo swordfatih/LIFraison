@@ -135,7 +135,7 @@ public class MapController extends ViewController implements Observer {
         double xCoordinate = scale * intersection.longitude + longitudeOffset;
         Circle deliveryPoint = new Circle(xCoordinate,yCoordinate,5);
         deliveryPoint.setFill(color);
-        deliveryPoint.setId(intersection.getId());
+        deliveryPoint.setId(intersection.id);
         pane.getChildren().add(deliveryPoint);
     }
 

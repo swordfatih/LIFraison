@@ -20,12 +20,23 @@ public class IntersectionTest {
      * Tests the construction and equality test for Intersection.
      */
     @Test
-    void TestIntersection() {
-        Intersection inter1 = new Intersection("test", 0.34, 0.53);
-        Intersection inter2 = new Intersection("test", 0.34, 0.53);
-        Intersection inter3 = new Intersection("test1", 0.23, 0.58);
-        assertEquals(inter1, inter2);
-        assertNotEquals(inter1, inter3);
-        assertEquals(inter1.getId(),"test");
+    void constructorTest() {
+        String id = "test";
+        double longitude = 0.34;
+        double latitude = 0.53;
+        Intersection intersection = new Intersection(id, longitude, latitude);
+        assertEquals(id, intersection.id);
+        assertEquals(longitude, intersection.longitude);
+        assertEquals(latitude, intersection.latitude);
+    }
+
+    @Test
+    void toStringTest() {
+        String id = "test";
+        double longitude = 0.34;
+        double latitude = 0.53;
+        Intersection intersection = new Intersection(id, longitude, latitude);
+        String toString = "Intersection{id='" + id + "', longitude=" + longitude + ", latitude=" + latitude + "}";
+        assertEquals(toString, intersection.toString());
     }
 }

@@ -11,7 +11,7 @@ public class Intersection {
     /**
      * Unique identifier of the intersection
      */
-    protected final String id;
+    public final String id;
     public final double longitude;
     public final double latitude;
 
@@ -21,22 +21,12 @@ public class Intersection {
         this.latitude = latitude;
     }
 
-    public double getLatitude(){return latitude;}
-    public double getLongitude(){return longitude;}
-    public String getId() {
-        return id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Intersection that = (Intersection) o;
         return Double.compare(longitude, that.longitude) == 0 && Double.compare(latitude, that.latitude) == 0 && Objects.equals(id, that.id);
-    }
-
-    public LinkedList<Double> getCoord(){
-        return new LinkedList<>(List.of(this.latitude, this.longitude));
     }
 
     @Override
