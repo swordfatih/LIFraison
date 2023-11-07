@@ -1,3 +1,12 @@
 .label {
     -fx-text-fill: blue;
 }
+
+.menu {
+    -fx-background-color: #AAAAAA20;
+
+}
+
+.menuButton {
+    -fx-max-width: 1000px;
+}
