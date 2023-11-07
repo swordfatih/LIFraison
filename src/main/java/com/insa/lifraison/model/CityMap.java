@@ -305,7 +305,7 @@ public class CityMap extends Observable {
                 pathLength += parentEdge.getLength();
             }
 
-            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().getDeparture());
+            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().departure);
             int hourDuration = (int)Math.floor(pathLength / Constants.courierSpeed);
             int minutesDuration = (int)Math.ceil(60.0 * (pathLength - Constants.courierSpeed*hourDuration) / Constants.courierSpeed);
             LocalTime endTime = startTime.plusHours(hourDuration).plusMinutes(minutesDuration);

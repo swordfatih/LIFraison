@@ -98,7 +98,7 @@ public class MapController extends ViewController implements Observer {
         this.mapForeground.getChildren().clear();
         for(Tour tour : map.getTours()) {
             for(TourStep tourStep : tour.getTourSteps()) {
-                for(Segment segment : tourStep.getSegments()) {
+                for(Segment segment : tourStep.segments) {
                     addSegmentLine(this.mapForeground, segment, Color.BLUE);
                 }
             }

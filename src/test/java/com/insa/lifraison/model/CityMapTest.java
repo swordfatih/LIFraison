@@ -47,10 +47,10 @@ public class CityMapTest {
         assertEquals(tourSegmentList, tour.getTourSteps());
         assertEquals(tourSegmentList.size(), 2);
 
-        assertEquals(tourSegmentList.get(0).getSegments().size(), 1);
-        assertEquals(tourSegmentList.get(0).getSegments().getFirst(), segment1);
+        assertEquals(tourSegmentList.get(0).segments.size(), 1);
+        assertEquals(tourSegmentList.get(0).segments.getFirst(), segment1);
 
-        assertEquals(tourSegmentList.get(1).getSegments().size(), 1);
-        assertEquals(tourSegmentList.get(1).getSegments().getFirst(), segment2);
+        assertEquals(tourSegmentList.get(1).segments.size(), 1);
+        assertEquals(tourSegmentList.get(1).segments.getFirst(), segment2);
     }
 }
