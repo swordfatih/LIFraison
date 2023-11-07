@@ -2,12 +2,15 @@
 
 .background {
     -fx-background: #FF8170;
+    -fx-background-image: url("../assets/background.png");
+    -fx-background-size: 100%;
 }
 
 .box {
-    -fx-border: black 1px;
     -fx-background-color: white;
     -fx-padding: 64px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 40, 0, 0, 0);
+    -fx-spacing: 20px;
 }
 
 .buttonLoad {
@@ -16,9 +19,18 @@
     -fx-border-width: 2px;
     -fx-border-radius: 100px;
     -fx-background-radius: 100px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 0, 4, 4, 0);
+    -fx-max-width: 1000px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
 }
 
-#label {
+.buttonLoad:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 2, 0, 0, 4);
+    -fx-scale-y: 1.1;
+}
+
+.label {
     -fx-font-size: 32px;
+    -fx-font-weight: 800;
+    transition: -fx-background-color 0.5s ease, -fx-scale-x 0.5s ease, -fx-scale-y 0.5s ease;
 }
