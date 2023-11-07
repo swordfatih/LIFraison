@@ -90,7 +90,7 @@ public class MapController extends ViewController implements Observer {
         // adding the warehouse
         Warehouse warehouse = this.map.getWarehouse();
         if(warehouse != null) {
-            addIntersectionPoint(this.mapBackground, warehouse.getIntersection(), Color.RED);
+            addIntersectionPoint(this.mapBackground, warehouse.intersection, Color.RED);
         }
     }
 

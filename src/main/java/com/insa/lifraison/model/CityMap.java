@@ -263,7 +263,7 @@ public class CityMap extends Observable {
             return tour.getTourSteps();
         }
 
-        deliveries.add(0, new DeliveryRequest(warehouse.getIntersection()));
+        deliveries.add(0, new DeliveryRequest(warehouse.intersection));
 
         ArrayList<ArrayList<Double>> adjMatrix = new ArrayList<>();
         ArrayList<ArrayList<Edge>> parentSegments = new ArrayList<>();
