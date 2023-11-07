@@ -27,11 +27,11 @@
                 <GridPane.rowIndex>1</GridPane.rowIndex>
                 <GridPane.columnIndex>1</GridPane.columnIndex>
             </Button>
-            <Button text="Undo" onAction="#undo">
+            <Button text="Undo" fx:id="undoButton" onAction="#undo">
                 <GridPane.rowIndex>2</GridPane.rowIndex>
                 <GridPane.columnIndex>0</GridPane.columnIndex>
             </Button>
-            <Button text="Redo" onAction="#redo">
+            <Button text="Redo" fx:id="redoButton" onAction="#redo">
                 <GridPane.rowIndex>2</GridPane.rowIndex>
                 <GridPane.columnIndex>1</GridPane.columnIndex>
             </Button>

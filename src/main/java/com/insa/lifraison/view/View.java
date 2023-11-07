@@ -28,8 +28,6 @@ public class View {
     public void loadScene(String name, String scenePath, String stylePath) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(scenePath));
 
-        System.out.println(getClass().getResource(scenePath));
-
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);

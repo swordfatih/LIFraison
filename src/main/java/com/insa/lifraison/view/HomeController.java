@@ -8,12 +8,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 
 public class HomeController extends ViewController {
-    @FXML
-    private Label label;
-
-    public void initialize() {
-        label.setText("Home page");
-    }
+    public void initialize() {}
 
     @FXML
     private void loadMap(ActionEvent event) {
