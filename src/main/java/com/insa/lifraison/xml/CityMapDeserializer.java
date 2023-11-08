@@ -60,7 +60,7 @@ public class CityMapDeserializer {
         LinkedList<Intersection> intersections = new LinkedList<>();
         for (int i = 0; i < IntersectionList.getLength(); i++) {
             Intersection currentIntersection = createIntersection((Element) IntersectionList.item(i));
-            intersectionMap.put(currentIntersection.getId(), currentIntersection);
+            intersectionMap.put(currentIntersection.id, currentIntersection);
             intersections.add(currentIntersection);
         }
         NodeList segmentNodeList = rootDOMNode.getElementsByTagName("segment");

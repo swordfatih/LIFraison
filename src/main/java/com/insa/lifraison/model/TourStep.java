@@ -8,9 +8,9 @@ import java.util.LinkedList;
  * as well as the departure and arrival time.
  */
 public class TourStep {
-    private final LinkedList<Segment> segments;
-    private final LocalTime departure;
-    private final LocalTime arrival;
+    public final LinkedList<Segment> segments;
+    public final LocalTime departure;
+    public final LocalTime arrival;
 
     public TourStep(LinkedList<Segment> segments, LocalTime departure, LocalTime arrival) {
         this.segments = segments;
@@ -18,15 +18,12 @@ public class TourStep {
         this.arrival = arrival;
     }
 
-    public LinkedList<Segment> getSegments() {
-        return segments;
+    public double getLength() {
+        double length = 0;
+        for(Segment segment : this.segments) {
+            length += segment.length;
+        }
+        return length;
     }
 
-    public LocalTime getDeparture() {
-        return departure;
-    }
-
-    public LocalTime getArrival() {
-        return arrival;
-    }
 }

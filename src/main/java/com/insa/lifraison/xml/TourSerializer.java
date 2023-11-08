@@ -1,10 +1,7 @@
 package com.insa.lifraison.xml;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,7 +48,7 @@ public class TourSerializer {// Singleton
         xformer.transform(source, result);
     }
 
-    public Element createToursElt(LinkedList<Tour> tours, Document doc) {
+    public Element createToursElt(Collection<Tour> tours, Document doc) {
         Element root = doc.createElement("tours_map");
         for(Tour t : tours){
             Element tourNode = doc.createElement("tour");
@@ -72,7 +69,7 @@ public class TourSerializer {// Singleton
 
     private Element buildDeliveryNode(DeliveryRequest delRequest, Document doc) {
         Element deliveryNode = doc.createElement("delivery");
-        createAttribute(deliveryNode,"destination",delRequest.getDestination().getId(),doc);
+        createAttribute(deliveryNode,"destination",delRequest.getDestination().id,doc);
         createAttribute(deliveryNode,"time_window_start",delRequest.getTimeWindowStart().toString(),doc);
         createAttribute(deliveryNode,"time_window_end",delRequest.getTimeWindowEnd().toString(),doc);
         return deliveryNode;

@@ -85,7 +85,7 @@ public class MapPaneDrawer extends Pane implements Observer {
         Warehouse warehouse = this.map.getWarehouse();
         gcBG.setFill(Color.RED);
         if(warehouse != null) {
-            drawIntersectionPoint(gcBG, warehouse.getIntersection());
+            drawIntersectionPoint(gcBG, warehouse.intersection);
         }
     }
 
@@ -106,7 +106,7 @@ public class MapPaneDrawer extends Pane implements Observer {
             gcFG.setFill(colorValue);
             gcFG.setStroke(colorValue);
             for(TourStep tourStep : tour.getTourSteps()) {
-                for(Segment segment : tourStep.getSegments()) {
+                for(Segment segment : tourStep.segments) {
                     drawSegmentLine(gcFG, segment);
                 }
             }

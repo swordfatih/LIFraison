@@ -65,7 +65,7 @@ public class TourDeserializer {
         LocalTime timeWindowStart = LocalTime.parse(deliveryNode.getAttribute("time_window_start"));
         LocalTime timeWindowEnd = LocalTime.parse(deliveryNode.getAttribute("time_window_end"));
         String intersection_id = deliveryNode.getAttribute("destination");
-        Optional<Intersection> intersectionOption = map_intersections.stream().filter(x -> x.getId().equals(intersection_id)).findAny();
+        Optional<Intersection> intersectionOption = map_intersections.stream().filter(x -> x.id.equals(intersection_id)).findAny();
         Intersection destination = null;
         if (intersectionOption.isPresent()) {
             destination = intersectionOption.get();

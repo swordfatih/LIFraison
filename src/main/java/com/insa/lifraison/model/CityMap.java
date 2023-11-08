@@ -95,9 +95,10 @@ public class CityMap extends Observable {
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
-    public void removeTour(Tour tour) {
+    public boolean removeTour(Tour tour) {
         boolean hasChanged = this.tours.remove(tour);
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        return hasChanged;
     }
     public void moveDelivery(DeliveryRequest delivery, Intersection newIntersection){
         delivery.setDestination(newIntersection);
@@ -108,17 +109,11 @@ public class CityMap extends Observable {
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
-    public void removeTours(Collection<Tour> tours) {
+    public boolean removeTours(Collection<Tour> tours) {
         boolean hasChanged = this.tours.removeAll(tours);
         if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        return hasChanged;
     }
-
-    /**
-     * Withdraw the delivery at this position if it exists
-     * @param i : the position where the delivery can be
-     * @return true if a delivery was at this position and was successfully remove
-     */
-    public boolean removeDeliveryAt(Intersection i){ return false; }
 
     /**
      * Withdraw the delivery  if it exists
@@ -165,7 +160,7 @@ public class CityMap extends Observable {
 
     /**
      * Set the warehouse of the CityMap.
-     * @param warehouse
+     * @param warehouse warehouse to be set as the warehouse of the CityMap
      */
     public void setWarehouse(Warehouse warehouse){
         this.warehouse = warehouse;
@@ -193,7 +188,12 @@ public class CityMap extends Observable {
         CityMap otherMap = (CityMap) o;
         boolean equalIntersections = intersections.containsAll(otherMap.intersections) && otherMap.intersections.containsAll(intersections);
         boolean equalSegments = segments.containsAll(otherMap.segments) && otherMap.segments.containsAll(segments);
-        boolean equalWarehouses = warehouse.equals(otherMap.warehouse);
+        boolean equalWarehouses;
+        if(warehouse != null) {
+            equalWarehouses = warehouse.equals(otherMap.warehouse);
+        } else {
+            equalWarehouses = otherMap.warehouse == null;
+        }
         return equalWarehouses && equalIntersections && equalSegments;
     }
 
@@ -238,17 +238,17 @@ public class CityMap extends Observable {
         HashMap<String, Integer> idMap = new HashMap<>();
         int length = intersections.size();
         for(Intersection inter : intersections) {
-            idMap.put(inter.getId(), idMap.size());
+            idMap.put(inter.id, idMap.size());
         }
         ArrayList<ArrayList<Edge>> adjList = new ArrayList<>();
         for(int i = 0; i < length; i++) {
             adjList.add(new ArrayList<>());
         }
         for(Segment segment : segments) {
-            int originIndex = idMap.get(segment.getOrigin().getId());
-            int destinationIndex = idMap.get(segment.getDestination().getId());
+            int originIndex = idMap.get(segment.origin.id);
+            int destinationIndex = idMap.get(segment.destination.id);
             adjList.get(originIndex)
-                    .add(new Edge(originIndex, destinationIndex, segment.getLength(), segment));
+                    .add(new Edge(originIndex, destinationIndex, segment.length, segment));
         }
 
         ArrayList<DeliveryRequest> deliveries = tour.getDeliveries();
@@ -258,7 +258,7 @@ public class CityMap extends Observable {
             return tour.getTourSteps();
         }
 
-        deliveries.add(0, new DeliveryRequest(warehouse.getIntersection()));
+        deliveries.add(0, new DeliveryRequest(warehouse.intersection));
 
         ArrayList<ArrayList<Double>> adjMatrix = new ArrayList<>();
         ArrayList<ArrayList<Edge>> parentSegments = new ArrayList<>();
@@ -267,13 +267,13 @@ public class CityMap extends Observable {
         for(DeliveryRequest deliveryRequest : deliveries) {
             ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(length, Double.MAX_VALUE));
             ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(length, null));
-            int index = idMap.get(deliveryRequest.getDestination().getId());
+            int index = idMap.get(deliveryRequest.getDestination().id);
             distances.set(index, 0.0);
             Dijkstra(index, adjList, distances, parents);
             adjMatrix.add(new ArrayList<>());
             for (DeliveryRequest delivery : deliveries) {
                 adjMatrix.get(adjMatrix.size() - 1)
-                        .add(distances.get(idMap.get(delivery.getDestination().getId())));
+                        .add(distances.get(idMap.get(delivery.getDestination().id)));
             }
             parentSegments.add(parents);
             graphIndices.add(index);
@@ -300,7 +300,7 @@ public class CityMap extends Observable {
                 pathLength += parentEdge.getLength();
             }
 
-            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().getDeparture());
+            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().departure);
             int hourDuration = (int)Math.floor(pathLength / Constants.courierSpeed);
             int minutesDuration = (int)Math.ceil(60.0 * (pathLength - Constants.courierSpeed*hourDuration) / Constants.courierSpeed);
             LocalTime endTime = startTime.plusHours(hourDuration).plusMinutes(minutesDuration);

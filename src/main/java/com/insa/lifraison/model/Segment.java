@@ -10,8 +10,8 @@ import java.util.Objects;
 public class Segment {
     public final Intersection origin;
     public final Intersection destination;
-    private final double length;
-    private final String name;
+    public final double length;
+    public final String name;
 
     public Segment(Intersection origin, Intersection destination, double length, String name) {
         this.origin = origin;
@@ -26,22 +26,6 @@ public class Segment {
         if (o == null || getClass() != o.getClass()) return false;
         Segment segment = (Segment) o;
         return Double.compare(length, segment.length) == 0 && Objects.equals(origin, segment.origin) && Objects.equals(destination, segment.destination) && Objects.equals(name, segment.name);
-    }
-
-    public Intersection getOrigin() {
-        return origin;
-    }
-
-    public Intersection getDestination() {
-        return destination;
-    }
-
-    public double getLength() {
-        return length;
-    }
-
-    public String getName() {
-        return name;
     }
 
     @Override
