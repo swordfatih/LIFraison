@@ -95,9 +95,10 @@ public class CityMap extends Observable {
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
-    public void removeTour(Tour tour) {
+    public boolean removeTour(Tour tour) {
         boolean hasChanged = this.tours.remove(tour);
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        return hasChanged;
     }
     public void moveDelivery(DeliveryRequest delivery, Intersection newIntersection){
         delivery.setDestination(newIntersection);
@@ -108,17 +109,11 @@ public class CityMap extends Observable {
         if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
-    public void removeTours(Collection<Tour> tours) {
+    public boolean removeTours(Collection<Tour> tours) {
         boolean hasChanged = this.tours.removeAll(tours);
         if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        return hasChanged;
     }
-
-    /**
-     * Withdraw the delivery at this position if it exists
-     * @param i : the position where the delivery can be
-     * @return true if a delivery was at this position and was successfully remove
-     */
-    public boolean removeDeliveryAt(Intersection i){ return false; }
 
     /**
      * Withdraw the delivery  if it exists

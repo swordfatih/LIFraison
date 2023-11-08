@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DeliveryRequestTest {
 
@@ -15,6 +16,8 @@ public class DeliveryRequestTest {
         Intersection intersection = new Intersection("test", 0.4, 0.6);
         DeliveryRequest deliveryRequest = new DeliveryRequest(intersection);
         assertEquals(intersection, deliveryRequest.getDestination());
+        assertNull(deliveryRequest.getTimeWindowStart());
+        assertNull(deliveryRequest.getTimeWindowEnd());
     }
 
     @Test
