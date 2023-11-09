@@ -93,4 +93,10 @@ public class LoadedDeliveryState implements State{
             c.setCurrentState(c.loadedMapState);
         }
     }
+
+    @Override
+    public void changeMap(Controller c, View view){
+        view.<MapController>getController("map").informations.displayDeleteMapInformations();
+        c.setCurrentState(c.changeMapState);
+    }
 }

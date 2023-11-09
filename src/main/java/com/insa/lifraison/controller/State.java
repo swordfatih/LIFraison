@@ -8,6 +8,8 @@ import com.insa.lifraison.view.View;
 public interface State {
     public default void loadMap(Controller c, CityMap m, View view, ListOfCommands l){};
 
+    public default void changeMap(Controller c, View view){};
+
     public default void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l){};
 
     public default void addDelivery(Controller c, View view){};
@@ -17,6 +19,8 @@ public interface State {
     public default void rightClick(Controller c, CityMap m, View view, ListOfCommands l){};
 
     public default void confirm(Controller c, CityMap m, View view, ListOfCommands l){};
+
+    public default void cancel(Controller c, View view){};
 
     public default void deleteDelivery(Controller c, View view){};
 

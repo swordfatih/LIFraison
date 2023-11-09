@@ -21,6 +21,7 @@ public class Controller {
     protected final DeleteDeliveryState1 deleteDeliveryState1 = new DeleteDeliveryState1();
 
     protected final DeleteDeliveryState2 deleteDeliveryState2 = new DeleteDeliveryState2();
+    protected final ChangeMapState changeMapState = new ChangeMapState();
 
     /**
      * Create the controller of the application
@@ -58,6 +59,8 @@ public class Controller {
         currentState.loadMap(this, map, view, listOfCommands);
     };
 
+    public void changeMap(){currentState.changeMap(this, view);};
+
     /**
      * Method called after a click on the "load Deliveries" button
      */
@@ -93,6 +96,8 @@ public class Controller {
     public void confirm(){
         currentState.confirm(this, map, view, listOfCommands);
     };
+
+    public void cancel(){currentState.cancel(this, view);};
 
     /**
      * Method called after a click on the "Delete Delivery" button

@@ -22,6 +22,16 @@ public class MapBoxInformation extends VBox{
         controller.confirm();
     }
 
+    private void loadMap(ActionEvent event) {
+        event.consume();
+        controller.loadMap();
+    }
+
+    private void cancelAction(ActionEvent event){
+        event.consume();
+        controller.cancel();
+    }
+
     public void displayAddDeliveryInformations() {
         this.getChildren().clear();
         Label info = new Label("Click anywhere on the map to create a new delivery");
@@ -36,6 +46,16 @@ public class MapBoxInformation extends VBox{
         Button confirm = new Button("confirm");
         confirm.setOnAction(this::confirmAction);
         this.getChildren().addAll(info, confirm);
+    }
+
+    public void displayDeleteMapInformations(){
+        clearInformations();
+        Label info = new Label("Some deliveries are already on the map. \nBy doing this action you will delete all deliveries. \nDo you still want to continue ?");
+        Button confirm = new Button("confirm");
+        confirm.setOnAction(this::loadMap);
+        Button cancel = new Button("cancel");
+        cancel.setOnAction(this::cancelAction);
+        this.getChildren().addAll(info, confirm, cancel);
     }
 
     public void clearInformations(){

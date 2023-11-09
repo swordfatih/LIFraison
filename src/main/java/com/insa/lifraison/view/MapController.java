@@ -72,6 +72,7 @@ public class MapController extends ViewController {
     private void loadMap(ActionEvent event) {
         event.consume();
         this.controller.loadMap();
+        this.controller.changeMap();
     }
 
     public void setMap(CityMap map) {
