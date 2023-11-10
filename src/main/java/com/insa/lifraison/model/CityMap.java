@@ -60,7 +60,6 @@ public class CityMap extends Observable {
         Tour tour = new Tour();
         tours.add(tour);
         this.selectedDelivery = null;
-        this.notifyObservers(NotifType.FULL_UPDATE);
     }
 
     /**

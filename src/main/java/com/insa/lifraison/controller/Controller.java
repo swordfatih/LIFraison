@@ -1,7 +1,6 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
@@ -82,8 +81,8 @@ public class Controller {
      * Method called after a left Click
      * @param i The nearest intersection of the click
      */
-    public void leftClick(Intersection i, DeliveryRequest d){
-        currentState.leftClick(this, map, i, d, listOfCommands);
+    public void leftClick(Intersection i){
+        currentState.leftClick(this, map, i, listOfCommands);
     };
 
     /**

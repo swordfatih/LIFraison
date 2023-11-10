@@ -1,7 +1,6 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
@@ -9,14 +8,16 @@ import com.insa.lifraison.view.View;
 public class DeleteDeliveryState2 implements State {
     /**
      * click on the Intersection you want to delete
+     *
      * @param c The controller
      * @param m the cityMap
      * @param i the Intersection
      */
+    /**
     @Override
-    public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, ListOfCommands l){
+    public void leftClick(Controller c, CityMap m, Intersection i, ListOfCommands l){
         m.selectDelivery(d);
-    }
+    }**/
 
     /**
      * Cancel the action

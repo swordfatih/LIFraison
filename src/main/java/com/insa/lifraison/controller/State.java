@@ -1,7 +1,6 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.View;
 import javafx.scene.layout.VBox;
@@ -15,7 +14,7 @@ public interface State {
 
     public default void addDelivery(Controller c, View view){};
 
-    public default void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, ListOfCommands l){};
+    public default void leftClick(Controller c, CityMap m, Intersection i, ListOfCommands l){};
 
     public default void rightClick(Controller c, CityMap m, View view, ListOfCommands l){};
 
