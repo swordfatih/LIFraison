@@ -1,8 +1,9 @@
 package com.insa.lifraison.model;
 
-import com.insa.lifraison.observer.Observable;
-
-import java.util.*;
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Object that stores all the deliveries for a courier.
@@ -31,8 +32,7 @@ public class Tour {
     public boolean removeDelivery(DeliveryRequest deliveryRequest) {
         return deliveries.remove(deliveryRequest);
     }
-
-    public ArrayList<DeliveryRequest> getDeliveries() {
+    public ArrayList<DeliveryRequest> getDeliveries(){
         return deliveries;
     }
 

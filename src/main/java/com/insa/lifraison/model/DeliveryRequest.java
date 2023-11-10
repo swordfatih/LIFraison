@@ -13,20 +13,20 @@ public class DeliveryRequest {
     private LocalTime timeWindowStart;
     private LocalTime timeWindowEnd;
 
-    private boolean isAdded;
-
     /**
      * Point to which this delivery must be made
      */
     private Intersection destination;
 
-    public DeliveryRequest(LocalTime timeWindowStart, LocalTime timeWindowEnd, Intersection destination) {
-        this.timeWindowStart = timeWindowStart;
-        this.timeWindowEnd = timeWindowEnd;
+    public DeliveryRequest(Intersection destination) {
+        this.timeWindowStart = null;
+        this.timeWindowEnd = null;
         this.destination = destination;
     }
 
-    public DeliveryRequest(Intersection destination) {
+    public DeliveryRequest(LocalTime timeWindowStart, LocalTime timeWindowEnd, Intersection destination) {
+        this.timeWindowStart = timeWindowStart;
+        this.timeWindowEnd = timeWindowEnd;
         this.destination = destination;
     }
 

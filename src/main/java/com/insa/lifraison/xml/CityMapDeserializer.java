@@ -84,13 +84,31 @@ public class CityMapDeserializer {
         String origin = elt.getAttribute("origin");
         String destination = elt.getAttribute("destination");
         String name = elt.getAttribute("name");
-        double length = Double.parseDouble(elt.getAttribute("length"));
-        return new Segment(intersections.get(origin), intersections.get(destination),length,name);
+        String lengthString = elt.getAttribute("length");
+        try {
+            double length = Double.parseDouble(lengthString);
+            if (length < 0.0) {
+                throw new ExceptionXML("Length cannot be negative: '" + length + "'.");
+            }
+            if (!intersections.containsKey(origin)) {
+                throw new ExceptionXML("Unknown intersection origin: '" + origin + "'.");
+            }
+            if (!intersections.containsKey(destination)) {
+                throw new ExceptionXML("Unknown intersection destination: '" + destination + "'.");
+            }
+            return new Segment(intersections.get(origin), intersections.get(destination), length, name);
+        }
+        catch(NumberFormatException e){
+            throw new ExceptionXML("Length is not a number: '" + lengthString + "'.");
+        }
     }
 
     private static Warehouse createWarehouse(Element elt, HashMap<String, Intersection> intersections) throws ExceptionXML{
        String id = elt.getAttribute("address");
-       return new Warehouse(intersections.get(id));
+       if(intersections.containsKey(id)) {
+           return new Warehouse(intersections.get(id));
+       }
+       throw new ExceptionXML("Unknown warehouse address: '" + id + "'.");
     }
 
 }

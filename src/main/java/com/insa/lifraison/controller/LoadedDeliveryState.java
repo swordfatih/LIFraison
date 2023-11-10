@@ -60,7 +60,7 @@ public class LoadedDeliveryState implements State{
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
             fileChooser.setInitialDirectory(new File("."));
-            File file = fileChooser.showOpenDialog(view.getStage());
+            File file = fileChooser.showSaveDialog(view.getStage());
 
             System.out.println(file.exists());
             TourSerializer instance = TourSerializer.getInstance();

@@ -12,6 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
+import javafx.scene.control.Alert;
+
 public class InitialState implements State {
     /**
      * load a map from an XML file
@@ -34,7 +36,10 @@ public class InitialState implements State {
 
             view.navigate("map");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
-            System.out.println(e.getMessage());
+            String errorMessage = "Invalid XML:\n" + e.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR,errorMessage);
+            alert.showAndWait();
+            System.out.println(errorMessage);
         }
     }
 

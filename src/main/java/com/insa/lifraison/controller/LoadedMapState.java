@@ -10,6 +10,7 @@ import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.TourDeserializer;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -33,7 +34,10 @@ public class LoadedMapState implements State {
 
             view.navigate("map");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
-            System.out.println(e.getMessage());
+            String errorMessage = "Invalid XML:\n" + e.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR,errorMessage);
+            alert.showAndWait();
+            System.out.println(errorMessage);
         }
     }
 
