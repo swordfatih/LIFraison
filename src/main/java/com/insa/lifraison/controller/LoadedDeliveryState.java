@@ -101,4 +101,9 @@ public class LoadedDeliveryState implements State{
         view.<MapController>getController("map").informations.displayDeleteMapInformations();
         c.setCurrentState(c.changeMapState);
     }
+
+    @Override
+    public void addTour(CityMap m, VBox container, String text, Controller controller, ListOfCommands l) {
+        l.add(new AddTourCommand(m, container, text, controller));
+    }
 }
