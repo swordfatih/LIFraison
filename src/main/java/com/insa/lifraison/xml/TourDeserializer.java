@@ -1,6 +1,7 @@
 package com.insa.lifraison.xml;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -63,23 +64,31 @@ public class TourDeserializer {
         return result;
     }
 
-    private static DeliveryRequest createDeliveryRequest(Element deliveryNode, LinkedList<Intersection> map_intersections) {
+    private static DeliveryRequest createDeliveryRequest(Element deliveryNode, LinkedList<Intersection> map_intersections) throws ExceptionXML {
         String timeWindowStartAttribute = deliveryNode.getAttribute("time_window_start");
         LocalTime timeWindowStart = null;
         if(!timeWindowStartAttribute.isEmpty()){
-            timeWindowStart = LocalTime.parse(timeWindowStartAttribute);
+            try {
+                timeWindowStart = LocalTime.parse(timeWindowStartAttribute);
+            }catch(DateTimeParseException e){
+                throw new ExceptionXML("Invalid start for time window: '" + timeWindowStartAttribute + "'.");
+            }
         }
-        String timeWindowEndAttribute = deliveryNode.getAttribute("time_window_start");
+        String timeWindowEndAttribute = deliveryNode.getAttribute("time_window_end");
         LocalTime timeWindowEnd = null;
         if(!timeWindowEndAttribute.isEmpty()){
-            timeWindowEnd = LocalTime.parse(timeWindowEndAttribute);
+            try {
+                timeWindowEnd = LocalTime.parse(timeWindowEndAttribute);
+            }catch(DateTimeParseException e) {
+                throw new ExceptionXML("Invalid ending for time window: '" + timeWindowEndAttribute + "'.");
+            }
         }
         String intersection_id = deliveryNode.getAttribute("destination");
         Optional<Intersection> intersectionOption = map_intersections.stream().filter(x -> x.id.equals(intersection_id)).findAny();
-        Intersection destination = null;
         if (intersectionOption.isPresent()) {
-            destination = intersectionOption.get();
+            Intersection destination = intersectionOption.get();
+            return new DeliveryRequest(timeWindowStart, timeWindowEnd, destination);
         }
-        return new DeliveryRequest(timeWindowStart, timeWindowEnd, destination);
+        throw new ExceptionXML("The following intersection do not exist in the map: '" + intersection_id + "'.");
     }
 }

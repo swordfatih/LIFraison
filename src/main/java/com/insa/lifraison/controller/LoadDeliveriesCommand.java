@@ -4,6 +4,7 @@ import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourDeserializer;
+import javafx.scene.control.Alert;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,8 +33,10 @@ public class LoadDeliveriesCommand implements Command {
         try {
             tours = TourDeserializer.load(cityMap.getIntersections(), file);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
-            //TODO: handle error properly
-            System.out.println(e.getMessage());
+            String errorMessage = "Invalid XML:\n" + e.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR,errorMessage);
+            alert.showAndWait();
+            System.out.println(errorMessage);
         }
         cityMap.addTours(tours);
     }

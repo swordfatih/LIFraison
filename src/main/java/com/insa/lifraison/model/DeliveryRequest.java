@@ -30,10 +30,6 @@ public class DeliveryRequest {
         this.destination = destination;
     }
 
-    public DeliveryRequest(Intersection destination) {
-        this.destination = destination;
-    }
-
     public LocalTime getTimeWindowStart(){
         return timeWindowStart;
     }

@@ -1,4 +1,4 @@
-package com.insa.lifraison;
+package com.insa.lifraison.xml;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,7 +50,7 @@ public class CityMapDeserializerTest {
         CityMap targetMap = new CityMap(targetIntersections, targetSegments,targetWarehouse);
 
         CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
-        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapTests.xml");
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/xml/resources/CityMapTests.xml");
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
@@ -64,7 +64,7 @@ public class CityMapDeserializerTest {
     @Test
     void testXMLDeserializerInvalidWarehouse() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
         CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
-        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapInvalidWarehouse.xml");
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/xml/resources/CityMapInvalidWarehouse.xml");
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
@@ -78,7 +78,7 @@ public class CityMapDeserializerTest {
     @Test
     void testXMLDeserializerInvalidSegmentIntersection() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
         CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
-        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapInvalidSegmentInter.xml");
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/xml/resources/CityMapInvalidSegmentInter.xml");
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
@@ -92,7 +92,7 @@ public class CityMapDeserializerTest {
     @Test
     void testXMLDeserializerNegativeSegmentLength() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
         CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
-        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapNegativeLength.xml");
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/xml/resources/CityMapNegativeLength.xml");
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
@@ -106,7 +106,7 @@ public class CityMapDeserializerTest {
     @Test
     void testXMLDeserializerInvalidSegmentLength() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
         CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
-        File XMLFile = new File("./src/test/java/com/insa/lifraison/CityMapInvalidLength.xml");
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/xml/resources/CityMapInvalidLength.xml");
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();

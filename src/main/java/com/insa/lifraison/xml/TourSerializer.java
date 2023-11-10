@@ -81,7 +81,7 @@ public class TourSerializer {// Singleton
             startTimeString = startTime.toString();
         }
 
-        LocalTime endTime = delRequest.getTimeWindowStart();
+        LocalTime endTime = delRequest.getTimeWindowEnd();
         String endTimeString = "";
         if(endTime!=null){
             endTimeString = endTime.toString();
