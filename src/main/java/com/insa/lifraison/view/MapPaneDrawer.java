@@ -6,6 +6,7 @@ import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -160,32 +161,36 @@ public class MapPaneDrawer extends Pane implements Observer {
     }
 
     private void onIntersectionClick(MouseEvent event){
-        Circle clicked = (Circle) event.getSource();
-        String idClicked = clicked.getId();
-        /// TODO : a remplacer avec une hashmap <id, intesection> !!!!
-        Intersection intersectionFound = null;
-        for(Intersection intersection:map.getIntersections()){
-            if(idClicked.equals(intersection.id)){
-                intersectionFound = intersection;
-                break;
+        if(event.getButton() == MouseButton.PRIMARY) {
+            Circle clicked = (Circle) event.getSource();
+            String idClicked = clicked.getId();
+            /// TODO : a remplacer avec une hashmap <id, intesection> !!!!
+            Intersection intersectionFound = null;
+            for (Intersection intersection : map.getIntersections()) {
+                if (idClicked.equals(intersection.id)) {
+                    intersectionFound = intersection;
+                    break;
+                }
             }
+            controller.leftClick(intersectionFound);
+            System.out.println("Intersection clicked found " + intersectionFound);
         }
-        controller.leftClick(intersectionFound);
-        System.out.println("Intersection clicked found "+ intersectionFound);
     }
 
     private void onDeliveryClick(MouseEvent event){
-        Circle clicked = (Circle) event.getSource();
-        String idClicked = clicked.getId();
-        Intersection intersectionFound = null;
-        for(Intersection intersection:map.getIntersections()){
-            if(idClicked.equals(intersection.id)){
-                intersectionFound = intersection;
-                break;
+        if(event.getButton() == MouseButton.PRIMARY) {
+            Circle clicked = (Circle) event.getSource();
+            String idClicked = clicked.getId();
+            Intersection intersectionFound = null;
+            for (Intersection intersection : map.getIntersections()) {
+                if (idClicked.equals(intersection.id)) {
+                    intersectionFound = intersection;
+                    break;
+                }
             }
+            controller.leftClick(intersectionFound);
+            System.out.println("delivery clicked found on " + intersectionFound);
         }
-        controller.leftClick(intersectionFound);
-        System.out.println("delivery clicked found on "+ intersectionFound);
     }
 
     /**
@@ -212,12 +217,12 @@ public class MapPaneDrawer extends Pane implements Observer {
      * @param mouseX mouseX
      * @param mouseY mouseY
      * @return the nearest Intersection
-     */
+
     public Intersection findNearestIntersection(double mouseX, double mouseY) {
         double longitudePos = (mouseX - longitudeOffset) / scale;
         double latitudePos = -(mouseY - latitudeOffset) / scale;
         return map.getClosestIntersection(longitudePos, latitudePos);
-    }
+    }*/
 
 
     /**
@@ -225,12 +230,12 @@ public class MapPaneDrawer extends Pane implements Observer {
      * @param mouseX mouseX
      * @param mouseY mouseY
      * @return the nearest DeliveryRequest
-     */
+
     public DeliveryRequest findNearestDelivery(double mouseX, double mouseY) {
         double longitudePos = (mouseX - longitudeOffset) / scale;
         double latitudePos = -(mouseY - latitudeOffset) / scale;
         return map.getClosestDelivery(longitudePos, latitudePos);
-    }
+    }*/
 
     public void setController(Controller controller) {
         this.controller = controller;

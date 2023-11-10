@@ -169,18 +169,18 @@ public class MapController extends ViewController {
      * Give the intersection clicked by the user to the controller
      * @param event mouseListener on the map
      */
-    /*
+
     public void mapClick(MouseEvent event){
         // left click
-        if(event.getButton() == MouseButton.PRIMARY){
-            Intersection intersection = mapDrawer.findNearestIntersection(event.getX(), event.getY());
+        /*if(event.getButton() == MouseButton.PRIMARY){
+            /*Intersection intersection = mapDrawer.findNearestIntersection(event.getX(), event.getY());
             DeliveryRequest delivery = mapDrawer.findNearestDelivery(event.getX(), event.getY());
             this.controller.leftClick(intersection);
 
-        } else if(event.getButton() == MouseButton.SECONDARY){
+        } else*/ if(event.getButton() == MouseButton.SECONDARY){
             this.controller.rightClick();
         }
-    }*/
+    }
 
     public void zoomIn() {
         mapPane.setScaleX(mapPane.getScaleX() * zoomFactor);

@@ -19,8 +19,6 @@ public class Controller {
     protected final AddDeliveryState2 addDeliveryState2 = new AddDeliveryState2();
     protected final LoadedDeliveryState loadedDeliveryState = new LoadedDeliveryState();
     protected final DeleteDeliveryState1 deleteDeliveryState1 = new DeleteDeliveryState1();
-
-    protected final DeleteDeliveryState2 deleteDeliveryState2 = new DeleteDeliveryState2();
     protected final ChangeMapState changeMapState = new ChangeMapState();
 
     protected final DeleteTourState deleteTourState = new DeleteTourState();

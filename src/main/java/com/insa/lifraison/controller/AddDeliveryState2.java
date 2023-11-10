@@ -40,24 +40,15 @@ public class AddDeliveryState2 implements State {
     }
 
     @Override
-    public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
-        m.clearDeliverySelection();
-        m.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
-        view.<MapController>getController("map").informations.clearInformations();
-        c.setCurrentState(c.loadedDeliveryState);
-    }
-
-    @Override
     public void handleTourButton(Controller c, CityMap m, int index, View view, VBox container, ListOfCommands l) {
         l.add(new AddDeliveryCommand(m, currentDelivery, index));
         m.clearDeliverySelection();
         view.<MapController>getController("map").clearInformations();
-        m.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
         c.setCurrentState(c.loadedDeliveryState);
     }
 
     protected void entryAction(Intersection i, CityMap m, ListOfCommands l){
         currentDelivery = new DeliveryRequest(i);
-        m.selectDelivery(currentDelivery);
+        m.addDelivery(currentDelivery);
     }
 }

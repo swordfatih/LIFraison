@@ -1,9 +1,15 @@
 package com.insa.lifraison.controller;
 
+import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.model.Tour;
+import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class DeleteDeliveryState1 implements State {
     /**
@@ -20,6 +26,15 @@ public class DeleteDeliveryState1 implements State {
         c.setCurrentState(c.deleteDeliveryState2);
     }**/
 
+    @Override
+    public void leftClick(Controller c, CityMap m, Intersection i, ListOfCommands l){
+        DeliveryRequest deliveryClicked = m.findDeliverybyIntersection(i);
+        m.selectDelivery(deliveryClicked);
+        l.add(new ReverseCommand(new AddDeliveryCommand(m, m.getSelectedDelivery(), 0)));
+        m.clearDeliverySelection();
+
+    }
+
     /**
      * Cancel the action
      *
@@ -29,13 +44,18 @@ public class DeleteDeliveryState1 implements State {
      */
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
-        view.<MapController>getController("map").informations.clearInformations();
-        c.setCurrentState(c.loadedDeliveryState);
+        l.cancel();
+        m.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
     }
 
     @Override
     public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
         view.<MapController>getController("map").informations.clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
+        if (m.getNumberDeliveries() != 0){
+            c.setCurrentState(c.loadedDeliveryState);
+        } else {
+            c.setCurrentState(c.loadedMapState);
+        }
     }
 }

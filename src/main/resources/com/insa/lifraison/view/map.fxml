@@ -36,7 +36,7 @@
     <VBox>
         <ScrollPane fx:id="mapScrollPane" hbarPolicy="NEVER" pannable="true" vbarPolicy="NEVER" prefHeight="720" prefWidth="960">
             <Group>
-                <StackPane fx:id="mapPane" prefHeight="720" prefWidth="960" />
+                <StackPane fx:id="mapPane" onMouseClicked="#mapClick" prefHeight="720" prefWidth="960" />
             </Group>
         </ScrollPane>
         <TitledPane text="Textual view" expanded="false">

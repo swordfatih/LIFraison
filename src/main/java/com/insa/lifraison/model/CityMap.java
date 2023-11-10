@@ -86,8 +86,21 @@ public class CityMap extends Observable {
      */
     public boolean addDelivery(int index, DeliveryRequest newDelivery){
         boolean hasChanged = tours.get(index).addDelivery(newDelivery);
-        if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
         return hasChanged;
+    }
+
+    /**
+     * add delivery which is selected
+     * @param newDelivery
+     * @return
+     */
+    public boolean addDelivery(DeliveryRequest newDelivery){
+        System.out.println("add a delivery which is selected");
+        this.selectedDelivery = newDelivery;
+        notifyObservers(NotifType.LIGHT_UPDATE);
+        return true;
+
     }
     public void addTour(Tour tour) {
         boolean hasChanged = this.tours.add(tour);
@@ -379,7 +392,7 @@ public class CityMap extends Observable {
 
     public void selectDelivery(DeliveryRequest delivery) {
         this.selectedDelivery = delivery;
-        this.notifyObservers(NotifType.LIGHT_UPDATE);
+        //this.notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
     public void clearDeliverySelection() {
@@ -389,5 +402,24 @@ public class CityMap extends Observable {
 
     public LinkedList<Intersection> getIntersections() {
         return intersections;
+    }
+
+    public DeliveryRequest findDeliverybyIntersection(Intersection i) {
+        DeliveryRequest deliveryClicked = null;
+        int tourIterator = 0;
+        ArrayList<DeliveryRequest> deliveries;
+        int deliveryIterator = 0;
+        while(tourIterator < tours.size() && deliveryClicked == null){
+            if(deliveryIterator >= tours.get(tourIterator).getDeliveries().size()){
+                ++tourIterator;
+                deliveryIterator = 0;
+            }
+            deliveries = tours.get(tourIterator).getDeliveries();
+            if(deliveries.get(deliveryIterator).getDestination().id.equals(i.id)){
+                deliveryClicked = deliveries.get(deliveryIterator);
+            }
+            ++deliveryIterator;
+        }
+        return deliveryClicked;
     }
 }
