@@ -6,6 +6,7 @@ import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
+import javafx.scene.layout.VBox;
 
 public class AddDeliveryState2 implements State {
     private DeliveryRequest currentDelivery;
@@ -45,9 +46,17 @@ public class AddDeliveryState2 implements State {
         c.setCurrentState(c.loadedDeliveryState);
     }
 
+    @Override
+    public void handleTourButton(Controller c, CityMap m, int index, View view, VBox container, ListOfCommands l) {
+        l.add(new AddDeliveryCommand(m, currentDelivery, index));
+        m.clearDeliverySelection();
+        view.<MapController>getController("map").clearInformations();
+        m.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
+        c.setCurrentState(c.loadedDeliveryState);
+    }
+
     protected void entryAction(Intersection i, CityMap m, ListOfCommands l){
         currentDelivery = new DeliveryRequest(i);
         m.selectDelivery(currentDelivery);
-        l.add(new AddDeliveryCommand(m, currentDelivery));
     }
 }

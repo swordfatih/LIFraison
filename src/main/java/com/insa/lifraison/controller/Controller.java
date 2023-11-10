@@ -5,6 +5,7 @@ import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Controller {
@@ -22,6 +23,8 @@ public class Controller {
 
     protected final DeleteDeliveryState2 deleteDeliveryState2 = new DeleteDeliveryState2();
     protected final ChangeMapState changeMapState = new ChangeMapState();
+
+    protected final DeleteTourState deleteTourState = new DeleteTourState();
 
     /**
      * Create the controller of the application
@@ -127,4 +130,10 @@ public class Controller {
     };
 
     public void save(){ currentState.save( map, view);};
+
+    public void addTour(VBox container, String text) { currentState.addTour(map, container, text, this, listOfCommands); }
+
+    public void deleteTour() { currentState = deleteTourState; }
+
+    public void handleTourButton(int index, VBox container) { currentState.handleTourButton(this, map, index, view, container, listOfCommands); }
 }

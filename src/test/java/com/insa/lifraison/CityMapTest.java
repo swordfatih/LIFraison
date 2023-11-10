@@ -70,7 +70,7 @@ public class CityMapTest {
         Segment segment = new Segment(intersection1, intersection2, 0.43, "segment");
         LinkedList<Segment> segments = new LinkedList<>(List.of(segment));
         CityMap cityMap = new CityMap(intersections, segments, warehouse);
-        cityMap.addDelivery(new DeliveryRequest(intersection2));
+        cityMap.addDelivery(0, new DeliveryRequest(intersection2));
         cityMap.addTour(new Tour());
         cityMap.addObserver(observer);
         cityMap.reset();
@@ -103,8 +103,8 @@ public class CityMapTest {
         LinkedList<Intersection> intersections = new LinkedList<>(List.of(intersection1,intersection2, intersection3));
         LinkedList<Segment> segments = new LinkedList<>();
         CityMap cityMap = new CityMap(intersections, segments, warehouse);
-        cityMap.addDelivery(new DeliveryRequest(intersection2));
-        cityMap.addDelivery(new DeliveryRequest(intersection3));
+        cityMap.addDelivery(0, new DeliveryRequest(intersection2));
+        cityMap.addDelivery(0, new DeliveryRequest(intersection3));
         assertEquals(2, cityMap.getNumberDeliveries());
     }
 
@@ -119,7 +119,7 @@ public class CityMapTest {
         CityMap cityMap = new CityMap(intersections, segments, warehouse);
         cityMap.addObserver(observer);
         DeliveryRequest deliveryRequest = new DeliveryRequest(intersection2);
-        cityMap.addDelivery(deliveryRequest);
+        cityMap.addDelivery(0, deliveryRequest);
         assertTrue(cityMap.getTours().get(0).getDeliveries().contains(deliveryRequest));
         assertTrue(updateCalled);
         assertEquals(Observable.NotifType.LIGHT_UPDATE, updateCalledType);
@@ -135,7 +135,7 @@ public class CityMapTest {
         LinkedList<Segment> segments = new LinkedList<>(List.of(segment));
         CityMap cityMap = new CityMap(intersections, segments, warehouse);
         DeliveryRequest deliveryRequest = new DeliveryRequest(intersection2);
-        cityMap.addDelivery(deliveryRequest);
+        cityMap.addDelivery(0, deliveryRequest);
         cityMap.addObserver(observer);
         assertTrue(cityMap.removeDelivery(deliveryRequest));
         assertFalse(cityMap.getTours().get(0).getDeliveries().contains(deliveryRequest));

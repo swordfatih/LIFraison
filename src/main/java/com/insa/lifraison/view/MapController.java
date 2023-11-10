@@ -3,17 +3,21 @@ package com.insa.lifraison.view;
 import com.insa.lifraison.controller.Controller;
 import com.insa.lifraison.model.*;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class MapController extends ViewController {
-    @FXML
-    private ScrollPane mapScrollPane;
-
     @FXML
     private StackPane mapPane;
 
@@ -24,11 +28,19 @@ public class MapController extends ViewController {
     private Button undoButton;
 
     @FXML
+    public VBox courierList;
+
+    @FXML
     private Button redoButton;
+
+    @FXML
+    private ScrollPane mapScrollPane;
 
     private MapPaneDrawer mapDrawer;
 
     public MapBoxInformation informations;
+
+    private int tourNumber;
 
     private final double zoomFactor = 1.2;
 
@@ -57,6 +69,18 @@ public class MapController extends ViewController {
         controlBox.getChildren().add(informations);
 
         mapScrollPane.addEventFilter(ScrollEvent.ANY, this::onScrollEvent);
+
+        tourNumber = 1;
+        Button newTourButton = new Button("Courier 1");
+        newTourButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                event.consume();
+                int index = courierList.getChildren().indexOf(newTourButton);
+                controller.handleTourButton(index, courierList);
+            }
+        });
+        courierList.getChildren().add(newTourButton);
     }
 
     private void onScrollEvent(ScrollEvent event){
@@ -120,9 +144,26 @@ public class MapController extends ViewController {
     }
 
     @FXML
+    private void addTour(ActionEvent event) {
+        event.consume();
+        tourNumber += 1;
+        this.controller.addTour(courierList, "Courier " + tourNumber);
+    }
+
+    @FXML
+    private void removeTour(ActionEvent event) {
+        event.consume();
+        this.controller.deleteTour();
+    }
+
+    @FXML
     private void saveDeliveries(ActionEvent event) {
         event.consume();
         this.controller.save();
+    }
+
+    public void clearInformations(){
+        informations.getChildren().clear();
     }
     /**
      * Give the intersection clicked by the user to the controller

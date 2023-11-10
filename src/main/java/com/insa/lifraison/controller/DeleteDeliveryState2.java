@@ -34,7 +34,7 @@ public class DeleteDeliveryState2 implements State {
 
     @Override
     public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
-        l.add(new ReverseCommand(new AddDeliveryCommand(m, m.getSelectedDelivery())));
+        l.add(new ReverseCommand(new AddDeliveryCommand(m, m.getSelectedDelivery(), 0)));
         m.clearDeliverySelection();
         view.<MapController>getController("map").informations.clearInformations();
         if (m.getNumberDeliveries() != 0){

@@ -4,6 +4,7 @@ import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.View;
+import javafx.scene.layout.VBox;
 
 public interface State {
     public default void loadMap(Controller c, CityMap m, View view, ListOfCommands l){};
@@ -31,5 +32,9 @@ public interface State {
     public default void redo(Controller c, CityMap m, ListOfCommands l){};
 
     public default void save(CityMap m, View view){};
+
+    public default void addTour(CityMap m, VBox container, String text, Controller controller, ListOfCommands l){};
+
+    public default void handleTourButton(Controller c, CityMap m, int index, View v, VBox container, ListOfCommands l){};
 
 }

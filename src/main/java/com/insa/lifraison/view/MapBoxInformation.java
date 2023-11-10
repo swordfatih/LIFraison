@@ -35,9 +35,7 @@ public class MapBoxInformation extends VBox{
     public void displayAddDeliveryInformations() {
         this.getChildren().clear();
         Label info = new Label("Click anywhere on the map to create a new delivery");
-        Button confirm = new Button("confirm");
-        confirm.setOnAction(this::confirmAction);
-        this.getChildren().addAll(info, confirm);
+        this.getChildren().add(info);
     }
 
     public void displayDeleteDeliveryInformations() {
