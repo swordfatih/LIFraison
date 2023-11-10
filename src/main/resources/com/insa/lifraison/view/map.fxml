@@ -1,57 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.layout.StackPane?>
+
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.insa.lifraison.view.MapController">
-    <VBox fx:id="controlBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="320.0">
-        <GridPane >
-            <Button text="Load Map" onAction="#loadMap">
-                <GridPane.rowIndex>0</GridPane.rowIndex>
-                <GridPane.columnIndex>0</GridPane.columnIndex>
-            </Button>
-            <Button text="Load Deliveries" onAction="#loadDeliveries">
-                <GridPane.rowIndex>0</GridPane.rowIndex>
-                <GridPane.columnIndex>1</GridPane.columnIndex>
-            </Button>
-            <Button text="Add Delivery" onAction="#addDelivery">
-                <GridPane.rowIndex>1</GridPane.rowIndex>
-                <GridPane.columnIndex>0</GridPane.columnIndex>
-            </Button>
-            <Button text="Delete Delivery" onAction="#deleteDelivery">
-                <GridPane.rowIndex>1</GridPane.rowIndex>
-                <GridPane.columnIndex>1</GridPane.columnIndex>
-            </Button>
-            <Button text="Undo" fx:id="undoButton" onAction="#undo">
-                <GridPane.rowIndex>2</GridPane.rowIndex>
-                <GridPane.columnIndex>0</GridPane.columnIndex>
-            </Button>
-            <Button text="Redo" fx:id="redoButton" onAction="#redo">
-                <GridPane.rowIndex>2</GridPane.rowIndex>
-                <GridPane.columnIndex>1</GridPane.columnIndex>
-            </Button>
-            <Button text="Compute Plan" onAction="#computePlan">
-                <GridPane.rowIndex>3</GridPane.rowIndex>
-                <GridPane.columnIndex>0</GridPane.columnIndex>
-            </Button>
-            <Button text="Save" onAction="#saveDeliveries">
-                <GridPane.rowIndex>3</GridPane.rowIndex>
-                <GridPane.columnIndex>1</GridPane.columnIndex>
-            </Button>
+    <VBox fx:id="controlBox" HBox.hgrow="ALWAYS" styleClass="menu">
+        <GridPane hgap="10" vgap="10">
+            <Button text="Load Map" onAction="#loadMap" styleClass="menuButton" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            <Button text="Load Deliveries" onAction="#loadDeliveries" styleClass="menuButton" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+            <Button text="Add Delivery" onAction="#addDelivery" styleClass="menuButton" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            <Button text="Delete Delivery" onAction="#deleteDelivery" styleClass="menuButton" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+            <Button text="Undo" fx:id="undoButton" onAction="#undo" styleClass="menuButton" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+            <Button text="Redo" fx:id="redoButton" onAction="#redo" styleClass="menuButton" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+            <Button text="Compute Plan" onAction="#computePlan" styleClass="menuButton" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" />
+                <ColumnConstraints percentWidth="50" />
+            </columnConstraints>
         </GridPane>
-        <VBox>
-
-        </VBox>
     </VBox>
-    <ScrollPane fx:id="mapScrollPane" hbarPolicy="NEVER" pannable="true" vbarPolicy="NEVER" prefHeight="720" prefWidth="960">
-        <Group>
-            <StackPane fx:id="mapPane" onMouseClicked="#mapClick" prefHeight="720" prefWidth="960">
 
-            </StackPane>
-        </Group>
-    </ScrollPane>
+    <VBox>
+        <ScrollPane fx:id="mapScrollPane" hbarPolicy="NEVER" pannable="true" vbarPolicy="NEVER" prefHeight="720" prefWidth="960">
+            <Group>
+                <StackPane fx:id="mapPane" onMouseClicked="#mapClick" prefHeight="720" prefWidth="960" />
+            </Group>
+        </ScrollPane>
+        <TitledPane text="Textual view" expanded="false">
+            <ScrollPane>
+                <VBox spacing="20" fx:id="textualView">
+                    <Label text="Hello" />
+                </VBox>
+            </ScrollPane>
+        </TitledPane>
+    </VBox>
 </HBox>
