@@ -48,6 +48,7 @@ public class MapController extends ViewController {
     public void setController(Controller controller) {
         this.controller = controller;
         this.informations.setController(controller);
+        this.mapDrawer.setController(controller);
     }
 
     public void initialize() {
@@ -64,7 +65,7 @@ public class MapController extends ViewController {
         
         mapDrawer = new MapPaneDrawer(mapPane.getPrefWidth(), mapPane.getPrefHeight());
         mapPane.getChildren().add(mapDrawer);
-        mapPane.setOnMouseClicked(this::mapClick);
+        //mapPane.setOnMouseClicked(this::mapClick);
         informations = new MapBoxInformation();
         controlBox.getChildren().add(informations);
 
@@ -168,7 +169,7 @@ public class MapController extends ViewController {
     /**
      * Give the intersection clicked by the user to the controller
      * @param event mouseListener on the map
-     */
+     *
     public void mapClick(MouseEvent event){
         // left click
         if(event.getButton() == MouseButton.PRIMARY){
@@ -179,7 +180,7 @@ public class MapController extends ViewController {
         } else if(event.getButton() == MouseButton.SECONDARY){
             this.controller.rightClick();
         }
-    }
+    }*/
 
     public void zoomIn() {
         mapPane.setScaleX(mapPane.getScaleX() * zoomFactor);

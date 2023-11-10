@@ -85,33 +85,32 @@ public class CityMap extends Observable {
      * @param newDelivery the delivery you want to add
      * @return succes of the adding
      */
-    public boolean addDelivery(int index, DeliveryRequest newDelivery){
-        boolean hasChanged = tours.get(index).addDelivery(newDelivery);
-        if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+    public boolean addDelivery(DeliveryRequest newDelivery){
+        boolean hasChanged = tours.get(0).addDelivery(newDelivery);
+        //if(hasChanged) notifyObservers(NotifType.ADD, newDelivery); à faire dans le tour
         return hasChanged;
     }
     public void addTour(Tour tour) {
         boolean hasChanged = this.tours.add(tour);
-        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        if (hasChanged) notifyObservers(NotifType.ADD, tour);
     }
 
     public boolean removeTour(Tour tour) {
         boolean hasChanged = this.tours.remove(tour);
-        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        if (hasChanged) notifyObservers(NotifType.DELETE, tour);
         return hasChanged;
     }
-    public void moveDelivery(DeliveryRequest delivery, Intersection newIntersection){
+    /*public void moveDelivery(DeliveryRequest delivery, Intersection newIntersection){
         delivery.setDestination(newIntersection);
-        notifyObservers(NotifType.LIGHT_UPDATE);
-    }
+    }*/
     public void addTours(Collection<Tour> tours) {
         boolean hasChanged = this.tours.addAll(tours);
-        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        if (hasChanged) notifyObservers(NotifType.ADD, tours);
     }
 
     public boolean removeTours(Collection<Tour> tours) {
         boolean hasChanged = this.tours.removeAll(tours);
-        if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        if(hasChanged) notifyObservers(NotifType.DELETE, tours);
         return hasChanged;
     }
 
@@ -120,10 +119,11 @@ public class CityMap extends Observable {
      * @param deliveryRequest : the position where the delivery can be
      * @return true if a delivery was successfully remove
      */
+
     public boolean removeDelivery(DeliveryRequest deliveryRequest){
         for(Tour tour : this.tours){
             if(tour.removeDelivery(deliveryRequest)) {
-                this.notifyObservers(NotifType.LIGHT_UPDATE);
+                //this.notifyObservers(NotifType.LIGHT_UPDATE); à faire dans le tours
                 return true;
             }
         }
@@ -380,12 +380,12 @@ public class CityMap extends Observable {
 
     public void selectDelivery(DeliveryRequest delivery) {
         this.selectedDelivery = delivery;
-        this.notifyObservers(NotifType.LIGHT_UPDATE);
+        //this.notifyObservers(NotifType.);
     }
 
     public void clearDeliverySelection() {
         this.selectedDelivery = null;
-        this.notifyObservers(NotifType.LIGHT_UPDATE);
+        //this.notifyObservers(NotifType.LIGHT_UPDATE);
     }
 
     public LinkedList<Intersection> getIntersections() {

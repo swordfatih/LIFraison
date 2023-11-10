@@ -16,11 +16,11 @@ public class AddDeliveryState2 implements State {
      * @param c The controller
      * @param m the city map
      * @param i the intersection the user have just clicked
-     */
+     *
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, ListOfCommands l){
         m.moveDelivery(currentDelivery, i);
-    }
+    }*/
 
     /**
      * cancel the action

@@ -1,5 +1,7 @@
 package com.insa.lifraison.model;
 
+import com.insa.lifraison.observer.Observable;
+
 import java.time.LocalTime;
 import java.util.Objects;
 
