@@ -111,15 +111,14 @@ public class MapPaneDrawer extends Pane implements Observer {
                 }
             }
             for(DeliveryRequest delivery : tour.getDeliveries()) {
-                if (map.getSelectedDelivery() == delivery){
-                    gcFG.setFill(Color.PURPLE);
-                    drawIntersectionPoint(gcFG, delivery.getDestination());
-                    gcFG.setFill(colorValue);
-                } else {
-                    drawIntersectionPoint(gcFG, delivery.getDestination());
-                }
+                drawIntersectionPoint(gcFG, delivery.getDestination());
             }
             i++;
+        }
+
+        if(map.getSelectedDelivery() != null) {
+            gcFG.setFill(Color.PURPLE);
+            drawIntersectionPoint(gcFG, map.getSelectedDelivery().getDestination());
         }
     }
 

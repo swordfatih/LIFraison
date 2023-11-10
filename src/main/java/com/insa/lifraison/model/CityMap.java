@@ -85,8 +85,8 @@ public class CityMap extends Observable {
      * @param newDelivery the delivery you want to add
      * @return succes of the adding
      */
-    public boolean addDelivery(DeliveryRequest newDelivery){
-        boolean hasChanged = tours.get(0).addDelivery(newDelivery);
+    public boolean addDelivery(int index, DeliveryRequest newDelivery){
+        boolean hasChanged = tours.get(index).addDelivery(newDelivery);
         if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
         return hasChanged;
     }

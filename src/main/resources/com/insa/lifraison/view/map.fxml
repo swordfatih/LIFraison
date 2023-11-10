@@ -20,15 +20,19 @@
             <Button text="Delete Delivery" onAction="#deleteDelivery" styleClass="menuButton" GridPane.rowIndex="1" GridPane.columnIndex="1" />
             <Button text="Undo" fx:id="undoButton" onAction="#undo" styleClass="menuButton" GridPane.rowIndex="2" GridPane.columnIndex="0" />
             <Button text="Redo" fx:id="redoButton" onAction="#redo" styleClass="menuButton" GridPane.rowIndex="2" GridPane.columnIndex="1" />
-            <Button text="Compute Plan" onAction="#computePlan" styleClass="menuButton" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-            <Button text="Save" onAction="#saveDeliveries" styleClass="menuButton" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+            <Button text="Add Tour" onAction="#addTour" styleClass="menuButton" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+            <Button text="Remove Tour" onAction="#removeTour" styleClass="menuButton" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+            <Button text="Compute Plan" onAction="#computePlan" styleClass="menuButton" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+            <Button text="Save" onAction="#saveDeliveries" styleClass="menuButton" GridPane.rowIndex="4" GridPane.columnIndex="1" />
             <columnConstraints>
                 <ColumnConstraints percentWidth="50" />
                 <ColumnConstraints percentWidth="50" />
             </columnConstraints>
         </GridPane>
-    </VBox>
+        <VBox fx:id="courierList">
 
+        </VBox>
+    </VBox>
     <VBox>
         <ScrollPane fx:id="mapScrollPane" hbarPolicy="NEVER" pannable="true" vbarPolicy="NEVER" prefHeight="720" prefWidth="960">
             <Group>

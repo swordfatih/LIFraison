@@ -1,8 +1,10 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
+import javafx.scene.layout.VBox;
 import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourSerializer;

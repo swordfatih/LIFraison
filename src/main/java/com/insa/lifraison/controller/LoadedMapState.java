@@ -3,11 +3,13 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.TourDeserializer;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -78,5 +80,10 @@ public class LoadedMapState implements State {
         } else {
             c.setCurrentState(c.loadedMapState);
         }
+    }
+
+    @Override
+    public void addTour(CityMap m, VBox container, String text, Controller controller, ListOfCommands l) {
+        l.add(new AddTourCommand(m, container, text, controller));
     }
 }
