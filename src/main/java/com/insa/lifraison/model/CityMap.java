@@ -86,7 +86,7 @@ public class CityMap extends Observable {
      */
     public boolean addDelivery(int index, DeliveryRequest newDelivery){
         boolean hasChanged = tours.get(index).addDelivery(newDelivery);
-        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        //if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
         return hasChanged;
     }
 
@@ -135,7 +135,7 @@ public class CityMap extends Observable {
     public boolean removeDelivery(DeliveryRequest deliveryRequest){
         for(Tour tour : this.tours){
             if(tour.removeDelivery(deliveryRequest)) {
-                this.notifyObservers(NotifType.LIGHT_UPDATE);
+                //this.notifyObservers(NotifType.LIGHT_UPDATE);
                 return true;
             }
         }
