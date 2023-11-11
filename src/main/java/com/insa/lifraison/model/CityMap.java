@@ -130,26 +130,6 @@ public class CityMap extends Observable {
         return false;
     }
 
-    /**
-     * Add a new intersection to the city map.
-     * @param intersection The intersection to be added to the CityMap.
-     */
-    public void addIntersection(Intersection intersection){
-        intersections.push(intersection);
-        minLongitude = min(minLongitude, intersection.longitude);
-        maxLongitude = max(maxLongitude, intersection.longitude);
-        minLatitude = min(minLatitude, intersection.latitude);
-        maxLatitude = max(maxLatitude, intersection.latitude);
-    }
-
-    /**
-     * Add a new segment to the city map.
-     * @param segment The segment to be added to the CityMap.
-     */
-    public void addSegment(Segment segment){
-        segments.push(segment);
-    }
-
     public void setIntersectionsSegmentsWarehouse(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
         this.intersections = intersections;
         this.segments = segments;
@@ -159,18 +139,11 @@ public class CityMap extends Observable {
     }
 
     /**
-     * Set the warehouse of the CityMap.
-     * @param warehouse warehouse to be set as the warehouse of the CityMap
-     */
-    public void setWarehouse(Warehouse warehouse){
-        this.warehouse = warehouse;
-    }
-
-    /**
      * Get the warehouse of the CityMap
      * @return
      */
     public Warehouse getWarehouse(){return this.warehouse;}
+
     /**
      *
      * Compares two City maps. It returns true if, and only if,
