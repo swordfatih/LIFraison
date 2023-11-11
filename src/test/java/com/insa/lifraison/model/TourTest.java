@@ -1,4 +1,4 @@
-package com.insa.lifraison;
+package com.insa.lifraison.model;
 
 import com.insa.lifraison.model.*;
 import org.junit.jupiter.api.Test;
