@@ -20,7 +20,7 @@ public class AddDeliveryState2 implements State {
      */
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i, ListOfCommands l){
-        m.moveDelivery(currentDelivery, i);
+        currentDelivery = m.moveDelivery(i);
     }
 
     /**
@@ -41,8 +41,8 @@ public class AddDeliveryState2 implements State {
 
     @Override
     public void handleTourButton(Controller c, CityMap m, int index, View view, VBox container, ListOfCommands l) {
-        l.add(new AddDeliveryCommand(m, currentDelivery, index));
         m.clearDeliverySelection();
+        l.add(new AddDeliveryCommand(m, currentDelivery, index));
         view.<MapController>getController("map").clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }

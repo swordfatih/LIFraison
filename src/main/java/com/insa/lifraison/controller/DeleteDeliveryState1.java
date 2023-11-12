@@ -45,7 +45,6 @@ public class DeleteDeliveryState1 implements State {
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
         l.cancel();
-        m.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
     }
 
     @Override
