@@ -27,12 +27,10 @@ public class DeleteDeliveryState1 implements State {
     }**/
 
     @Override
-    public void leftClick(Controller c, CityMap m, Intersection i, ListOfCommands l){
-        DeliveryRequest deliveryClicked = m.findDeliverybyIntersection(i);
-        m.selectDelivery(deliveryClicked);
-        l.add(new ReverseCommand(new AddDeliveryCommand(m, m.getSelectedDelivery(), 0)));
-        m.clearDeliverySelection();
-
+    public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour tour, ListOfCommands l){
+        if(d != null) {
+            l.add(new ReverseCommand(new AddDeliveryCommand(tour, d)));
+        }
     }
 
     /**
@@ -44,7 +42,12 @@ public class DeleteDeliveryState1 implements State {
      */
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
-        l.cancel();
+        view.<MapController>getController("map").informations.clearInformations();
+        if (m.getNumberDeliveries() != 0){
+            c.setCurrentState(c.loadedDeliveryState);
+        } else {
+            c.setCurrentState(c.loadedMapState);
+        }
     }
 
     @Override

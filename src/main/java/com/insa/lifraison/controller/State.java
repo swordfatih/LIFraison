@@ -1,12 +1,14 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.model.DeliveryRequest;
+import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.View;
 import javafx.scene.layout.VBox;
 
 public interface State {
-    public default void loadMap(Controller c, CityMap m, View view, ListOfCommands l){};
+    public default void loadMap(Controller c, View view, ListOfCommands l){};
 
     public default void changeMap(Controller c, View view){};
 
@@ -14,7 +16,7 @@ public interface State {
 
     public default void addDelivery(Controller c, View view){};
 
-    public default void leftClick(Controller c, CityMap m, Intersection i, ListOfCommands l){};
+    public default void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t,  ListOfCommands l){};
 
     public default void rightClick(Controller c, CityMap m, View view, ListOfCommands l){};
 
@@ -32,8 +34,8 @@ public interface State {
 
     public default void save(CityMap m, View view){};
 
-    public default void addTour(CityMap m, VBox container, String text, Controller controller, ListOfCommands l){};
+    public default void addTour(CityMap m, ListOfCommands l){};
 
-    public default void handleTourButton(Controller c, CityMap m, int index, View v, VBox container, ListOfCommands l){};
+    public default void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l){};
 
 }

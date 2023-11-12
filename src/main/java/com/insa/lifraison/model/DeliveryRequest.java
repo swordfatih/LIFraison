@@ -53,12 +53,4 @@ public class DeliveryRequest {
         this.destination = destination;
 
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DeliveryRequest that = (DeliveryRequest) o;
-        return Objects.equals(timeWindowStart, that.timeWindowStart) && Objects.equals(timeWindowEnd, that.timeWindowEnd) && Objects.equals(destination, that.destination);
-    }
 }

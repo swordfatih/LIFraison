@@ -1,10 +1,11 @@
 package com.insa.lifraison.model;
 
 import com.insa.lifraison.observer.Observable;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.LinkedList;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,9 +23,22 @@ public class Tour extends Observable{
      */
     private LinkedList<TourStep> tourSteps;
 
+    private int id;
+    private Color color;
+
     public Tour() {
+        id = -1;
+        color = null;
         deliveries = new ArrayList<>();
         tourSteps = new LinkedList<>();
+    }
+
+    void setId(int id) {
+        this.id = id;
+    }
+
+    void setColor(Color color) {
+        this.color = color;
     }
 
     public boolean addDelivery(DeliveryRequest deliveryRequest) {
@@ -38,7 +52,7 @@ public class Tour extends Observable{
 
     public boolean removeDelivery(DeliveryRequest deliveryRequest) {
         boolean hasChanged = deliveries.remove((deliveryRequest));
-        if (hasChanged) notifyObservers(NotifType.DELETE, deliveryRequest);
+        if (hasChanged) notifyObservers(NotifType.REMOVE, deliveryRequest);
         return hasChanged;
     }
     public ArrayList<DeliveryRequest> getDeliveries(){
@@ -59,5 +73,13 @@ public class Tour extends Observable{
 
     public LinkedList<TourStep> getTourSteps() { 
         return tourSteps; 
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public Paint getColor() {
+        return  this.color;
     }
 }

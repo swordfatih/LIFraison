@@ -1,7 +1,9 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import javafx.scene.layout.VBox;
@@ -29,12 +31,10 @@ public class Controller {
     public Controller(Stage stage) {
         this.currentState = initialState;
         this.listOfCommands = new ListOfCommands();
-        this.map = new CityMap();
         this.view = new View(stage, this);
 
         view.loadScene("home", "home.fxml", "style/home.css");
         view.loadScene("map", "map.fxml", "style/map.css");
-        view.<MapController>getController("map").setMap(this.map);
         stage.setTitle("LIFraison");
         view.navigate("home");
         stage.show();
@@ -50,13 +50,14 @@ public class Controller {
      */
     protected void setCurrentState(State state) {
         this.currentState = state;
+        System.out.println("new state : " +state);
     }
 
     /**
      * Method called after a click on the "load Map" button
      */
     public void loadMap(){
-        currentState.loadMap(this, map, view, listOfCommands);
+        currentState.loadMap(this, view, listOfCommands);
     };
 
     public void changeMap(){currentState.changeMap(this, view);};
@@ -79,8 +80,8 @@ public class Controller {
      * Method called after a left Click
      * @param i The nearest intersection of the click
      */
-    public void leftClick(Intersection i){
-        currentState.leftClick(this, map, i, listOfCommands);
+    public void leftClick(Intersection i, DeliveryRequest d, Tour t){
+        currentState.leftClick(this, map, i, d, t, listOfCommands);
     };
 
     /**
@@ -128,9 +129,14 @@ public class Controller {
 
     public void save(){ currentState.save( map, view);};
 
-    public void addTour(VBox container, String text) { currentState.addTour(map, container, text, this, listOfCommands); }
+    public void addTour() { currentState.addTour(map, listOfCommands); }
 
     public void deleteTour() { currentState = deleteTourState; }
 
-    public void handleTourButton(int index, VBox container) { currentState.handleTourButton(this, map, index, view, container, listOfCommands); }
+    public void tourButtonClicked(Tour tour) { currentState.tourButtonClicked(this, map, tour, view, listOfCommands); }
+
+    public void setMap(CityMap map) {
+        this.map = map;
+        view.<MapController>getController("map").setMap(this.map);
+    }
 }

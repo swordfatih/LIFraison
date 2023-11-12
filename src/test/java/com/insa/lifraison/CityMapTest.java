@@ -122,7 +122,7 @@ public class CityMapTest {
         cityMap.addDelivery(0, deliveryRequest);
         assertTrue(cityMap.getTours().get(0).getDeliveries().contains(deliveryRequest));
         assertTrue(updateCalled);
-        assertEquals(Observable.NotifType.LIGHT_UPDATE, updateCalledType);
+        assertEquals(Observable.NotifType.UPDATE, updateCalledType);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class CityMapTest {
         assertTrue(cityMap.removeDelivery(deliveryRequest));
         assertFalse(cityMap.getTours().get(0).getDeliveries().contains(deliveryRequest));
         assertTrue(updateCalled);
-        assertEquals(Observable.NotifType.LIGHT_UPDATE, updateCalledType);
+        assertEquals(Observable.NotifType.UPDATE, updateCalledType);
     }
 
     @Test
@@ -173,7 +173,7 @@ public class CityMapTest {
         cityMap.addTour(tour);
         assertTrue(cityMap.getTours().contains(tour));
         assertTrue(updateCalled);
-        assertEquals(Observable.NotifType.LIGHT_UPDATE, updateCalledType);
+        assertEquals(Observable.NotifType.UPDATE, updateCalledType);
     }
 
     @Test
@@ -192,7 +192,7 @@ public class CityMapTest {
         assertTrue(cityMap.removeTour(tour));
         assertFalse(cityMap.getTours().contains(tour));
         assertTrue(updateCalled);
-        assertEquals(Observable.NotifType.LIGHT_UPDATE, updateCalledType);
+        assertEquals(Observable.NotifType.UPDATE, updateCalledType);
     }
 
     @Test
@@ -231,7 +231,7 @@ public class CityMapTest {
         cityMap.addTours(tours);
         assertTrue(cityMap.getTours().containsAll(tours));
         assertTrue(updateCalled);
-        assertEquals(Observable.NotifType.LIGHT_UPDATE, updateCalledType);
+        assertEquals(Observable.NotifType.UPDATE, updateCalledType);
     }
 
     @Test
@@ -257,6 +257,6 @@ public class CityMapTest {
         assertFalse(cityMap.getTours().contains(tour1));
         assertFalse(cityMap.getTours().contains(tour2));
         assertTrue(updateCalled);
-        assertEquals(Observable.NotifType.LIGHT_UPDATE, updateCalledType);
+        assertEquals(Observable.NotifType.UPDATE, updateCalledType);
     }
 }

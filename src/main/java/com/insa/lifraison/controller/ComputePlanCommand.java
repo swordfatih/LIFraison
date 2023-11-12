@@ -29,7 +29,7 @@ public class ComputePlanCommand implements Command {
             tours.add(tour.getTourSteps());
             tour.setTourSteps(cityMap.computePath(tour));
         }
-        cityMap.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
+        cityMap.notifyObservers(Observable.NotifType.UPDATE);
     }
 
     @Override
@@ -37,6 +37,6 @@ public class ComputePlanCommand implements Command {
         for(int i = 0; i < tours.size(); i++) {
             cityMap.getTours().get(i).setTourSteps(tours.get(i));
         }
-        cityMap.notifyObservers(Observable.NotifType.LIGHT_UPDATE);
+        cityMap.notifyObservers(Observable.NotifType.UPDATE);
     }
 }
