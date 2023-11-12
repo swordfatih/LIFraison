@@ -3,7 +3,9 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.MapController;
+import com.insa.lifraison.view.MenuController;
 import com.insa.lifraison.view.View;
 import javafx.stage.Stage;
 
@@ -32,9 +34,9 @@ public class Controller {
         this.map = new CityMap();
         this.view = new View(stage, this);
 
+        view.loadScene("main", "main.fxml", "style/main.css");
         view.loadScene("home", "home.fxml", "style/home.css");
-        view.loadScene("map", "map.fxml", "style/map.css");
-        view.<MapController>getController("map").setMap(this.map);
+        view.<MainController>getController("main").setMap(this.map);
         stage.setTitle("LIFraison");
         view.navigate("home");
         stage.show();

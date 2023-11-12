@@ -12,6 +12,7 @@ public class Intersection {
      * Unique identifier of the intersection
      */
     public final String id;
+
     public final double longitude;
     public final double latitude;
 
@@ -19,6 +20,18 @@ public class Intersection {
         this.id = id;
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
     }
 
     @Override
@@ -31,10 +44,8 @@ public class Intersection {
 
     @Override
     public String toString() {
-        return "Intersection{" +
-                "id='" + id + '\'' +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                '}';
+        return "Intersection " +
+                "[" + this.id + "] " +
+                "{" + this.longitude + ", " + this.latitude + "}";
     }
 }

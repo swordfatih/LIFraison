@@ -1,18 +1,16 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.view.MapController;
+import com.insa.lifraison.view.MainController;
+import com.insa.lifraison.view.MenuController;
 import com.insa.lifraison.view.View;
-import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourSerializer;
 import javafx.stage.FileChooser;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.File;
-import java.io.IOException;
 
 public class LoadedDeliveryState implements State{
     /**
@@ -42,7 +40,7 @@ public class LoadedDeliveryState implements State{
      */
     @Override
     public void addDelivery(Controller c, View view) {
-        view.<MapController>getController("map").informations.displayAddDeliveryInformations();
+        view.<MainController>getController("main").getInformationController().displayAddDeliveryInformations();
         c.setCurrentState(c.addDeliveryState1);
     }
 
@@ -70,7 +68,7 @@ public class LoadedDeliveryState implements State{
 
     @Override
     public void deleteDelivery(Controller c, View view){
-        view.<MapController>getController("map").informations.displayDeleteDeliveryInformations();
+        view.<MainController>getController("main").getInformationController().displayDeleteDeliveryInformations();
         c.setCurrentState(c.deleteDeliveryState1);
     }
 
@@ -96,7 +94,7 @@ public class LoadedDeliveryState implements State{
 
     @Override
     public void changeMap(Controller c, View view){
-        view.<MapController>getController("map").informations.displayDeleteMapInformations();
+        view.<MainController>getController("main").getInformationController().displayDeleteMapInformations();
         c.setCurrentState(c.changeMapState);
     }
 }

@@ -1,7 +1,6 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.CityMapDeserializer;
@@ -32,7 +31,7 @@ public class InitialState implements State {
 
             c.setCurrentState(c.loadedMapState);
 
-            view.navigate("map");
+            view.navigate("main");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
         }

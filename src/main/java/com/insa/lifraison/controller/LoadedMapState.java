@@ -1,13 +1,11 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.model.DeliveryRequest;
-import com.insa.lifraison.model.Intersection;
-import com.insa.lifraison.view.MapController;
+import com.insa.lifraison.view.MainController;
+import com.insa.lifraison.view.MenuController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.CityMapDeserializer;
-import com.insa.lifraison.xml.TourDeserializer;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -41,7 +39,7 @@ public class LoadedMapState implements State {
      */
     @Override
     public void addDelivery(Controller c, View view) {
-        view.<MapController>getController("map").informations.displayAddDeliveryInformations();
+        view.<MainController>getController("main").getInformationController().displayAddDeliveryInformations();
         c.setCurrentState(c.addDeliveryState1);
     }
     @Override

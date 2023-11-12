@@ -1,7 +1,8 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.view.MapController;
+import com.insa.lifraison.view.MainController;
+import com.insa.lifraison.view.MenuController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.ExceptionXML;
@@ -15,7 +16,7 @@ import java.io.IOException;
 public class ChangeMapState implements State {
     @Override
     public void loadMap(Controller c, CityMap m, View view, ListOfCommands l){
-        view.<MapController>getController("map").informations.clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformations();
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -37,7 +38,7 @@ public class ChangeMapState implements State {
 
     @Override
     public void cancel(Controller c, View view){
-        view.<MapController>getController("map").informations.clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }
 
