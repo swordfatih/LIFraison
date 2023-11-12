@@ -56,10 +56,10 @@ public class MapPaneDrawer extends Pane implements Observer {
                 else {
                     DeliveryRequest newDelivery = (DeliveryRequest) arg;
                     if (observable instanceof Tour) {
-                        System.out.println("draw temporary delivery");
+                        System.out.println("draw permanent delivery");
                         drawIntersectionPoint(this, newDelivery.getDestination(), Color.BLUE, 2);
                     } else {
-                        System.out.println("draw permanent delivery");
+                        System.out.println("draw temporary delivery");
                         drawIntersectionPoint(this, newDelivery.getDestination(), Color.PURPLE, 2);
                     }
                 }

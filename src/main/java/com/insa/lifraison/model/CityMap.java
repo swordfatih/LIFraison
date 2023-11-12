@@ -59,6 +59,7 @@ public class CityMap extends Observable {
         this.tours = new LinkedList<>();
         Tour tour = new Tour();
         tours.add(tour);
+        notifyObservers(NotifType.ADD, tour);
         this.selectedDelivery = null;
     }
 
