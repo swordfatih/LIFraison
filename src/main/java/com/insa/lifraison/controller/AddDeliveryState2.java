@@ -19,7 +19,7 @@ public class AddDeliveryState2 implements State {
      */
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t, ListOfCommands l){
-        currentDelivery = m.moveDelivery(i);
+        currentDelivery.setIntersection(i);
     }
 
     /**

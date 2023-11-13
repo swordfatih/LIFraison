@@ -109,12 +109,7 @@ public class CityMap extends Observable {
         if (hasChanged) notifyObservers(NotifType.REMOVE, tour);
         return hasChanged;
     }
-    public DeliveryRequest moveDelivery(Intersection newIntersection){
-        notifyObservers(NotifType.REMOVE, temporaryDelivery);
-        temporaryDelivery.setIntersection(newIntersection);
-        notifyObservers(NotifType.ADD, temporaryDelivery);
-        return temporaryDelivery;
-    }
+
     public void addTours(Collection<Tour> tours) {
         for(Tour tour : tours) {
             this.addTour(tour);

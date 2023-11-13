@@ -48,34 +48,45 @@ public class MapPaneDrawer extends Pane implements Observer {
         System.out.println(this + " received notif");
         switch (notifType) {
             case UPDATE -> {
-                updateBackground();
+                if(observable instanceof CityMap) {
+                    refresh();
+                }
+                else if(observable instanceof Tour) {
+                    eraseTour((Tour)observable);
+                    drawTour((Tour)observable);
+                }
+                else if(observable instanceof DeliveryRequest) {
+                    DeliveryRequest deliveryRequest = (DeliveryRequest) observable;
+                    CircleDelivery circleDelivery = findCircleDelivery(deliveryRequest);
+                    circleDelivery.setCenterX(scale * deliveryRequest.getIntersection().longitude + longitudeOffset);
+                    circleDelivery.setCenterY(-scale * deliveryRequest.getIntersection().latitude + latitudeOffset);
+                }
             }
             case ADD -> {
-                if(arg instanceof Tour){
+                if(observable instanceof CityMap && arg instanceof Tour){
                     Tour tour = (Tour) arg;
-                    observeTour(tour);
-                    for (DeliveryRequest delivery : tour.getDeliveries()) {
-                        drawDeliveryPoint(this, delivery, tour, tour.getColor());
-                    }
+                    tour.addObserver(this);
+                    drawTour(tour);
                 }
                 else if(arg instanceof DeliveryRequest){
                     DeliveryRequest newDelivery = (DeliveryRequest) arg;
+                    newDelivery.addObserver(this);
                     if (observable instanceof Tour) {
                         Tour tour = (Tour) observable;
                         System.out.println("draw permanent delivery");
-                        drawDeliveryPoint(this, newDelivery, tour, tour.getColor());
+                        drawDeliveryPoint(newDelivery, tour, tour.getColor());
                     } else {
                         System.out.println("draw temporary delivery");
-                        drawDeliveryPoint(this, newDelivery, null, Color.PURPLE);
+                        drawDeliveryPoint(newDelivery, null, Color.PURPLE);
                     }
                 }
             }
             case REMOVE -> {
                 if(arg instanceof Tour){
-                    deleteTour((Tour) arg);
-                }else {
+                    eraseTour((Tour) arg);
+                }else if(arg instanceof DeliveryRequest){
                     DeliveryRequest newDelivery = (DeliveryRequest) arg;
-                    deleteDeliveryPoint(newDelivery);
+                    eraseDeliveryRequest(newDelivery);
                 }
 
             }
@@ -92,21 +103,60 @@ public class MapPaneDrawer extends Pane implements Observer {
         for(Tour tour : map.getTours()){
             tour.addObserver(this);
         }
-        this.updateBackground();
+        this.refresh();
     }
 
     public void observeTour(Tour tour){
         tour.addObserver(this);
     }
 
-    public void deleteTour(Tour tour){
+    public void drawTour(Tour tour){
+        PathTour path = new PathTour(tour);
+        Intersection tmp = map.getWarehouse().intersection;
+        path.getElements().add(getmoveTo(tmp));
+        for (TourStep tourStep : tour.getTourSteps()) {
+            for (Segment segment : tourStep.segments) {
+                if (segment.destination == tmp) {
+                    tmp = segment.origin;
+                } else {
+                    tmp = segment.destination;
+                }
+                path.getElements().add(getLineTo(tmp));
+            }
+        }
+        path.setId("Tour" + tour.getId());
+        path.setStrokeWidth(5);
+        path.setStroke(tour.getColor());
+        this.getChildren().add(path);
+        for (DeliveryRequest delivery : tour.getDeliveries()) {
+            drawDeliveryPoint(delivery, tour, tour.getColor());
+        }
+    }
+
+    private void eraseTour(Tour tour) {
+        PathTour pathTour = findPathTour(tour);
+        if(pathTour != null) {
+            getChildren().remove(pathTour);
+        }
+        for(DeliveryRequest deliveryRequest : tour.getDeliveries()) {
+            eraseDeliveryRequest(deliveryRequest);
+        }
+    }
+
+    private PathTour findPathTour(Tour tour) {
+        for (javafx.scene.Node node : this.getChildren()) {
+            if (node instanceof PathTour && Objects.equals(((PathTour) node).getTour(),tour)) {
+                return (PathTour) node;
+            }
+        }
+        return null;
     }
 
 
     /**
-     * redraw the background of the map meaning roads and the warehouse
+     * redraw everything
      */
-    public void updateBackground(){
+    public void refresh(){
         //computing scale
         double sizeLatitude = this.map.getMaxLatitude()-this.map.getMinLatitude();
         double sizeLongitude = this.map.getMaxLongitude()-this.map.getMinLongitude();
@@ -120,52 +170,30 @@ public class MapPaneDrawer extends Pane implements Observer {
 
         //adding map segments
         for (Segment segment : this.map.getSegments()){
-            drawSegmentLine(this, segment, Color.BLACK, 2);
+            drawSegmentLine(segment, Color.BLACK, 2);
         }
 
         //adding map intersections
         for (Intersection intersection : this.map.getIntersections()){
-            drawIntersectionPoint(this, intersection, intersectionPointSize, Color.DARKGREY);
+            drawIntersectionPoint(intersection, intersectionPointSize, Color.DARKGREY);
         }
 
         // adding the warehouse
         Warehouse warehouse = this.map.getWarehouse();
-        if(warehouse != null) {
-            drawIntersectionPoint(this, warehouse.intersection, deliveryPointSize,Color.RED);
+        drawIntersectionPoint(warehouse.intersection, deliveryPointSize,Color.RED);
 
-            System.out.println("je dessine tout");
-            //draw the delivery which is selected
-            DeliveryRequest temporaryDelivery = map.getTemporaryDelivery();
-            if (temporaryDelivery != null) {
-                drawDeliveryPoint(this, temporaryDelivery, null ,Color.PURPLE);
-            }
-
-            //draw deliveries and path
-
-            int i = 0;
-            for (Tour tour : map.getTours()) {
-                for (DeliveryRequest delivery : tour.getDeliveries()) {
-                    drawDeliveryPoint(this, delivery, tour, tour.getColor());
-                }
-                Path path = new Path();
-                Intersection tmp = map.getWarehouse().intersection;
-                path.getElements().add(getmoveTo(tmp));
-                for (TourStep tourStep : tour.getTourSteps()) {
-                    for (Segment segment : tourStep.segments) {
-                        if (segment.destination == tmp) {
-                            tmp = segment.origin;
-                        } else {
-                            tmp = segment.destination;
-                        }
-                        path.getElements().add(getLineTo(tmp));
-                    }
-                }
-                path.setId(Integer.toString(i));
-                path.setStrokeWidth(5);
-                path.setStroke(tour.getColor());
-                this.getChildren().add(path);
-            }
+        System.out.println("je dessine tout");
+        //draw the delivery which is selected
+        DeliveryRequest temporaryDelivery = map.getTemporaryDelivery();
+        if (temporaryDelivery != null) {
+            drawDeliveryPoint(temporaryDelivery, null ,Color.PURPLE);
         }
+
+        //draw deliveries and path
+        for (Tour tour : map.getTours()) {
+            drawTour(tour);
+        }
+
     }
 
     private LineTo getLineTo(Intersection i){
@@ -182,38 +210,37 @@ public class MapPaneDrawer extends Pane implements Observer {
 
     /**
      * Highlight an intersection of the delivery
-     * @param board The pane where the intersection must be drawn
      * @param intersection The Intersection to draw
      */
-    public void drawIntersectionPoint(Pane board, Intersection intersection, double radius, Color color){
+    public void drawIntersectionPoint(Intersection intersection, double radius, Color color){
         double yCoordinate = -scale * intersection.latitude + latitudeOffset;
         double xCoordinate = scale * intersection.longitude + longitudeOffset;
         CircleIntersection circleIntersection = new CircleIntersection(xCoordinate, yCoordinate, radius, color, intersection);
         circleIntersection.setOnMouseClicked(this::onIntersectionClick);
 
-        board.getChildren().add(circleIntersection);
+        this.getChildren().add(circleIntersection);
     }
 
-    public void drawDeliveryPoint(Pane board, DeliveryRequest deliveryRequest, Tour tour, Paint color){
+    public void drawDeliveryPoint(DeliveryRequest deliveryRequest, Tour tour, Paint color){
         double yCoordinate = -scale * deliveryRequest.getIntersection().latitude + latitudeOffset;
         double xCoordinate = scale * deliveryRequest.getIntersection().longitude + longitudeOffset;
         CircleDelivery circleDelivery = new CircleDelivery(xCoordinate, yCoordinate, deliveryPointSize, color, deliveryRequest, tour);
 
         circleDelivery.setOnMouseClicked(this::onDeliveryClick);
-        board.getChildren().add(circleDelivery);
+        this.getChildren().add(circleDelivery);
     }
 
 
-    public void deleteDeliveryPoint(DeliveryRequest  deliveryRequest){
-        System.out.println("delete a delivery");
-        CircleDelivery foundCircle = findCircleDeliveryById(this, deliveryRequest);
+    public void eraseDeliveryRequest(DeliveryRequest  deliveryRequest){
+        System.out.println(this + "delete" + deliveryRequest);
+        CircleDelivery foundCircle = findCircleDelivery(deliveryRequest);
         if(foundCircle != null ){
-            boolean removed = this.getChildren().remove(foundCircle);
+            this.getChildren().remove(foundCircle);
         }
     }
 
-    private CircleDelivery findCircleDeliveryById(Pane pane, DeliveryRequest deliveryRequest) {
-        for (javafx.scene.Node node : pane.getChildren()) {
+    private CircleDelivery findCircleDelivery(DeliveryRequest deliveryRequest) {
+        for (javafx.scene.Node node : this.getChildren()) {
             if (node instanceof CircleDelivery && Objects.equals(((CircleDelivery) node).getDeliveryRequest(),deliveryRequest)) {
                 return (CircleDelivery) node;
             }
@@ -239,12 +266,11 @@ public class MapPaneDrawer extends Pane implements Observer {
 
     /**
      * draw a segment on the pane
-     * @param board The pane where the intersection must be drawn
      * @param segment The Segment to draw
      * @param color
      * @param strokeWidth
      */
-    public void drawSegmentLine(Pane board, Segment segment, Color color, double strokeWidth){
+    public void drawSegmentLine(Segment segment, Color color, double strokeWidth){
         double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
         double xOrigin = scale * segment.origin.longitude + longitudeOffset;
         double yDest = -scale * segment.destination.latitude + latitudeOffset;
@@ -252,7 +278,7 @@ public class MapPaneDrawer extends Pane implements Observer {
         Line segmentLine = new Line(xOrigin, yOrigin, xDest, yDest);
         segmentLine.setStroke(color);
         segmentLine.setStrokeWidth(strokeWidth);
-        board.getChildren().add(segmentLine);
+        this.getChildren().add(segmentLine);
     }
     public void setController(Controller controller) {
         this.controller = controller;
