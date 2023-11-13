@@ -44,14 +44,13 @@ public class Tour extends Observable{
     public boolean addDelivery(DeliveryRequest deliveryRequest) {
         boolean hasChanged = deliveries.add(deliveryRequest);
         if(hasChanged){
-            System.out.println("the delivery added is at : ("+deliveryRequest.getDestination().longitude+";"+deliveryRequest.getDestination().latitude+")");
             notifyObservers(NotifType.ADD, deliveryRequest);
         }
         return hasChanged;
     }
 
     public boolean removeDelivery(DeliveryRequest deliveryRequest) {
-        boolean hasChanged = deliveries.remove((deliveryRequest));
+        boolean hasChanged = deliveries.remove(deliveryRequest);
         if (hasChanged) notifyObservers(NotifType.REMOVE, deliveryRequest);
         return hasChanged;
     }
@@ -68,7 +67,8 @@ public class Tour extends Observable{
     }
     
     public void setTourSteps(LinkedList<TourStep> tourSteps) { 
-        this.tourSteps = tourSteps; 
+        this.tourSteps = tourSteps;
+        notifyObservers(NotifType.UPDATE);
     }
 
     public LinkedList<TourStep> getTourSteps() { 
