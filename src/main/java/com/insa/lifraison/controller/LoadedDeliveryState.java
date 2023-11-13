@@ -2,12 +2,9 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
-import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.TourDeserializer;
-import javafx.scene.layout.VBox;
-import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourSerializer;
 import javafx.stage.FileChooser;
@@ -17,7 +14,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class LoadedDeliveryState implements State{
     /**
@@ -34,7 +30,7 @@ public class LoadedDeliveryState implements State{
             fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            GroupOfCommand loadDeliveriesCommand = new GroupOfCommand();
+            CompoundCommand loadDeliveriesCommand = new CompoundCommand();
             for(Tour tour : TourDeserializer.load(m.getIntersections(), file)) {
                 loadDeliveriesCommand.addCommand(new AddTourCommand(m, tour));
             }

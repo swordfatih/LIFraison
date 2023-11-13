@@ -1,15 +1,12 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.model.DeliveryRequest;
-import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.TourDeserializer;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
@@ -58,7 +55,7 @@ public class LoadedMapState implements State {
             fileChooser.getExtensionFilters().add(extFilter);
             fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
-            GroupOfCommand loadDeliveriesCommand = new GroupOfCommand();
+            CompoundCommand loadDeliveriesCommand = new CompoundCommand();
             if(m.getTours().size() == 1) {
                 loadDeliveriesCommand.addCommand(new ReverseCommand(new AddTourCommand(m, m.getTours().get(0))));
             }

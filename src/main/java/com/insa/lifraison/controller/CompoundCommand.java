@@ -2,14 +2,14 @@ package com.insa.lifraison.controller;
 
 import java.util.ArrayList;
 
-public class GroupOfCommand implements Command {
+public class CompoundCommand implements Command {
     private ArrayList<Command> commands;
 
-    public GroupOfCommand() {
+    public CompoundCommand() {
         this.commands = new ArrayList<>();
     }
 
-    public GroupOfCommand(ArrayList<Command> commands) {
+    public CompoundCommand(ArrayList<Command> commands) {
         this.commands = commands;
     }
 
