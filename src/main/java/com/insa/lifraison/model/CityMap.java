@@ -111,7 +111,7 @@ public class CityMap extends Observable {
     }
     public DeliveryRequest moveDelivery(Intersection newIntersection){
         notifyObservers(NotifType.REMOVE, temporaryDelivery);
-        temporaryDelivery.setDestination(newIntersection);
+        temporaryDelivery.setIntersection(newIntersection);
         notifyObservers(NotifType.ADD, temporaryDelivery);
         return temporaryDelivery;
     }
@@ -234,13 +234,13 @@ public class CityMap extends Observable {
         for(DeliveryRequest deliveryRequest : deliveries) {
             ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(length, Double.MAX_VALUE));
             ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(length, null));
-            int index = idMap.get(deliveryRequest.getDestination().id);
+            int index = idMap.get(deliveryRequest.getIntersection().id);
             distances.set(index, 0.0);
             Dijkstra(index, adjList, distances, parents);
             adjMatrix.add(new ArrayList<>());
             for (DeliveryRequest delivery : deliveries) {
                 adjMatrix.get(adjMatrix.size() - 1)
-                        .add(distances.get(idMap.get(delivery.getDestination().id)));
+                        .add(distances.get(idMap.get(delivery.getIntersection().id)));
             }
             parentSegments.add(parents);
             graphIndices.add(index);

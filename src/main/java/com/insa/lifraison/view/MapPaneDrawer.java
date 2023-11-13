@@ -195,8 +195,8 @@ public class MapPaneDrawer extends Pane implements Observer {
     }
 
     public void drawDeliveryPoint(Pane board, DeliveryRequest deliveryRequest, Tour tour, Paint color){
-        double yCoordinate = -scale * deliveryRequest.getDestination().latitude + latitudeOffset;
-        double xCoordinate = scale * deliveryRequest.getDestination().longitude + longitudeOffset;
+        double yCoordinate = -scale * deliveryRequest.getIntersection().latitude + latitudeOffset;
+        double xCoordinate = scale * deliveryRequest.getIntersection().longitude + longitudeOffset;
         CircleDelivery circleDelivery = new CircleDelivery(xCoordinate, yCoordinate, deliveryPointSize, color, deliveryRequest, tour);
 
         circleDelivery.setOnMouseClicked(this::onDeliveryClick);
@@ -233,7 +233,7 @@ public class MapPaneDrawer extends Pane implements Observer {
         if(event.getButton() == MouseButton.PRIMARY) {
             CircleDelivery clicked = (CircleDelivery) event.getSource();
             DeliveryRequest deliveryRequest = clicked.getDeliveryRequest();
-            controller.leftClick(deliveryRequest.getDestination(), deliveryRequest,  clicked.getTour());
+            controller.leftClick(deliveryRequest.getIntersection(), deliveryRequest,  clicked.getTour());
         }
     }
 

@@ -1,12 +1,13 @@
 package com.insa.lifraison.model;
 
+import com.insa.lifraison.observer.Observable;
+
 import java.time.LocalTime;
-import java.util.Objects;
 
 /**
  * Object that includes an {@link com.insa.lifraison.model.Intersection} to deliver.
  */
-public class DeliveryRequest {
+public class DeliveryRequest extends Observable {
     /**
      * The final arrival time of this delivery after considering all the deliveries from the same courier.
      */
@@ -16,18 +17,18 @@ public class DeliveryRequest {
     /**
      * Point to which this delivery must be made
      */
-    private Intersection destination;
+    private Intersection intersection;
 
-    public DeliveryRequest(Intersection destination) {
+    public DeliveryRequest(Intersection intersection) {
         this.timeWindowStart = null;
         this.timeWindowEnd = null;
-        this.destination = destination;
+        this.intersection = intersection;
     }
 
-    public DeliveryRequest(LocalTime timeWindowStart, LocalTime timeWindowEnd, Intersection destination) {
+    public DeliveryRequest(LocalTime timeWindowStart, LocalTime timeWindowEnd, Intersection intersection) {
         this.timeWindowStart = timeWindowStart;
         this.timeWindowEnd = timeWindowEnd;
-        this.destination = destination;
+        this.intersection = intersection;
     }
 
     public LocalTime getTimeWindowStart(){
@@ -37,20 +38,18 @@ public class DeliveryRequest {
         return timeWindowEnd;
     }
 
-    public Intersection getDestination(){
-        return this.destination;
+    public Intersection getIntersection(){
+        return this.intersection;
     }
 
-    public void setTimeWindowStart(LocalTime timeWindowStart) {
+    public void setTimeWindow(LocalTime timeWindowStart, LocalTime timeWindowEnd) {
         this.timeWindowStart = timeWindowStart;
-    }
-
-    public void setTimeWindowEnd(LocalTime timeWindowEnd) {
         this.timeWindowEnd = timeWindowEnd;
+        this.notifyObservers(NotifType.UPDATE);
     }
 
-    public void setDestination(Intersection destination) {
-        this.destination = destination;
-
+    public void setIntersection(Intersection intersection) {
+        this.intersection = intersection;
+        this.notifyObservers(NotifType.UPDATE);
     }
 }

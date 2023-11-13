@@ -71,7 +71,7 @@ public class TourSerializer {// Singleton
     private Element buildDeliveryNode(DeliveryRequest delRequest, Document doc) {
         Element deliveryNode = doc.createElement("delivery");
 
-        createAttribute(deliveryNode,"destination",delRequest.getDestination().id,doc);
+        createAttribute(deliveryNode,"destination",delRequest.getIntersection().id,doc);
         LocalTime startTime = delRequest.getTimeWindowStart();
         String startTimeString = "";
         if(startTime!=null){
