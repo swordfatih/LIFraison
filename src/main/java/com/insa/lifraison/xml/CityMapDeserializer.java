@@ -53,8 +53,6 @@ public class CityMapDeserializer {
      */
     public static CityMap buildFromDOMXML(Element rootDOMNode) throws ExceptionXML, NumberFormatException{
 
-        CityMap map = new CityMap();
-
         NodeList IntersectionList = rootDOMNode.getElementsByTagName("intersection");
         HashMap<String, Intersection> intersectionMap = new HashMap<>();
         LinkedList<Intersection> intersections = new LinkedList<>();
@@ -71,8 +69,7 @@ public class CityMapDeserializer {
         }
         NodeList warehouseNodes = rootDOMNode.getElementsByTagName("warehouse");
         Warehouse warehouse= createWarehouse((Element) warehouseNodes.item(0),intersectionMap);
-        map.setIntersectionsSegmentsWarehouse(intersections, segmentList, warehouse);
-        return map;
+        return new CityMap(intersections, segmentList, warehouse);
     }
     private static Intersection createIntersection(Element elt) throws ExceptionXML{
         String id = elt.getAttribute("id");

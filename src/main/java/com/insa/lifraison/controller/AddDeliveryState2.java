@@ -4,10 +4,8 @@ import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.Tour;
-import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
-import javafx.scene.layout.VBox;
 
 public class AddDeliveryState2 implements State {
     private DeliveryRequest currentDelivery;
@@ -51,6 +49,6 @@ public class AddDeliveryState2 implements State {
 
     protected void entryAction(Intersection i, CityMap m, ListOfCommands l){
         currentDelivery = new DeliveryRequest(i);
-        m.addTemporaryDelivery(currentDelivery);
+        m.setTemporaryDelivery(currentDelivery);
     }
 }
