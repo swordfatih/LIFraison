@@ -64,7 +64,11 @@ public class MapTourList extends VBox implements Observer{
     private void add(Tour tour) {
         ButtonTour buttonTour = new ButtonTour(tour);
         buttonTour.setOnAction(this::buttonTourClicked);
-        this.getChildren().add(buttonTour);
+        int i = 0;
+        while (i < this.getChildren().size() && ((ButtonTour)this.getChildren().get(i)).getTour().getId() < tour.getId()) {
+            i++;
+        }
+        this.getChildren().add(i, buttonTour);
     }
 
     private void buttonTourClicked(ActionEvent event) {

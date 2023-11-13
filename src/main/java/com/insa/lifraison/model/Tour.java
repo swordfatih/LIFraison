@@ -57,14 +57,6 @@ public class Tour extends Observable{
     public ArrayList<DeliveryRequest> getDeliveries(){
         return deliveries;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tour tour = (Tour) o;
-        return Objects.equals(deliveries, tour.deliveries) && Objects.equals(tourSteps, tour.tourSteps);
-    }
     
     public void setTourSteps(LinkedList<TourStep> tourSteps) { 
         this.tourSteps = tourSteps;

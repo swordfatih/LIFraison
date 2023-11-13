@@ -87,6 +87,10 @@ public class CityMap extends Observable {
     }
 
     public void addTour(Tour tour) {
+        System.out.println("adding tour" + tour);
+        for(Tour t : this.tours) {
+            System.out.println(t.getId());
+        }
         int i = 0;
         if (tour.getId() == -1) {
             while (i < this.tours.size() && this.tours.get(i).getId() == i) {
