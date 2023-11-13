@@ -23,7 +23,6 @@ public class MapTourList extends VBox implements Observer{
 
     @Override
     public void update(Observable.NotifType type, Observable observed, Object arg) {
-        System.out.println(this + "received notif");
         if (arg instanceof Tour) {
             Tour tour = (Tour) arg;
             if(type == Observable.NotifType.ADD) {

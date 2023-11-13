@@ -45,7 +45,6 @@ public class MapPaneDrawer extends Pane implements Observer {
      */
     @Override
     public void update(Observable.NotifType notifType, Observable observable, Object arg){
-        System.out.println(this + " received notif");
         switch (notifType) {
             case UPDATE -> {
                 if(observable instanceof CityMap) {
@@ -73,10 +72,8 @@ public class MapPaneDrawer extends Pane implements Observer {
                     newDelivery.addObserver(this);
                     if (observable instanceof Tour) {
                         Tour tour = (Tour) observable;
-                        System.out.println("draw permanent delivery");
                         drawDeliveryPoint(newDelivery, tour, tour.getColor());
                     } else {
-                        System.out.println("draw temporary delivery");
                         drawDeliveryPoint(newDelivery, null, Color.PURPLE);
                     }
                 }
@@ -182,7 +179,6 @@ public class MapPaneDrawer extends Pane implements Observer {
         Warehouse warehouse = this.map.getWarehouse();
         drawIntersectionPoint(warehouse.intersection, deliveryPointSize,Color.RED);
 
-        System.out.println("je dessine tout");
         //draw the delivery which is selected
         DeliveryRequest temporaryDelivery = map.getTemporaryDelivery();
         if (temporaryDelivery != null) {
@@ -232,7 +228,6 @@ public class MapPaneDrawer extends Pane implements Observer {
 
 
     public void eraseDeliveryRequest(DeliveryRequest  deliveryRequest){
-        System.out.println(this + "delete" + deliveryRequest);
         CircleDelivery foundCircle = findCircleDelivery(deliveryRequest);
         if(foundCircle != null ){
             this.getChildren().remove(foundCircle);
@@ -251,7 +246,6 @@ public class MapPaneDrawer extends Pane implements Observer {
     private void onIntersectionClick(MouseEvent event){
         if(event.getButton() == MouseButton.PRIMARY) {
             CircleIntersection clicked = (CircleIntersection) event.getSource();
-            System.out.println("Intersection clicked found " + clicked.getIntersection());
             controller.leftClick(clicked.getIntersection(), null, null);
         }
     }

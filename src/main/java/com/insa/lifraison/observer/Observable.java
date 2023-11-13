@@ -23,7 +23,6 @@ public class Observable {
     }
 
     public void notifyObservers(NotifType type, Object arg){
-        System.out.println(this+ " notify " + type + " " + arg);
         for (Observer o : observers) {
             o.update(type, this, arg);
         }

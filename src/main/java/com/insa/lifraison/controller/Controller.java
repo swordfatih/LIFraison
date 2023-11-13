@@ -50,7 +50,6 @@ public class Controller {
      */
     protected void setCurrentState(State state) {
         this.currentState = state;
-        System.out.println("new state : " +state);
     }
 
     /**
