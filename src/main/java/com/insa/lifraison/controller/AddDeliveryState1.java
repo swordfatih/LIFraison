@@ -7,10 +7,15 @@ import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.View;
 
+/**
+ * AddDeliveryState1 implements a State {@link com.insa.lifraison.controller.State}
+ * It corresponds to the state when the user had clicked on the "addDelivery" button
+ * but hasn't created a deliveryRequest yet.
+ */
 public class AddDeliveryState1 implements State {
+
     /**
-     * click on the intersection where you want to add a delivery request
-     *
+     * Create a delivery request at an intersection given by the user. Go to AddDeliveryState2
      * @param c the controller
      * @param m the cityMap
      * @param i the Intersection where the user clicks
@@ -22,7 +27,7 @@ public class AddDeliveryState1 implements State {
     }
 
     /**
-     * cancel the action
+     * Cancel the action and go back to precedent state.
      * @param c the Controller
      * @param m the city map
      */

@@ -1,5 +1,8 @@
 package com.insa.lifraison.controller;
 
+/**
+ * Interface Command to execute a command
+ */
 public interface Command {
 
     /**
