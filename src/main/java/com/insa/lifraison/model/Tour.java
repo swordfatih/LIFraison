@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 /**
  * Object that stores all the deliveries for a courier.
- * Provides a method that can calculate the optimal solution for the tour.
+ * This class extends from {@link com.insa.lifraison.observer.Observable}
  */
 public class Tour extends Observable{
     /**
@@ -25,6 +25,9 @@ public class Tour extends Observable{
     private int id;
     private Color color;
 
+    /**
+     * Constructor of Tour
+     */
     public Tour() {
         id = -1;
         color = null;
