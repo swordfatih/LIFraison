@@ -125,11 +125,9 @@ public class CityMap extends Observable {
         return selectionColor;
     }
 
-    /**
-     * Give all tours of the CityMap
-     * @return LinkedList<Tour> tours
-     */
-    public LinkedList<Tour> getTours() { return tours; }
+    public LinkedList<Tour> getTours() { 
+        return tours;
+    }
 
     /**
      * Give all segments of the CityMap
@@ -145,6 +143,14 @@ public class CityMap extends Observable {
      */
     public LinkedList<Intersection> getIntersections() {
         return intersections;
+    }
+
+    public double getMinLongitude(){
+        return minLongitude;
+    }
+
+    public double getMaxLongitude(){
+        return maxLongitude;
     }
 
     /**
@@ -178,6 +184,15 @@ public class CityMap extends Observable {
     }
 
     /**
+     * add a delivery to the uncomputedDeliveries list
+     * @param newDelivery the delivery you want to add
+     * @return succes of the adding
+     */
+    public boolean addDelivery(int index, DeliveryRequest newDelivery){
+        return tours.get(index).addDelivery(newDelivery);
+    }
+
+    /**
      * Add a new tour to tours of the CityMap
      * Notify observers {@link com.insa.lifraison.observer.Observer} that a new tour have been added
      * @param tour the new tour which is added
@@ -200,21 +215,6 @@ public class CityMap extends Observable {
         notifyObservers(NotifType.ADD, tour);
     }
 
-    /**
-     * Remove a tour from tours of the CityMap
-     * Notify observers {@link com.insa.lifraison.observer.Observer} that a tour have been removed
-     * @param tour the tour which is removed
-     */
-    public boolean removeTour(Tour tour) {
-        boolean hasChanged = this.tours.remove(tour);
-        if (hasChanged) notifyObservers(NotifType.REMOVE, tour);
-        return hasChanged;
-    }
-
-    /**
-     * Add a collection of tour in the CityMap
-     * @param tours the collection of tour which will be added to tours of the CityMap
-     */
     public void addTours(Collection<Tour> tours) {
         for(Tour tour : tours) {
             this.addTour(tour);
@@ -225,10 +225,16 @@ public class CityMap extends Observable {
      * Remove a collection of tour in the CityMap
      * @param tours the collection of tour which will be removed to tours of the CityMap
      */
+    public boolean removeTour(Tour tour) {
+        boolean hasChanged = this.tours.remove(tour);
+        if (hasChanged) notifyObservers(NotifType.REMOVE, tour);
+        return hasChanged;
+    }
+
     public boolean removeTours(Collection<Tour> tours) {
         boolean hasChanged = false;
         for(Tour tour : tours) {
-            hasChanged = hasChanged || this.removeTour(tour);
+            hasChanged = this.removeTour(tour) || hasChanged;
         }
         return hasChanged;
     }
@@ -237,7 +243,9 @@ public class CityMap extends Observable {
      * Get the warehouse of the CityMap
      * @return the warehouse of the CityMap
      */
-    public Warehouse getWarehouse(){return this.warehouse;}
+    public Warehouse getWarehouse() {
+        return this.warehouse;
+    }
 
     /**
      * Compares two City maps. It returns true if, and only if,
@@ -305,24 +313,9 @@ public class CityMap extends Observable {
         return maxLatitude;
     }
 
-    /**
-     * Give the minLongitude of the CityMap
-     * @return double minLongitude
-     */
-    public double getMinLongitude(){
-        return minLongitude;
-    }
-
-    /**
-     * Give the maxLongitude of the CityMap
-     * @return double maxLongitude
-     */
-    public double getMaxLongitude(){
-        return maxLongitude;
-    }
-
     private ArrayList<ArrayList<Edge>> createAdjacencyList() {
         this.intersectionIdMap = new HashMap<>();
+        
         int length = intersections.size();
         for(Intersection inter : intersections) {
             intersectionIdMap.put(inter.id, intersectionIdMap.size());

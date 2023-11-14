@@ -39,4 +39,15 @@ public class TourStep {
         return length;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof TourStep trStp){
+            return this.departure.equals(trStp.departure) &&
+                    this.arrival.equals(trStp.arrival) &&
+                    this.segments.containsAll(trStp.segments) &&
+                    trStp.segments.equals(this.segments);
+        } else {
+            return false;
+        }
+    }
 }

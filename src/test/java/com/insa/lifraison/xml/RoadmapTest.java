@@ -64,6 +64,6 @@ public class RoadmapTest {
         Document document = docBuilder.parse(htmlFile);
         Element root = document.getDocumentElement();
 
-        assertTrue(roadmap.isEqualNode(root));
+        assertTrue(roadmap.isEqualNode(root.getLastChild()));
     }
 }

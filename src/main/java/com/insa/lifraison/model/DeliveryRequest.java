@@ -104,4 +104,20 @@ public class DeliveryRequest extends Observable {
         this.state = state;
         notifyObservers(NotifType.UPDATE);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof DeliveryRequest delreq){
+            return this.intersection.equals(delreq.intersection) &&
+                    this.timeWindowEnd == delreq.timeWindowEnd &&
+                    this.timeWindowStart == delreq.timeWindowStart;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return intersection.toString() + " entre " + timeWindowStart + " et " + timeWindowEnd;
+    }
 }

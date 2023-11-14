@@ -41,10 +41,14 @@ public class Segment {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Segment segment = (Segment) o;
-        return Double.compare(length, segment.length) == 0 && Objects.equals(origin, segment.origin) && Objects.equals(destination, segment.destination) && Objects.equals(name, segment.name);
+        if (o instanceof Segment seg) {
+            return this.destination.equals(seg.destination) &&
+                    this.origin.equals(seg.origin) &&
+                    this.length == seg.length &&
+                    this.name.equals(seg.name);
+        } else {
+            return false;
+        }
     }
 
     public boolean contains(Intersection intersection) {

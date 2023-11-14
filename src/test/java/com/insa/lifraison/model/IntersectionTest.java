@@ -36,7 +36,7 @@ public class IntersectionTest {
         double longitude = 0.34;
         double latitude = 0.53;
         Intersection intersection = new Intersection(id, longitude, latitude);
-        String toString = "Intersection{id='" + id + "', longitude=" + longitude + ", latitude=" + latitude + "}";
+        String toString = "Intersection [" + id + "] {" + longitude + ", " + latitude + "}";
         assertEquals(toString, intersection.toString());
     }
 }

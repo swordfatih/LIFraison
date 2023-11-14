@@ -124,4 +124,28 @@ public class Tour extends Observable{
         }
         notifyObservers(NotifType.UPDATE);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Tour tr){
+            boolean b1 = (this.getColor() == tr.getColor());
+            boolean b2 = (this.getId() == tr.getId());
+            boolean b3 = this.getDeliveries().containsAll(tr.getDeliveries()) && tr.getDeliveries().containsAll(this.getDeliveries());
+            boolean b4 = this.getTourSteps().containsAll(tr.getTourSteps()) && tr.getTourSteps().containsAll(this.getTourSteps());
+            return b1 && b2 && b3 && b4;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s;
+        s = new StringBuilder("id : " + this.getId());
+        s.append("color : ").append(this.getColor());
+        for (DeliveryRequest del : this.deliveries){
+            s.append("\n").append(del.toString());
+        }
+        return s.toString();
+    }
 }

@@ -55,10 +55,13 @@ public class Intersection {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Intersection that = (Intersection) o;
-        return Double.compare(longitude, that.longitude) == 0 && Double.compare(latitude, that.latitude) == 0 && Objects.equals(id, that.id);
+        if (o instanceof Intersection i){
+            return this.longitude == i.longitude &&
+                    this.latitude == i.latitude &&
+                    this.id.equals(i.id);
+        } else {
+            return false;
+        }
     }
 
     /**
