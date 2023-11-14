@@ -231,7 +231,7 @@ public class CityMap extends Observable {
         return hasChanged;
     }
 
-    public boolean removeTours(Collection<Tour> tours) {
+    public boolean removeTours(Collection<Tour> toursToDelete) {
         boolean hasChanged = false;
         for(Tour tour : tours) {
             hasChanged = this.removeTour(tour) || hasChanged;

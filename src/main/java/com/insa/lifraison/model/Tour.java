@@ -144,7 +144,7 @@ public class Tour extends Observable{
         s = new StringBuilder("id : " + this.getId());
         s.append("color : ").append(this.getColor());
         for (DeliveryRequest del : this.deliveries){
-            s.append("\n").append(del.toString());
+            s.append("\n\t").append(del.toString());
         }
         return s.toString();
     }

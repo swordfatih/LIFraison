@@ -71,6 +71,7 @@ public class CityMapDeserializer {
         Warehouse warehouse= createWarehouse((Element) warehouseNodes.item(0),intersectionMap);
         return new CityMap(intersections, segmentList, warehouse);
     }
+
     private static Intersection createIntersection(Element elt) throws ExceptionXML{
         String id = elt.getAttribute("id");
         double latitude = Double.parseDouble(elt.getAttribute("latitude"));
@@ -108,5 +109,4 @@ public class CityMapDeserializer {
        }
        throw new ExceptionXML("Unknown warehouse address: '" + id + "'.");
     }
-
 }
