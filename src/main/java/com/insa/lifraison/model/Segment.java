@@ -1,7 +1,5 @@
 package com.insa.lifraison.model;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
 /**

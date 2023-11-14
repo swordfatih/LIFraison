@@ -1,16 +1,11 @@
 package com.insa.lifraison.controller;
 
+import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
-import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.view.MainController;
-import com.insa.lifraison.view.MenuController;
 import com.insa.lifraison.model.Tour;
-import com.insa.lifraison.observer.Observable;
+import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class DeleteDeliveryState1 implements State {
     /**

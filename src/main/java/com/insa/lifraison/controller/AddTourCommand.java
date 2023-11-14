@@ -2,8 +2,6 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
 
 public class AddTourCommand implements Command {
     private CityMap cityMap;

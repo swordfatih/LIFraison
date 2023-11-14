@@ -2,10 +2,9 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
-import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.View;
-import javafx.scene.layout.VBox;
 
 public interface State {
     public default void loadMap(Controller c, View view, ListOfCommands l){};

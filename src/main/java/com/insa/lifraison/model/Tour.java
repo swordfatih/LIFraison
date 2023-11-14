@@ -4,9 +4,8 @@ import com.insa.lifraison.observer.Observable;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import java.util.LinkedList;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.LinkedList;
 
 /**
  * Object that stores all the deliveries for a courier.

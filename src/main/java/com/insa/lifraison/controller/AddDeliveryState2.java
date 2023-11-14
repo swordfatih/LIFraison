@@ -3,9 +3,8 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
-import com.insa.lifraison.observer.Observable;
-import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.model.Tour;
+import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 
 public class AddDeliveryState2 implements State {

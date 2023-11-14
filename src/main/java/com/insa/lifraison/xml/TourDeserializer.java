@@ -1,28 +1,23 @@
 package com.insa.lifraison.xml;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Optional;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.model.Tour;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.model.Tour;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Optional;
 
 public class TourDeserializer {
     public static ArrayList<Tour> load(LinkedList<Intersection> map_intersections, File file) throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
