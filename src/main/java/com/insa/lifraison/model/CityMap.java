@@ -23,7 +23,7 @@ public class CityMap extends Observable {
     /**
      * List of all {@link com.insa.lifraison.model.Intersection} of the city
      */
-    private final LinkedList<Intersection> intersections;
+    private LinkedList<Intersection> intersections;
     /**
      * List of all {@link com.insa.lifraison.model.Segment} of the city
      */
@@ -42,35 +42,15 @@ public class CityMap extends Observable {
     private ArrayList<ArrayList<Edge>> adjList;
     private HashMap<String, Integer> intersectionIdMap;
 
-    public CityMap() {
-        reset();
-    }
-
     public CityMap(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
         this.intersections = intersections;
         this.segments = segments;
         this.warehouse = warehouse;
         this.updateMinMax();
         this.tours = new LinkedList<>();
-        Tour tour = new Tour();
-        this.selectedDelivery = null;
-        tours.add(tour);
+        this.addTour(new Tour());
+        this.temporaryDelivery = null;
         this.adjList = createAdjacencyList();
-    }
-
-    public void reset(){
-        this.intersections = new LinkedList<>();
-        this.segments = new LinkedList<>();
-        this.warehouse = null;
-        this.minLatitude = Double.MAX_VALUE;
-        this.minLongitude = Double.MAX_VALUE;
-        this.maxLatitude = Double.MIN_VALUE;
-        this.maxLongitude = Double.MIN_VALUE;
-        this.tours = new LinkedList<>();
-        Tour tour = new Tour();
-        tours.add(tour);
-        this.selectedDelivery = null;
-        this.notifyObservers(NotifType.FULL_UPDATE);
     }
 
     /**
@@ -151,38 +131,6 @@ public class CityMap extends Observable {
             hasChanged = hasChanged || this.removeTour(tour);
         }
         return hasChanged;
-    }
-
-    /**
-     * Withdraw the delivery  if it exists
-     * @param deliveryRequest : the position where the delivery can be
-     * @return true if a delivery was successfully remove
-     */
-    public boolean removeDelivery(DeliveryRequest deliveryRequest){
-        for(Tour tour : this.tours){
-            if(tour.removeDelivery(deliveryRequest)) {
-                this.notifyObservers(NotifType.LIGHT_UPDATE);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void setIntersectionsSegmentsWarehouse(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
-        this.intersections = intersections;
-        this.segments = segments;
-        this.warehouse = warehouse;
-        this.updateMinMax();
-        this.notifyObservers(NotifType.FULL_UPDATE);
-        this.adjList = createAdjacencyList();
-    }
-
-    /**
-     * Set the warehouse of the CityMap.
-     * @param warehouse warehouse to be set as the warehouse of the CityMap
-     */
-    public void setWarehouse(Warehouse warehouse){
-        this.warehouse = warehouse;
     }
 
     /**
@@ -299,7 +247,7 @@ public class CityMap extends Observable {
         for(DeliveryRequest deliveryRequest : deliveries) {
             ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(intersectionCnt, Double.MAX_VALUE));
             ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(intersectionCnt, null));
-            int index = intersectionIdMap.get(deliveryRequest.getDestination().id);
+            int index = intersectionIdMap.get(deliveryRequest.getIntersection().id);
             distances.set(index, 0.0);
             Dijkstra(index, distances, parents);
 
@@ -311,7 +259,7 @@ public class CityMap extends Observable {
                     distances.set(i, Double.MAX_VALUE);
                 }
                 adjMatrix.get(adjMatrix.size() - 1)
-                        .add(distances.get(intersectionIdMap.get(deliveries.get(0).getDestination().id)));
+                        .add(distances.get(intersectionIdMap.get(deliveries.get(0).getIntersection().id)));
             }
 
             parentSegments.add(parents);
@@ -344,7 +292,8 @@ public class CityMap extends Observable {
             int hourDuration = (int)Math.floor(pathLength / Constants.courierSpeed);
             int minutesDuration = (int)Math.ceil(60.0 * (pathLength - Constants.courierSpeed*hourDuration) / Constants.courierSpeed);
             LocalTime endTime = startTime.plusHours(hourDuration).plusMinutes(minutesDuration);
-            if(endTime.isBefore(deliveries.get(finalNode).getTimeWindowStart())) {
+            if(deliveries.get(finalNode).getTimeWindowStart() != null &&
+                    endTime.isBefore(deliveries.get(finalNode).getTimeWindowStart())) {
                 var delta = Duration.between(endTime, deliveries.get(finalNode).getTimeWindowStart());
                 startTime = startTime.plus(delta);
                 endTime = endTime.plus(delta);
@@ -389,7 +338,7 @@ public class CityMap extends Observable {
         for(DeliveryRequest deliveryRequest : deliveries) {
             if(deliveryRequest.getTimeWindowStart() == null) {
                 int index = timeWindows.indexOf(Collections.min(timeWindows));
-                deliveryRequest.setTimeWindowStart(LocalTime.of(8 + 2*index, 0));
+                deliveryRequest.setTimeWindow(LocalTime.of(8 + 2*index, 0), LocalTime.of(10 + 2*index, 0));
                 timeWindows.set(index, timeWindows.get(index) + 1);
             }
         }
@@ -432,7 +381,7 @@ public class CityMap extends Observable {
         DeliveryRequest deliveryMin = null;
         for(Tour tour : this.tours) {
             for(DeliveryRequest delivery : tour.getDeliveries()) {
-                Intersection intersection = delivery.getDestination();
+                Intersection intersection = delivery.getIntersection();
                 double distanceTmp = Math.sqrt(Math.pow(intersection.latitude - latitude, 2) + Math.pow(intersection.longitude - longitude, 2));
                 if (distanceTmp < distanceMin) {
                     distanceMin = distanceTmp;
@@ -444,14 +393,10 @@ public class CityMap extends Observable {
 
     }
 
-    public void selectDelivery(DeliveryRequest delivery) {
-        this.selectedDelivery = delivery;
-        this.notifyObservers(NotifType.LIGHT_UPDATE);
-    }
-
-    public void clearDeliverySelection() {
-        this.selectedDelivery = null;
-        this.notifyObservers(NotifType.LIGHT_UPDATE);
+    public void clearTemporaryDelivery() {
+        DeliveryRequest deliveryRequest = this.temporaryDelivery;
+        this.temporaryDelivery = null;
+        this.notifyObservers(NotifType.REMOVE, deliveryRequest);
     }
 
     public LinkedList<Intersection> getIntersections() {
