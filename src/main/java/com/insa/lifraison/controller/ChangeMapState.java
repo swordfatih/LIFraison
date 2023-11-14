@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class ChangeMapState implements State {
     @Override
-    public void loadMap(Controller c, CityMap m, View view, ListOfCommands l){
+    public void loadMap(Controller c, View view, ListOfCommands l){
         view.<MainController>getController("main").getInformationController().clearInformations();
         try{
             FileChooser fileChooser = new FileChooser();
@@ -24,7 +24,7 @@ public class ChangeMapState implements State {
             fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            CityMapDeserializer.load(m, file);
+            c.setMap(CityMapDeserializer.load(file));
             l.reset();
             c.setCurrentState(c.loadedMapState);
 

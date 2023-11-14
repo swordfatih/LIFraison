@@ -4,9 +4,10 @@ import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.MainController;
-import com.insa.lifraison.view.MapController;
+import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MenuController;
 import com.insa.lifraison.view.View;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Controller {
@@ -21,9 +22,9 @@ public class Controller {
     protected final AddDeliveryState2 addDeliveryState2 = new AddDeliveryState2();
     protected final LoadedDeliveryState loadedDeliveryState = new LoadedDeliveryState();
     protected final DeleteDeliveryState1 deleteDeliveryState1 = new DeleteDeliveryState1();
-
-    protected final DeleteDeliveryState2 deleteDeliveryState2 = new DeleteDeliveryState2();
     protected final ChangeMapState changeMapState = new ChangeMapState();
+
+    protected final DeleteTourState deleteTourState = new DeleteTourState();
 
     /**
      * Create the controller of the application
@@ -31,12 +32,13 @@ public class Controller {
     public Controller(Stage stage) {
         this.currentState = initialState;
         this.listOfCommands = new ListOfCommands();
-        this.map = new CityMap();
         this.view = new View(stage, this);
 
         view.loadScene("main", "main.fxml", "style/main.css");
         view.loadScene("home", "home.fxml", "style/home.css");
+        
         view.<MainController>getController("main").setMap(this.map);
+
         stage.setTitle("LIFraison");
         view.navigate("home");
         stage.show();
@@ -58,7 +60,7 @@ public class Controller {
      * Method called after a click on the "load Map" button
      */
     public void loadMap(){
-        currentState.loadMap(this, map, view, listOfCommands);
+        currentState.loadMap(this, view, listOfCommands);
     };
 
     public void changeMap(){currentState.changeMap(this, view);};
@@ -81,8 +83,8 @@ public class Controller {
      * Method called after a left Click
      * @param i The nearest intersection of the click
      */
-    public void leftClick(Intersection i, DeliveryRequest d){
-        currentState.leftClick(this, map, i, d, listOfCommands);
+    public void leftClick(Intersection i, DeliveryRequest d, Tour t){
+        currentState.leftClick(this, map, i, d, t, listOfCommands);
     };
 
     /**
@@ -129,4 +131,15 @@ public class Controller {
     };
 
     public void save(){ currentState.save( map, view);};
+
+    public void addTour() { currentState.addTour(map, listOfCommands); }
+
+    public void deleteTour() { currentState = deleteTourState; }
+
+    public void tourButtonClicked(Tour tour) { currentState.tourButtonClicked(this, map, tour, view, listOfCommands); }
+
+    public void setMap(CityMap map) {
+        this.map = map;
+        view.<MapController>getController("map").setMap(this.map);
+    }
 }

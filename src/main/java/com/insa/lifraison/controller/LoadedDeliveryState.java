@@ -3,7 +3,9 @@ package com.insa.lifraison.controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.MenuController;
+import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.View;
+import com.insa.lifraison.xml.TourDeserializer;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourSerializer;
 import javafx.stage.FileChooser;
@@ -20,18 +22,22 @@ public class LoadedDeliveryState implements State{
      */
     @Override
     public void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l) {
-        //try{
+        try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
             fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            l.add(new LoadDeliveriesCommand(m, file));
+            CompoundCommand loadDeliveriesCommand = new CompoundCommand();
+            for(Tour tour : TourDeserializer.load(m.getIntersections(), file)) {
+                loadDeliveriesCommand.addCommand(new AddTourCommand(m, tour));
+            }
+            l.add(loadDeliveriesCommand);
             c.setCurrentState(c.loadedDeliveryState);
-        /*} catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
+        } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());
-        }*/
+        }
     }
 
     /**
@@ -56,7 +62,7 @@ public class LoadedDeliveryState implements State{
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
             fileChooser.setInitialDirectory(new File("."));
-            File file = fileChooser.showOpenDialog(view.getStage());
+            File file = fileChooser.showSaveDialog(view.getStage());
 
             System.out.println(file.exists());
             TourSerializer instance = TourSerializer.getInstance();
@@ -96,5 +102,10 @@ public class LoadedDeliveryState implements State{
     public void changeMap(Controller c, View view){
         view.<MainController>getController("main").getInformationController().displayDeleteMapInformations();
         c.setCurrentState(c.changeMapState);
+    }
+
+    @Override
+    public void addTour(CityMap m, ListOfCommands l) {
+        l.add(new AddTourCommand(m, new Tour()));
     }
 }

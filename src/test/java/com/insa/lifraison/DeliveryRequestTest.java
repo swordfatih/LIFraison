@@ -15,7 +15,7 @@ public class DeliveryRequestTest {
     void constructorTest1() {
         Intersection intersection = new Intersection("test", 0.4, 0.6);
         DeliveryRequest deliveryRequest = new DeliveryRequest(intersection);
-        assertEquals(intersection, deliveryRequest.getDestination());
+        assertEquals(intersection, deliveryRequest.getIntersection());
         assertNull(deliveryRequest.getTimeWindowStart());
         assertNull(deliveryRequest.getTimeWindowEnd());
     }
@@ -26,7 +26,7 @@ public class DeliveryRequestTest {
         LocalTime timeWindowStart = LocalTime.of(10, 30);
         LocalTime timeWindowEnd = LocalTime.of(11, 30);
         DeliveryRequest deliveryRequest = new DeliveryRequest(timeWindowStart, timeWindowEnd, intersection);
-        assertEquals(intersection, deliveryRequest.getDestination());
+        assertEquals(intersection, deliveryRequest.getIntersection());
         assertEquals(timeWindowStart, deliveryRequest.getTimeWindowStart());
         assertEquals(timeWindowEnd, deliveryRequest.getTimeWindowEnd());
     }
@@ -34,8 +34,8 @@ public class DeliveryRequestTest {
     void setDestinationTest() {
         DeliveryRequest deliveryRequest = new DeliveryRequest(null);
         Intersection intersection = new Intersection("test", 0.4, 0.6);
-        deliveryRequest.setDestination(intersection);
-        assertEquals(intersection, deliveryRequest.getDestination());
+        deliveryRequest.setIntersection(intersection);
+        assertEquals(intersection, deliveryRequest.getIntersection());
     }
 
     @Test

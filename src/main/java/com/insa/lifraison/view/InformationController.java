@@ -28,9 +28,7 @@ public class InformationController extends ViewController {
     public void displayAddDeliveryInformations() {
         this.information.getChildren().clear();
         Label info = new Label("Click anywhere on the map to create a new delivery");
-        Button confirm = new Button("confirm");
-        confirm.setOnAction(this::confirmAction);
-        this.information.getChildren().addAll(info, confirm);
+        this.getChildren().add(info);
     }
 
     public void displayDeleteDeliveryInformations() {

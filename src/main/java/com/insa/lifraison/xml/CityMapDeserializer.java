@@ -29,12 +29,12 @@ public class CityMapDeserializer {
      * @throws IOException
      * @throws ExceptionXML
      */
-    public static void load(CityMap map, File file) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+    public static CityMap load(File file) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(file);
         Element root = document.getDocumentElement();
         if (root.getNodeName().equals("map")) {
-            buildFromDOMXML(root, map);
+            return buildFromDOMXML(root);
         }
         else
             throw new ExceptionXML("Wrong format");
@@ -51,9 +51,7 @@ public class CityMapDeserializer {
      * @throws ExceptionXML
      * @throws NumberFormatException
      */
-    public static void buildFromDOMXML(Element rootDOMNode, CityMap map) throws ExceptionXML, NumberFormatException{
-
-        map.reset();
+    public static CityMap buildFromDOMXML(Element rootDOMNode) throws ExceptionXML, NumberFormatException{
 
         NodeList IntersectionList = rootDOMNode.getElementsByTagName("intersection");
         HashMap<String, Intersection> intersectionMap = new HashMap<>();
@@ -71,7 +69,7 @@ public class CityMapDeserializer {
         }
         NodeList warehouseNodes = rootDOMNode.getElementsByTagName("warehouse");
         Warehouse warehouse= createWarehouse((Element) warehouseNodes.item(0),intersectionMap);
-        map.setIntersectionsSegmentsWarehouse(intersections, segmentList, warehouse);
+        return new CityMap(intersections, segmentList, warehouse);
     }
     private static Intersection createIntersection(Element elt) throws ExceptionXML{
         String id = elt.getAttribute("id");
@@ -84,13 +82,31 @@ public class CityMapDeserializer {
         String origin = elt.getAttribute("origin");
         String destination = elt.getAttribute("destination");
         String name = elt.getAttribute("name");
-        double length = Double.parseDouble(elt.getAttribute("length"));
-        return new Segment(intersections.get(origin), intersections.get(destination),length,name);
+        String lengthString = elt.getAttribute("length");
+        try {
+            double length = Double.parseDouble(lengthString);
+            if (length < 0.0) {
+                throw new ExceptionXML("Length cannot be negative: '" + length + "'.");
+            }
+            if (!intersections.containsKey(origin)) {
+                throw new ExceptionXML("Unknown intersection origin: '" + origin + "'.");
+            }
+            if (!intersections.containsKey(destination)) {
+                throw new ExceptionXML("Unknown intersection destination: '" + destination + "'.");
+            }
+            return new Segment(intersections.get(origin), intersections.get(destination), length, name);
+        }
+        catch(NumberFormatException e){
+            throw new ExceptionXML("Length is not a number: '" + lengthString + "'.");
+        }
     }
 
     private static Warehouse createWarehouse(Element elt, HashMap<String, Intersection> intersections) throws ExceptionXML{
        String id = elt.getAttribute("address");
-       return new Warehouse(intersections.get(id));
+       if(intersections.containsKey(id)) {
+           return new Warehouse(intersections.get(id));
+       }
+       throw new ExceptionXML("Unknown warehouse address: '" + id + "'.");
     }
 
 }
