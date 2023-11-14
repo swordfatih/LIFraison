@@ -301,6 +301,7 @@ public class CityMap extends Observable {
             tourSteps.add(new TourStep(path, startTime, endTime));
         }
 
+        deliveries.remove(0);
         tour.setTourSteps(tourSteps);
         return tourSteps;
     }
