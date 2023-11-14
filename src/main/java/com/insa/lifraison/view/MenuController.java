@@ -1,14 +1,10 @@
 package com.insa.lifraison.view;
 
 import com.insa.lifraison.controller.Controller;
-import com.insa.lifraison.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 public class MenuController extends ViewController {
     @FXML
@@ -91,7 +87,7 @@ public class MenuController extends ViewController {
     @FXML
     private void removeTour(ActionEvent event) {
         event.consume();
-        this.controller.deleteTour();
+        this.controller.removeTour();
     }
 
     @FXML

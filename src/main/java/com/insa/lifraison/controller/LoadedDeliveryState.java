@@ -112,5 +112,5 @@ public class LoadedDeliveryState implements State{
     }
 
     @Override
-    public void removeTour(Controller c){c.setCurrentState(c.deleteTourState);}
+    public void removeTour(Controller c, CityMap m){c.setCurrentState(c.deleteTourState);}
 }
