@@ -88,7 +88,7 @@ public class MenuController extends ViewController {
     @FXML
     private void removeTour(ActionEvent event) {
         event.consume();
-        this.controller.deleteTour();
+        this.controller.removeTour();
     }
 
     @FXML

@@ -5,9 +5,7 @@ import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.model.Tour;
-import com.insa.lifraison.view.MenuController;
 import com.insa.lifraison.view.View;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Controller {
@@ -51,6 +49,8 @@ public class Controller {
      */
     protected void setCurrentState(State state) {
         this.currentState = state;
+
+        System.out.println(currentState);
     }
 
     /**
@@ -131,7 +131,7 @@ public class Controller {
 
     public void addTour() { currentState.addTour(map, listOfCommands); }
 
-    public void deleteTour() { currentState.removeTour(this); }
+    public void removeTour() { currentState.removeTour(this, map); }
 
     public void tourButtonClicked(Tour tour) { currentState.tourButtonClicked(this, map, tour, view, listOfCommands); }
 

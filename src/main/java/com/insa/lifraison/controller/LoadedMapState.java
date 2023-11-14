@@ -22,12 +22,14 @@ public class LoadedMapState implements State {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
-            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            c.setMap(CityMapDeserializer.load(file));
-            l.reset();
-            c.setCurrentState(c.loadedMapState);
+            if (file != null) {
+                c.setMap(CityMapDeserializer.load(file));
+                l.reset();
+                c.setCurrentState(c.loadedMapState);
+            }
 
             view.navigate("main");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
@@ -38,32 +40,32 @@ public class LoadedMapState implements State {
         }
     }
 
-    /**
-     * Change to state addDelivery
-     * @param c
-     */
     @Override
     public void addDelivery(Controller c, View view) {
         view.<MainController>getController("main").getInformationController().displayAddDeliveryInformations();
         c.setCurrentState(c.addDeliveryState1);
     }
+
     @Override
     public void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l) {
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
-            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.setInitialDirectory(new File("src/main/resources/tours"));
             File file = fileChooser.showOpenDialog(view.getStage());
-            CompoundCommand loadDeliveriesCommand = new CompoundCommand();
-            if(m.getTours().size() == 1) {
-                loadDeliveriesCommand.addCommand(new ReverseCommand(new AddTourCommand(m, m.getTours().get(0))));
+
+            if (file != null) {
+                CompoundCommand loadDeliveriesCommand = new CompoundCommand();
+                if (m.getTours().size() == 1) {
+                    loadDeliveriesCommand.addCommand(new ReverseCommand(new AddTourCommand(m, m.getTours().get(0))));
+                }
+                for (Tour tour : TourDeserializer.load(m.getIntersections(), file)) {
+                    loadDeliveriesCommand.addCommand(new AddTourCommand(m, tour));
+                }
+                l.add(loadDeliveriesCommand);
+                c.setCurrentState(c.loadedDeliveryState);
             }
-            for(Tour tour : TourDeserializer.load(m.getIntersections(), file)) {
-                loadDeliveriesCommand.addCommand(new AddTourCommand(m, tour));
-            }
-            l.add(loadDeliveriesCommand);
-            c.setCurrentState(c.loadedDeliveryState);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());
         }
@@ -95,5 +97,8 @@ public class LoadedMapState implements State {
     }
 
     @Override
-    public void removeTour(Controller c){c.setCurrentState(c.deleteTourState);}
+    public void removeTour(Controller c, CityMap m){
+        if(m.getTours().size() > 1)
+            c.setCurrentState(c.deleteTourState);
+    }
 }
