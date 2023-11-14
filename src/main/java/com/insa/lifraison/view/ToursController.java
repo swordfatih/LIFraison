@@ -64,6 +64,7 @@ public class ToursController extends ViewController implements Observer {
     private void add(Tour tour) {
         ButtonTour buttonTour = new ButtonTour(tour);
         buttonTour.setOnAction(this::buttonTourClicked);
+        buttonTour.setStyle("-fx-max-width: 1000");
         int i = 0;
         while (i < this.tourList.getChildren().size() && ((ButtonTour) this.tourList.getChildren().get(i)).getTour().getId() < tour.getId()) {
             i++;

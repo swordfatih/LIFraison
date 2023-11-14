@@ -17,35 +17,28 @@ import java.io.File;
 import java.io.IOException;
 
 public class LoadedDeliveryState implements State{
-    /**
-     * load a list of deliveries from an XML file
-     * @param c
-     * @param m
-     */
     @Override
     public void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l) {
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
-            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.setInitialDirectory(new File("src/main/resources/tours"));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            CompoundCommand loadDeliveriesCommand = new CompoundCommand();
-            for(Tour tour : TourDeserializer.load(m.getIntersections(), file)) {
-                loadDeliveriesCommand.addCommand(new AddTourCommand(m, tour));
+            if (file != null) {
+                CompoundCommand loadDeliveriesCommand = new CompoundCommand();
+                for (Tour tour : TourDeserializer.load(m.getIntersections(), file)) {
+                    loadDeliveriesCommand.addCommand(new AddTourCommand(m, tour));
+                }
+                l.add(loadDeliveriesCommand);
+                c.setCurrentState(c.loadedDeliveryState);
             }
-            l.add(loadDeliveriesCommand);
-            c.setCurrentState(c.loadedDeliveryState);
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());
         }
     }
 
-    /**
-     * Change to state addDelivery
-     * @param c
-     */
     @Override
     public void addDelivery(Controller c, View view) {
         view.<MainController>getController("main").getInformationController().displayAddDeliveryInformations();
@@ -63,12 +56,14 @@ public class LoadedDeliveryState implements State{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
-            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
             File file = fileChooser.showSaveDialog(view.getStage());
 
-            System.out.println(file.exists());
-            TourSerializer instance = TourSerializer.getInstance();
-            instance.save(m.getTours(), file);
+            if (file != null) {
+                System.out.println(file.exists());
+                TourSerializer instance = TourSerializer.getInstance();
+                instance.save(m.getTours(), file);
+            }
         }catch (ParserConfigurationException | ExceptionXML |TransformerException e) {
             System.out.println(e.getMessage());
         }

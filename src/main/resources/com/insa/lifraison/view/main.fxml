@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-
 <?import javafx.scene.control.Label?>
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.MainController" prefHeight="720.0" prefWidth="1280.0">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.MainController" prefHeight="720.0" prefWidth="1280.0" onMouseClicked="#mainClick">
     <left>
-        <VBox>
+        <VBox maxHeight="Infinity" styleClass="leftPane" spacing="40">
             <fx:include source="menu.fxml" fx:id="menu" />
             <fx:include source="tours.fxml" fx:id="tours" />
         </VBox>
@@ -14,10 +16,10 @@
         <fx:include source="map.fxml" fx:id="map" />
     </center>
     <bottom>
-        <fx:include source="textual.fxml" fx:id="textual" />
+        <fx:include source="information.fxml" fx:id="information" />
     </bottom>
     <right>
-        <fx:include source="information.fxml" fx:id="information" />
+        <fx:include source="textual.fxml" fx:id="textual" />
     </right>
     <top>
         <HBox styleClass="titleBar" alignment="CENTER">

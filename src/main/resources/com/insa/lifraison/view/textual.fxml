@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 
-<VBox prefHeight="200" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.TextualController">
-    <ScrollPane minHeight="200" maxWidth="Infinity" styleClass="consoleBox">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.TextualController" spacing="20" styleClass="textual" alignment="CENTER">
+    <Label text="Textual" styleClass="title" />
+    <ScrollPane maxHeight="Infinity" VBox.vgrow="ALWAYS" styleClass="consoleBox">
         <VBox spacing="20" fx:id="console" styleClass="console">
             <Label text="Bienvenue sur la vue textuelle." />
         </VBox>

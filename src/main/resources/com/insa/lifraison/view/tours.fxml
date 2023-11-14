@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.VBox ?>
+<?import javafx.scene.control.Label?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.ToursController" fx:id="tourList">
-
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.ToursController" styleClass="toursBox" alignment="CENTER" spacing="20">
+    <Label text="Tours" styleClass="title" />
+    <VBox fx:id="tourList" spacing="20">
+        <VBox.vgrow>ALWAYS</VBox.vgrow>
+    </VBox>
 </VBox>

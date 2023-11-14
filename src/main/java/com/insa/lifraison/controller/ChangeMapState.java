@@ -21,14 +21,17 @@ public class ChangeMapState implements State {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
-            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            c.setMap(CityMapDeserializer.load(file));
-            l.reset();
-            c.setCurrentState(c.loadedMapState);
-
-            view.navigate("main");
+            if (file != null) {
+                c.setMap(CityMapDeserializer.load(file));
+                l.reset();
+                c.setCurrentState(c.loadedMapState);
+                view.navigate("main");
+            } else {
+                c.setCurrentState(c.loadedDeliveryState);
+            }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
             l.reset();
@@ -41,6 +44,4 @@ public class ChangeMapState implements State {
         view.<MainController>getController("main").getInformationController().clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }
-
-
 }

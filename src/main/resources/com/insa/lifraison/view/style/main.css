@@ -1,5 +1,5 @@
 .menu {
-    -fx-background-color: #AAAAAA20;
+    -fx-padding: 8px;
 }
 
 .menuButton {
@@ -25,10 +25,23 @@
     -fx-padding: 8px;
 }
 
+.textual {
+    -fx-background-color: #AAAAAA20;
+}
+
 .consoleBox > .viewport {
     -fx-background-color: transparent;
 }
 
 .consoleBox {
+    -fx-background-color: transparent;
+}
+
+.toursBox {
+    -fx-padding: 8px;
+    -fx-max-height: 1000;
+}
+
+.leftPane {
     -fx-background-color: #AAAAAA20;
 }
