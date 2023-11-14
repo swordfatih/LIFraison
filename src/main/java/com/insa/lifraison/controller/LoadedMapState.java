@@ -29,7 +29,7 @@ public class LoadedMapState implements State {
             l.reset();
             c.setCurrentState(c.loadedMapState);
 
-            view.navigate("map");
+            view.navigate("main");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             String errorMessage = "Invalid XML:\n" + e.getMessage();
             Alert alert = new Alert(Alert.AlertType.ERROR,errorMessage);

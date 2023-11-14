@@ -28,7 +28,7 @@ public class InformationController extends ViewController {
     public void displayAddDeliveryInformations() {
         this.information.getChildren().clear();
         Label info = new Label("Click anywhere on the map to create a new delivery");
-        this.getChildren().add(info);
+        this.information.getChildren().add(info);
     }
 
     public void displayDeleteDeliveryInformations() {

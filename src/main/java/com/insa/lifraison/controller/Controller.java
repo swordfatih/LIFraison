@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 public class Controller {
     private View view;
     private CityMap map;
-
     private ListOfCommands listOfCommands;
     private State currentState;
     protected final InitialState initialState = new InitialState();
@@ -36,8 +35,6 @@ public class Controller {
 
         view.loadScene("main", "main.fxml", "style/main.css");
         view.loadScene("home", "home.fxml", "style/home.css");
-        
-        view.<MainController>getController("main").setMap(this.map);
 
         stage.setTitle("LIFraison");
         view.navigate("home");
@@ -140,6 +137,6 @@ public class Controller {
 
     public void setMap(CityMap map) {
         this.map = map;
-        view.<MapController>getController("map").setMap(this.map);
+        view.<MainController>getController("main").setMap(this.map);
     }
 }

@@ -24,7 +24,7 @@ public class TextualController extends ViewController implements Observer {
     private CityMap map;
 
     @Override
-    public void update(Observable.NotifType type) {
+    public void update(Observable.NotifType type, Observable observed, Object arg) {
         printContent();
     }
 
@@ -57,9 +57,9 @@ public class TextualController extends ViewController implements Observer {
                 TableColumn<DeliveryRequest, String> latCol = new TableColumn<>("Latitude");
 
                 typeCol.setCellValueFactory(p -> new ReadOnlyStringWrapper("Intersection"));
-                idCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getDestination().getId()));
-                lngCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(valueOf(p.getValue().getDestination().getLongitude()).toString()));
-                latCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(valueOf(p.getValue().getDestination().getLatitude()).toString()));
+                idCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getIntersection().getId()));
+                lngCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(valueOf(p.getValue().getIntersection().getLongitude()).toString()));
+                latCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(valueOf(p.getValue().getIntersection().getLatitude()).toString()));
 
                 deliveryTable.getColumns().add(typeCol);
                 deliveryTable.getColumns().add(idCol);
@@ -71,7 +71,7 @@ public class TextualController extends ViewController implements Observer {
                     row.setOnMouseClicked(event -> {
                         if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
                             DeliveryRequest delivery = row.getItem();
-                            this.controller.leftClick(delivery.getDestination(), delivery);
+                            this.controller.leftClick(delivery.getIntersection(), delivery, tour);
                         }
                     });
                     return row;

@@ -5,7 +5,10 @@
 <?import javafx.scene.control.Label?>
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.MainController" prefHeight="720.0" prefWidth="1280.0">
     <left>
-        <fx:include source="menu.fxml" fx:id="menu" />
+        <VBox>
+            <fx:include source="menu.fxml" fx:id="menu" />
+            <fx:include source="tours.fxml" fx:id="tours" />
+        </VBox>
     </left>
     <center>
         <fx:include source="map.fxml" fx:id="map" />

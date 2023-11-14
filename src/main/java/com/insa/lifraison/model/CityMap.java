@@ -87,7 +87,6 @@ public class CityMap extends Observable {
     }
 
     public void addTour(Tour tour) {
-        System.out.println("adding tour" + tour);
         for(Tour t : this.tours) {
             System.out.println(t.getId());
         }

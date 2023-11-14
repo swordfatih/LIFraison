@@ -44,7 +44,7 @@ public class AddDeliveryState2 implements State {
         DeliveryRequest deliveryRequest = m.getTemporaryDelivery();
         m.clearTemporaryDelivery();
         l.add(new AddDeliveryCommand(t, deliveryRequest));
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        v.<MainController>getController("main").getInformationController().clearInformations();
         c.setCurrentState(c.loadedDeliveryState);
     }
 

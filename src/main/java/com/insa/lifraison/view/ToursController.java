@@ -1,25 +1,25 @@
 package com.insa.lifraison.view;
 
-import com.insa.lifraison.controller.Controller;
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
-public class MapTourList extends VBox implements Observer {
-    private Controller controller;
+public class ToursController extends ViewController implements Observer {
+    @FXML
+    private VBox tourList;
 
     private ArrayList<Tour> tours;
-    public MapTourList(){
-        tours = new ArrayList<>();
-    }
 
-    public void setController (Controller c){this.controller = c;}
+    public void initialize() {
+        this.tours = new ArrayList<>();
+    }
 
     @Override
     public void update(Observable.NotifType type, Observable observed, Object arg) {
@@ -37,7 +37,7 @@ public class MapTourList extends VBox implements Observer {
     }
 
     public void refresh(CityMap map) {
-        this.getChildren().clear();
+        this.tourList.getChildren().clear();
         for(Tour tour : map.getTours()) {
             add(tour);
         }
@@ -49,7 +49,7 @@ public class MapTourList extends VBox implements Observer {
 
     private void remove(Tour tour) {
         Node tourButton = null;
-        for(Node n : this.getChildren()) {
+        for(Node n : this.tourList.getChildren()) {
             if(n instanceof ButtonTour) {
                 if(((ButtonTour) n).getTour() == tour) {
                    tourButton = n;
@@ -57,7 +57,7 @@ public class MapTourList extends VBox implements Observer {
             }
         }
         if(tourButton != null) {
-            this.getChildren().remove(tourButton);
+            this.tourList.getChildren().remove(tourButton);
         }
     }
 
@@ -65,10 +65,10 @@ public class MapTourList extends VBox implements Observer {
         ButtonTour buttonTour = new ButtonTour(tour);
         buttonTour.setOnAction(this::buttonTourClicked);
         int i = 0;
-        while (i < this.getChildren().size() && ((ButtonTour)this.getChildren().get(i)).getTour().getId() < tour.getId()) {
+        while (i < this.tourList.getChildren().size() && ((ButtonTour) this.tourList.getChildren().get(i)).getTour().getId() < tour.getId()) {
             i++;
         }
-        this.getChildren().add(i, buttonTour);
+        this.tourList.getChildren().add(i, buttonTour);
     }
 
     private void buttonTourClicked(ActionEvent event) {

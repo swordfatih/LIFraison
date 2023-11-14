@@ -14,6 +14,8 @@ public class MenuController extends ViewController {
     @FXML
     private Button undoButton;
 
+    private int tourNumber;
+
     @Override
     public void setController(Controller controller) {
         super.setController(controller);
@@ -77,6 +79,19 @@ public class MenuController extends ViewController {
     private void computePlan(ActionEvent event) {
         event.consume();
         this.controller.computePlan();
+    }
+
+    @FXML
+    private void addTour(ActionEvent event) {
+        event.consume();
+        tourNumber += 1;
+        this.controller.addTour();
+    }
+
+    @FXML
+    private void removeTour(ActionEvent event) {
+        event.consume();
+        this.controller.deleteTour();
     }
 
     @FXML

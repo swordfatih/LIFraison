@@ -3,8 +3,6 @@ package com.insa.lifraison.view;
 import com.insa.lifraison.model.*;
 import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,20 +10,20 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.*;
+import java.util.LinkedList;
+import java.util.Objects;
 import static java.lang.Math.min;
 
 public class MapController extends ViewController implements Observer {
     @FXML
-    private StackPane pane;
+    private Pane pane;
     @FXML
     private ScrollPane scrollPane;
-    @FXML
-    private Canvas foreground;
-    @FXML
-    private Canvas background;
     private CityMap map;
     private double scale;
     private double longitudeOffset;
@@ -33,6 +31,8 @@ public class MapController extends ViewController implements Observer {
     private final double pointSize = 10;
     private final double zoomFactor = 1.2;
     private LinkedList<Tour> tours;
+    private final double deliveryPointSize = 6;
+    private final double intersectionPointSize = 3;
 
     public void initialize() {
         scrollPane.addEventFilter(ScrollEvent.ANY, this::onScrollEvent);
@@ -123,7 +123,7 @@ public class MapController extends ViewController implements Observer {
         path.setId("Tour" + tour.getId());
         path.setStrokeWidth(5);
         path.setStroke(tour.getColor());
-        this.getChildren().add(path);
+        this.pane.getChildren().add(path);
         for (DeliveryRequest delivery : tour.getDeliveries()) {
             drawDeliveryPoint(delivery, tour, tour.getColor());
         }
@@ -132,7 +132,7 @@ public class MapController extends ViewController implements Observer {
     private void eraseTour(Tour tour) {
         PathTour pathTour = findPathTour(tour);
         if(pathTour != null) {
-            getChildren().remove(pathTour);
+            this.pane.getChildren().remove(pathTour);
         }
         for(DeliveryRequest deliveryRequest : tour.getDeliveries()) {
             eraseDeliveryRequest(deliveryRequest);
@@ -140,7 +140,7 @@ public class MapController extends ViewController implements Observer {
     }
 
     private PathTour findPathTour(Tour tour) {
-        for (javafx.scene.Node node : this.getChildren()) {
+        for (javafx.scene.Node node : this.pane.getChildren()) {
             if (node instanceof PathTour && Objects.equals(((PathTour) node).getTour(),tour)) {
                 return (PathTour) node;
             }
@@ -153,15 +153,15 @@ public class MapController extends ViewController implements Observer {
      */
     public void refresh(){
         //computing scale
-        double sizeLatitude = this.map.getMaxLatitude()-this.map.getMinLatitude();
-        double sizeLongitude = this.map.getMaxLongitude()-this.map.getMinLongitude();
-        double XScale = this.getPrefWidth() / sizeLongitude;
-        double YScale = this.getPrefHeight() / sizeLatitude;
+        double sizeLatitude = this.map.getMaxLatitude() - this.map.getMinLatitude();
+        double sizeLongitude = this.map.getMaxLongitude() - this.map.getMinLongitude();
+        double XScale = this.pane.getPrefWidth() / sizeLongitude;
+        double YScale = this.pane.getPrefHeight() / sizeLatitude;
         scale = min(XScale,YScale);
         longitudeOffset = -scale * this.map.getMinLongitude();
         latitudeOffset = scale * this.map.getMaxLatitude();
 
-        this.getChildren().clear();
+        this.pane.getChildren().clear();
 
         //adding map segments
         for (Segment segment : this.map.getSegments()){
@@ -189,40 +189,6 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
-    /**
-     * redraw the foreground meaning delivery points and tours
-     */
-    void updateForeground(){
-        foreground.toFront();
-        GraphicsContext gcFG = foreground.getGraphicsContext2D();
-        gcFG.setFill(Color.TRANSPARENT);
-        gcFG.clearRect(0, 0, foreground.getWidth(), foreground.getHeight());
-
-        Color[] colorChoice = {Color.BLUE, Color.ORANGE, Color.LAWNGREEN};
-        gcFG.setLineWidth(3);
-        int i = 0;
-        for(Tour tour : map.getTours()) {
-            Color colorValue = colorChoice[i%colorChoice.length];
-            gcFG.setFill(colorValue);
-            gcFG.setStroke(colorValue);
-            for(TourStep tourStep : tour.getTourSteps()) {
-                for(Segment segment : tourStep.segments) {
-                    drawSegmentLine(gcFG, segment);
-                }
-            }
-            for(DeliveryRequest delivery : tour.getDeliveries()) {
-                if (map.getSelectedDelivery() == delivery){
-                    gcFG.setFill(Color.PURPLE);
-                    drawIntersectionPoint(gcFG, delivery.getDestination());
-                    gcFG.setFill(colorValue);
-                } else {
-                    drawIntersectionPoint(gcFG, delivery.getDestination());
-                }
-            }
-            i++;
-        }
-    }
-
     private LineTo getLineTo(Intersection i){
         double yCoordinate = -scale * i.latitude + latitudeOffset;
         double xCoordinate = scale * i.longitude + longitudeOffset;
@@ -245,7 +211,7 @@ public class MapController extends ViewController implements Observer {
         CircleIntersection circleIntersection = new CircleIntersection(xCoordinate, yCoordinate, radius, color, intersection);
         circleIntersection.setOnMouseClicked(this::onIntersectionClick);
 
-        this.getChildren().add(circleIntersection);
+        this.pane.getChildren().add(circleIntersection);
     }
 
     public void drawDeliveryPoint(DeliveryRequest deliveryRequest, Tour tour, Paint color){
@@ -254,18 +220,18 @@ public class MapController extends ViewController implements Observer {
         CircleDelivery circleDelivery = new CircleDelivery(xCoordinate, yCoordinate, deliveryPointSize, color, deliveryRequest, tour);
 
         circleDelivery.setOnMouseClicked(this::onDeliveryClick);
-        this.getChildren().add(circleDelivery);
+        this.pane.getChildren().add(circleDelivery);
     }
 
     public void eraseDeliveryRequest(DeliveryRequest  deliveryRequest){
         CircleDelivery foundCircle = findCircleDelivery(deliveryRequest);
         if(foundCircle != null ){
-            this.getChildren().remove(foundCircle);
+            this.pane.getChildren().remove(foundCircle);
         }
     }
 
     private CircleDelivery findCircleDelivery(DeliveryRequest deliveryRequest) {
-        for (javafx.scene.Node node : this.getChildren()) {
+        for (javafx.scene.Node node : this.pane.getChildren()) {
             if (node instanceof CircleDelivery && Objects.equals(((CircleDelivery) node).getDeliveryRequest(),deliveryRequest)) {
                 return (CircleDelivery) node;
             }
@@ -301,31 +267,7 @@ public class MapController extends ViewController implements Observer {
         Line segmentLine = new Line(xOrigin, yOrigin, xDest, yDest);
         segmentLine.setStroke(color);
         segmentLine.setStrokeWidth(strokeWidth);
-        this.getChildren().add(segmentLine);
-    }
-
-    /**
-     * find the nearest intersection of a clicked point
-     * @param mouseX mouseX
-     * @param mouseY mouseY
-     * @return the nearest Intersection
-     */
-    public Intersection findNearestIntersection(double mouseX, double mouseY) {
-        double longitudePos = (mouseX - longitudeOffset) / scale;
-        double latitudePos = -(mouseY - latitudeOffset) / scale;
-        return map.getClosestIntersection(longitudePos, latitudePos);
-    }
-
-    /**
-     * find the nearest Delivery of a clicked point
-     * @param mouseX mouseX
-     * @param mouseY mouseY
-     * @return the nearest DeliveryRequest
-     */
-    public DeliveryRequest findNearestDelivery(double mouseX, double mouseY) {
-        double longitudePos = (mouseX - longitudeOffset) / scale;
-        double latitudePos = -(mouseY - latitudeOffset) / scale;
-        return map.getClosestDelivery(longitudePos, latitudePos);
+        this.pane.getChildren().add(segmentLine);
     }
 
     /**
@@ -334,12 +276,7 @@ public class MapController extends ViewController implements Observer {
      */
 
     public void mapClick(MouseEvent event){
-        // left click
-        if(event.getButton() == MouseButton.PRIMARY){
-            Intersection intersection = findNearestIntersection(event.getX(), event.getY());
-            DeliveryRequest delivery = findNearestDelivery(event.getX(), event.getY());
-            this.controller.leftClick(intersection, delivery);
-        } else if(event.getButton() == MouseButton.SECONDARY){
+        if(event.getButton() == MouseButton.SECONDARY) {
             this.controller.rightClick();
         }
     }

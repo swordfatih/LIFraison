@@ -28,7 +28,7 @@ public class ChangeMapState implements State {
             l.reset();
             c.setCurrentState(c.loadedMapState);
 
-            view.navigate("map");
+            view.navigate("main");
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
             l.reset();
