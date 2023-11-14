@@ -76,6 +76,7 @@ public class TourSerializerTest {
 
         assertTrue(tourXML.isEqualNode(root));
     }
+
     @Test
     void testTourSerializerNoTime() throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
         ArrayList<Tour> toursSources = new ArrayList<>();

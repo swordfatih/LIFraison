@@ -55,7 +55,7 @@ public class CityMapTest {
         Tour tr = new Tour();
         tr.setId(0);
         tr.setColor(Color.BLUE);
-        assertEquals(tr, cityMap.getTours().get(0)); // pas de methode equal dans Tour !!
+        assertEquals(tr, cityMap.getTours().get(0));
         assertNull(cityMap.getTemporaryDelivery());
     }
 
@@ -237,20 +237,36 @@ public class CityMapTest {
         Warehouse warehouse = new Warehouse(intersection1);
         Intersection intersection2 = new Intersection("intersection2", 0.24, 0.12);
         Intersection intersection3 = new Intersection("intersection3", 0.67, 0.09);
+        Intersection intersection4 = new Intersection("intersection4", 0.67, 0.09);
         LinkedList<Intersection> intersections = new LinkedList<>(List.of(intersection1,intersection2,intersection3));
         Segment segment1 = new Segment(intersection1, intersection2, 0.43, "segment1");
         Segment segment2 = new Segment(intersection2, intersection3, 0.43, "segment2");
-        LinkedList<Segment> segments = new LinkedList<>(List.of(segment1, segment2));
+        Segment segment3 = new Segment(intersection2, intersection4, 0.43, "segment2");
+        LinkedList<Segment> segments = new LinkedList<>(List.of(segment1, segment2, segment3));
         CityMap cityMap = new CityMap(intersections, segments, warehouse);
+        cityMap.addObserver(observer);
 
         Tour tour1 = new Tour();
         tour1.addDelivery(new DeliveryRequest(intersection2));
         Tour tour2 = new Tour();
         tour2.addDelivery(new DeliveryRequest(intersection3));
-        LinkedList<Tour> tours = new LinkedList<>(List.of(tour1,tour2));
+        Tour tour3 = new Tour();
+        tour3.addDelivery(new DeliveryRequest(intersection4));
+
+        LinkedList<Tour> tours = new LinkedList<>(List.of(tour1,tour2, tour3));
+        LinkedList<Tour> toursToDelete = new LinkedList<>(List.of(tour1,tour2));
         cityMap.addTours(tours);
-        cityMap.addObserver(observer);
-        assertTrue(cityMap.removeTours(tours));
+
+        System.out.println("AVANT");
+        for (Tour t : cityMap.getTours()){
+            System.out.println(t);
+        }
+        assertTrue(cityMap.removeTours(toursToDelete));
+
+        System.out.println("APRES");
+        for (Tour t : cityMap.getTours()){
+            System.out.println(t);
+        }
         assertFalse(cityMap.getTours().contains(tour2));
         assertFalse(cityMap.getTours().contains(tour1));
     }

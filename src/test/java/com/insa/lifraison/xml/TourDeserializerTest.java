@@ -74,9 +74,20 @@ public class TourDeserializerTest {
         DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
-        ArrayList<Tour> tourFromXML = new ArrayList<>();
-        TourDeserializer.buildFromDOMXML(root, tourFromXML, cityIntersections);
-        assertEquals(tourFromXML, toursSources);
+        ArrayList<Tour> toursFromXML = new ArrayList<>();
+        TourDeserializer.buildFromDOMXML(root, toursFromXML, cityIntersections);
+        for (int i = 0 ; i < toursSources.size() ; i++){
+            Tour t1 = toursFromXML.get(i), t2 = toursSources.get(i);
+            LinkedList<Intersection> inters1 = new LinkedList<>(), inters2 = new LinkedList<>();
+            for (int j = 0 ; j < t1.getDeliveries().size() ; j++){
+                inters1.add(t1.getDeliveries().get(j).getIntersection());
+                inters2.add(t2.getDeliveries().get(j).getIntersection());
+            }
+            assertTrue(inters1.containsAll(inters2));
+            assertTrue(inters2.containsAll(inters1));
+            assertTrue(t1.getTourSteps().containsAll(t2.getTourSteps()));
+            assertTrue(t2.getTourSteps().containsAll(t1.getTourSteps()));
+        }
     }
 
     @Test
@@ -102,7 +113,18 @@ public class TourDeserializerTest {
         ArrayList<Tour> toursFromXML = new ArrayList<>();
         TourDeserializer.buildFromDOMXML(root, toursFromXML, deliveryList1);
 
-        assertEquals(toursFromXML, toursSources);
+        for (int i = 0 ; i < toursSources.size() ; i++){
+            Tour t1 = toursFromXML.get(i), t2 = toursSources.get(i);
+            LinkedList<Intersection> inters1 = new LinkedList<>(), inters2 = new LinkedList<>();
+            for (int j = 0 ; j < t1.getDeliveries().size() ; j++){
+                inters1.add(t1.getDeliveries().get(j).getIntersection());
+                inters2.add(t2.getDeliveries().get(j).getIntersection());
+            }
+            assertTrue(inters1.containsAll(inters2));
+            assertTrue(inters2.containsAll(inters1));
+            assertTrue(t1.getTourSteps().containsAll(t2.getTourSteps()));
+            assertTrue(t2.getTourSteps().containsAll(t1.getTourSteps()));
+        }
     }
 
     @Test

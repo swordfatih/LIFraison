@@ -42,21 +42,20 @@ public class CityMapDeserializerTest {
         Intersection inter2 = new Intersection("2",53,50);
         Intersection inter3 = new Intersection("3",20,10);
         LinkedList<Intersection> targetIntersections = new LinkedList<>(List.of(inter1,inter2,inter3));
+
         Segment segment1 = new Segment(inter1, inter2,10,"Avenue Albert Einstein");
         Segment segment2 = new Segment(inter2, inter1,10,"Avenue Albert Einstein");
         Segment segment3 = new Segment(inter2, inter3,22,"Avenue des Arts");
         LinkedList<Segment> targetSegments= new LinkedList<>(List.of(segment1,segment2,segment3));
+
         Warehouse targetWarehouse = new Warehouse(inter2);
         CityMap targetMap = new CityMap(targetIntersections, targetSegments,targetWarehouse);
 
-        CityMap mapFromXML = new CityMap(new LinkedList<>(), new LinkedList<>(),null);
         File XMLFile = new File("./src/test/java/com/insa/lifraison/xml/resources/CityMapTests.xml");
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
-        if (root.getNodeName().equals("main")) {
-            CityMapDeserializer.buildFromDOMXML(root);
-        }
+        CityMap mapFromXML = CityMapDeserializer.buildFromDOMXML(root);
 
         assertEquals(targetMap, mapFromXML);
     }
