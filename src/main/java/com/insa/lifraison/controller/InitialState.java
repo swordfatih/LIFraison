@@ -1,7 +1,5 @@
 package com.insa.lifraison.controller;
 
-import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.CityMapDeserializer;
@@ -16,9 +14,10 @@ import javafx.scene.control.Alert;
 
 public class InitialState implements State {
     /**
-     * load a map from an XML file
-     * @param c the Controller
-     * @param m the city map
+     * open the file chooser and load the map from the selected file
+     * @param c the app controller
+     * @param view the app view
+     * @param l the list of commands for the undo/redo
      */
     @Override
     public void loadMap(Controller c, View view, ListOfCommands l){
@@ -26,15 +25,15 @@ public class InitialState implements State {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
             fileChooser.getExtensionFilters().add(extFilter);
-            fileChooser.setInitialDirectory(new File("."));
+            fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            c.setMap(CityMapDeserializer.load(file));
-            l.reset();
-
-            c.setCurrentState(c.loadedMapState);
-
-            view.navigate("map");
+            if (file != null) {
+                c.setMap(CityMapDeserializer.load(file));
+                l.reset();
+                c.setCurrentState(c.loadedMapState);
+                view.navigate("map");
+            }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             String errorMessage = "Invalid XML:\n" + e.getMessage();
             Alert alert = new Alert(Alert.AlertType.ERROR,errorMessage);
@@ -42,5 +41,4 @@ public class InitialState implements State {
             System.out.println(errorMessage);
         }
     }
-
 }
