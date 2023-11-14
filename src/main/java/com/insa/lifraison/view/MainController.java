@@ -3,6 +3,8 @@ package com.insa.lifraison.view;
 import com.insa.lifraison.controller.Controller;
 import com.insa.lifraison.model.CityMap;
 import javafx.fxml.FXML;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 public class MainController extends ViewController {
     @FXML
@@ -38,5 +40,15 @@ public class MainController extends ViewController {
 
     public InformationController getInformationController() {
         return informationController;
+    }
+
+    /**
+     * Handle map click event
+     * @param event mouseListener on the map
+     */
+    public void mainClick(MouseEvent event) {
+        if(event.getButton() == MouseButton.SECONDARY) {
+            this.controller.rightClick();
+        }
     }
 }

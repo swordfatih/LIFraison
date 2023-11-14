@@ -33,9 +33,20 @@ public class MapController extends ViewController implements Observer {
     private LinkedList<Tour> tours;
     private final double deliveryPointSize = 6;
     private final double intersectionPointSize = 3;
+    private Number mapWidth, mapHeight;
 
     public void initialize() {
         scrollPane.addEventFilter(ScrollEvent.ANY, this::onScrollEvent);
+
+        this.scrollPane.widthProperty().addListener(((obs, oldVal, newVal) -> {
+           this.mapWidth = newVal;
+           refresh();
+        }));
+
+        this.scrollPane.heightProperty().addListener(((obs, oldVal, newVal) -> {
+            this.mapHeight = newVal;
+            refresh();
+        }));
     }
 
     /**
@@ -155,8 +166,10 @@ public class MapController extends ViewController implements Observer {
         //computing scale
         double sizeLatitude = this.map.getMaxLatitude() - this.map.getMinLatitude();
         double sizeLongitude = this.map.getMaxLongitude() - this.map.getMinLongitude();
-        double XScale = this.pane.getPrefWidth() / sizeLongitude;
-        double YScale = this.pane.getPrefHeight() / sizeLatitude;
+
+        double XScale = (this.mapWidth == null ? this.pane.getPrefWidth() : this.mapWidth.intValue()) / sizeLongitude;
+        double YScale = (this.mapHeight == null ? this.pane.getPrefWidth() : this.mapHeight.intValue()) / sizeLatitude;
+
         scale = min(XScale,YScale);
         longitudeOffset = -scale * this.map.getMinLongitude();
         latitudeOffset = scale * this.map.getMaxLatitude();
@@ -268,17 +281,6 @@ public class MapController extends ViewController implements Observer {
         segmentLine.setStroke(color);
         segmentLine.setStrokeWidth(strokeWidth);
         this.pane.getChildren().add(segmentLine);
-    }
-
-    /**
-     * Give the intersection clicked by the user to the controller
-     * @param event mouseListener on the map
-     */
-
-    public void mapClick(MouseEvent event){
-        if(event.getButton() == MouseButton.SECONDARY) {
-            this.controller.rightClick();
-        }
     }
 
     public void zoomIn() {

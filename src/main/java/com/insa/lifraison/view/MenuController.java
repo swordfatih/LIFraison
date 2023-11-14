@@ -1,20 +1,16 @@
 package com.insa.lifraison.view;
 
 import com.insa.lifraison.controller.Controller;
-import com.insa.lifraison.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.input.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 
 public class MenuController extends ViewController {
     @FXML
     private Button undoButton;
-
-    private int tourNumber;
 
     @Override
     public void setController(Controller controller) {
@@ -24,12 +20,14 @@ public class MenuController extends ViewController {
     public void initialize() {
         KeyCombination kcUndo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
         KeyCombination kcRedo = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
+        KeyCombination kcCancel = new KeyCodeCombination(KeyCode.ESCAPE);
 
         // on Scene loaded event
         undoButton.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
             if (oldScene == null && newScene != null) {
                 newScene.getAccelerators().put(kcUndo, () -> this.controller.undo());
                 newScene.getAccelerators().put(kcRedo, () -> this.controller.redo());
+                newScene.getAccelerators().put(kcCancel, () -> this.controller.rightClick());
             }
         });
     }
@@ -84,7 +82,6 @@ public class MenuController extends ViewController {
     @FXML
     private void addTour(ActionEvent event) {
         event.consume();
-        tourNumber += 1;
         this.controller.addTour();
     }
 

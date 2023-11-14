@@ -23,26 +23,12 @@ public class HomeController extends ViewController {
         FadeTransition ft = new FadeTransition(Duration.millis(500), label);
         ft.setFromValue(1.0);
         ft.setToValue(0.1);
-        ft.setCycleCount(2);
+        ft.setCycleCount(Timeline.INDEFINITE);
         ft.setAutoReverse(true);
-
-        Path path = new Path();
-        path.getElements().add(new MoveTo(100, 20));
-        path.getElements().add(new CubicCurveTo(380, 0, 380, 120, 200, 120));
-        path.getElements().add(new CubicCurveTo(0, 120, 0, 240, 380, 240));
-        path.getElements().add(new CubicCurveTo(380, 340, -500, 240, 100, 20));
-        PathTransition pt = new PathTransition();
-        pt.setDuration(Duration.millis(6000));
-        pt.setPath(path);
-        pt.setNode(label);
-        pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-        pt.setCycleCount(1);
-        pt.setAutoReverse(true);
 
         label.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
             if(newValue) {
                 ft.play();
-                pt.play();
             }
         });
     }
