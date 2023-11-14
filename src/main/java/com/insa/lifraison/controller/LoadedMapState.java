@@ -93,4 +93,7 @@ public class LoadedMapState implements State {
     public void addTour(CityMap m, ListOfCommands l) {
         l.add(new AddTourCommand(m, new Tour()));
     }
+
+    @Override
+    public void removeTour(Controller c){c.setCurrentState(c.deleteTourState);}
 }
