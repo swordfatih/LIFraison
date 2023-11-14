@@ -131,7 +131,7 @@ public class Controller {
 
     public void addTour() { currentState.addTour(map, listOfCommands); }
 
-    public void deleteTour() { currentState = deleteTourState; }
+    public void deleteTour() { currentState.removeTour(this); }
 
     public void tourButtonClicked(Tour tour) { currentState.tourButtonClicked(this, map, tour, view, listOfCommands); }
 

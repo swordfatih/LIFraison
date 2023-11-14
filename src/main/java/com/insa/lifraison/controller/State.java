@@ -36,6 +36,8 @@ public interface State {
 
     public default void addTour(CityMap m, ListOfCommands l){};
 
+    public default void removeTour(Controller c){};
+
     public default void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l){};
 
 }
