@@ -11,19 +11,23 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 import com.insa.lifraison.xml.Roadmap;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 
 public class RoadmapTest {
     @Test
-    void testRoadmap() throws ExceptionXML, ParserConfigurationException, TransformerException {
+    void testRoadmap() throws ExceptionXML, ParserConfigurationException, TransformerException, IOException, SAXException {
        Tour tour = new Tour();
        // Create intersections
         ArrayList<Intersection> intersectionList = new ArrayList<>();
@@ -50,7 +54,16 @@ public class RoadmapTest {
         tourSteps.add(new TourStep(segmentList3, LocalTime.parse("10:00"), LocalTime.parse("11:00")));
 
         tour.setTourSteps(tourSteps);
-        File file = new File("RouteTest.html");
-        Roadmap.save(tour,file);
+        Document testDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        Element roadmap = Roadmap.createRoadmapElt(tour, testDocument);
+
+        File htmlFile = new File("./src/test/java/com/insa/lifraison/xml/resources/RouteTest.html");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+
+        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+        Document document = docBuilder.parse(htmlFile);
+        Element root = document.getDocumentElement();
+
+        assertTrue(roadmap.isEqualNode(root));
     }
 }
