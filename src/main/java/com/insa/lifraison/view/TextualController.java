@@ -114,5 +114,6 @@ public class TextualController extends ViewController implements Observer {
     public void setMap(CityMap map) {
         this.map = map;
         this.map.addObserver(this);
+        printContent();
     }
 }
