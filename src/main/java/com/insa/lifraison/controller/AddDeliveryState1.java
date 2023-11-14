@@ -1,7 +1,9 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
+import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
+import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MapController;
 import com.insa.lifraison.view.View;
 
@@ -14,7 +16,7 @@ public class AddDeliveryState1 implements State {
      * @param i the Intersection where the user clicks
      */
     @Override
-    public void leftClick(Controller c, CityMap m, Intersection i, ListOfCommands l){
+    public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t, ListOfCommands l){
         c.addDeliveryState2.entryAction(i, m, l);
         c.setCurrentState(c.addDeliveryState2);
     }

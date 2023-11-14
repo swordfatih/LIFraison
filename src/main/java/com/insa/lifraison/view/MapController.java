@@ -10,9 +10,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -40,6 +37,8 @@ public class MapController extends ViewController {
 
     public MapBoxInformation informations;
 
+    public MapTourList tourList;
+
     private int tourNumber;
 
     private final double zoomFactor = 1.2;
@@ -49,6 +48,7 @@ public class MapController extends ViewController {
         this.controller = controller;
         this.informations.setController(controller);
         this.mapDrawer.setController(controller);
+        this.tourList.setController(controller);
     }
 
     public void initialize() {
@@ -66,21 +66,12 @@ public class MapController extends ViewController {
         mapDrawer = new MapPaneDrawer(mapPane.getPrefWidth(), mapPane.getPrefHeight());
         mapPane.getChildren().add(mapDrawer);
         informations = new MapBoxInformation();
+        tourList = new MapTourList();
+
         controlBox.getChildren().add(informations);
+        controlBox.getChildren().add(tourList);
 
         mapScrollPane.addEventFilter(ScrollEvent.ANY, this::onScrollEvent);
-
-        tourNumber = 1;
-        Button newTourButton = new Button("Courier 1");
-        newTourButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                event.consume();
-                int index = courierList.getChildren().indexOf(newTourButton);
-                controller.handleTourButton(index, courierList);
-            }
-        });
-        courierList.getChildren().add(newTourButton);
     }
 
     private void onScrollEvent(ScrollEvent event){
@@ -101,6 +92,7 @@ public class MapController extends ViewController {
 
     public void setMap(CityMap map) {
         this.mapDrawer.setMap(map);
+        this.tourList.setMap(map);
     }
 
     @FXML
@@ -147,7 +139,7 @@ public class MapController extends ViewController {
     private void addTour(ActionEvent event) {
         event.consume();
         tourNumber += 1;
-        this.controller.addTour(courierList, "Courier " + tourNumber);
+        this.controller.addTour();
     }
 
     @FXML

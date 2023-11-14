@@ -29,12 +29,12 @@ public class CityMapDeserializer {
      * @throws IOException
      * @throws ExceptionXML
      */
-    public static void load(CityMap map, File file) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+    public static CityMap load(File file) throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(file);
         Element root = document.getDocumentElement();
         if (root.getNodeName().equals("map")) {
-            buildFromDOMXML(root, map);
+            return buildFromDOMXML(root);
         }
         else
             throw new ExceptionXML("Wrong format");
@@ -51,9 +51,7 @@ public class CityMapDeserializer {
      * @throws ExceptionXML
      * @throws NumberFormatException
      */
-    public static void buildFromDOMXML(Element rootDOMNode, CityMap map) throws ExceptionXML, NumberFormatException{
-
-        map.reset();
+    public static CityMap buildFromDOMXML(Element rootDOMNode) throws ExceptionXML, NumberFormatException{
 
         NodeList IntersectionList = rootDOMNode.getElementsByTagName("intersection");
         HashMap<String, Intersection> intersectionMap = new HashMap<>();
@@ -71,7 +69,7 @@ public class CityMapDeserializer {
         }
         NodeList warehouseNodes = rootDOMNode.getElementsByTagName("warehouse");
         Warehouse warehouse= createWarehouse((Element) warehouseNodes.item(0),intersectionMap);
-        map.setIntersectionsSegmentsWarehouse(intersections, segmentList, warehouse);
+        return new CityMap(intersections, segmentList, warehouse);
     }
     private static Intersection createIntersection(Element elt) throws ExceptionXML{
         String id = elt.getAttribute("id");

@@ -7,6 +7,8 @@ import java.util.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import com.insa.lifraison.utils.*;
+import javafx.scene.paint.Color;
+
 import java.time.LocalTime;
 
 /**
@@ -14,28 +16,26 @@ import java.time.LocalTime;
  * as well as the warehouse instance.
  */
 public class CityMap extends Observable {
+
+    private final Color[] tourColors = {Color.BLUE, Color.ORANGE, Color.LAWNGREEN, Color.LIGHTGOLDENRODYELLOW};
     /**
      * List of all {@link com.insa.lifraison.model.Intersection} of the city
      */
-    private LinkedList<Intersection> intersections;
+    private final LinkedList<Intersection> intersections;
     /**
      * List of all {@link com.insa.lifraison.model.Segment} of the city
      */
-    private LinkedList<Segment> segments;
+    private final LinkedList<Segment> segments;
     /**
      * Unique {@link com.insa.lifraison.model.Warehouse} of the city
      */
-    private Warehouse warehouse;
+    private final Warehouse warehouse;
 
     private LinkedList<Tour> tours;
 
-    private DeliveryRequest selectedDelivery;
+    private DeliveryRequest temporaryDelivery;
 
     private double minLatitude, maxLatitude, minLongitude, maxLongitude;
-
-    public CityMap() {
-        reset();
-    }
 
     public CityMap(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
         this.intersections = intersections;
@@ -43,23 +43,8 @@ public class CityMap extends Observable {
         this.warehouse = warehouse;
         this.updateMinMax();
         this.tours = new LinkedList<>();
-        Tour tour = new Tour();
-        this.selectedDelivery = null;
-        tours.add(tour);
-    }
-
-    public void reset(){
-        this.intersections = new LinkedList<>();
-        this.segments = new LinkedList<>();
-        this.warehouse = null;
-        this.minLatitude = Double.MAX_VALUE;
-        this.minLongitude = Double.MAX_VALUE;
-        this.maxLatitude = Double.MIN_VALUE;
-        this.maxLongitude = Double.MIN_VALUE;
-        this.tours = new LinkedList<>();
-        Tour tour = new Tour();
-        tours.add(tour);
-        this.selectedDelivery = null;
+        this.addTour(new Tour());
+        this.temporaryDelivery = null;
     }
 
     /**
@@ -79,103 +64,68 @@ public class CityMap extends Observable {
     public LinkedList<Segment> getSegments() {
         return this.segments;
     }
+
     /**
      * add a delivery to the uncomputedDeliveries list
      * @param newDelivery the delivery you want to add
      * @return succes of the adding
      */
     public boolean addDelivery(int index, DeliveryRequest newDelivery){
-        boolean hasChanged = tours.get(index).addDelivery(newDelivery);
-        //if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
-        return hasChanged;
+        return tours.get(index).addDelivery(newDelivery);
     }
 
     /**
-     * add delivery which is selected
+     * add delivery which is selected to the cityMap
      * @param newDelivery
      * @return
      */
-    public boolean addDelivery(DeliveryRequest newDelivery){
-        System.out.println("add a delivery which is selected");
-        this.selectedDelivery = newDelivery;
-        notifyObservers(NotifType.LIGHT_UPDATE);
-        return true;
-
+    public void setTemporaryDelivery(DeliveryRequest newDelivery){
+        if(this.temporaryDelivery != null)
+            clearTemporaryDelivery();
+        this.temporaryDelivery = newDelivery;
+        notifyObservers(NotifType.ADD, newDelivery);
     }
+
     public void addTour(Tour tour) {
-        boolean hasChanged = this.tours.add(tour);
-        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        System.out.println("adding tour" + tour);
+        for(Tour t : this.tours) {
+            System.out.println(t.getId());
+        }
+        int i = 0;
+        if (tour.getId() == -1) {
+            while (i < this.tours.size() && this.tours.get(i).getId() == i) {
+                i++;
+            }
+            tour.setId(i);
+            tour.setColor(tourColors[i % tourColors.length]);
+        } else {
+            while (i < this.tours.size() && this.tours.get(i).getId() < tour.getId()) {
+                i++;
+            }
+        }
+
+        this.tours.add(i, tour);
+        notifyObservers(NotifType.ADD, tour);
     }
 
     public boolean removeTour(Tour tour) {
         boolean hasChanged = this.tours.remove(tour);
-        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        if (hasChanged) notifyObservers(NotifType.REMOVE, tour);
         return hasChanged;
     }
-    public void moveDelivery(DeliveryRequest delivery, Intersection newIntersection){
-        delivery.setDestination(newIntersection);
-        notifyObservers(NotifType.LIGHT_UPDATE);
-    }
+
     public void addTours(Collection<Tour> tours) {
-        boolean hasChanged = this.tours.addAll(tours);
-        if (hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
+        for(Tour tour : tours) {
+            this.addTour(tour);
+        }
     }
 
     public boolean removeTours(Collection<Tour> tours) {
-        boolean hasChanged = this.tours.removeAll(tours);
-        if(hasChanged) notifyObservers(NotifType.LIGHT_UPDATE);
-        return hasChanged;
-    }
-
-    /**
-     * Withdraw the delivery  if it exists
-     * @param deliveryRequest : the position where the delivery can be
-     * @return true if a delivery was successfully remove
-     */
-    public boolean removeDelivery(DeliveryRequest deliveryRequest){
-        for(Tour tour : this.tours){
-            if(tour.removeDelivery(deliveryRequest)) {
-                //this.notifyObservers(NotifType.LIGHT_UPDATE);
-                return true;
-            }
+        boolean hasChanged = false;
+        for(Tour tour : tours) {
+            hasChanged = hasChanged || this.removeTour(tour);
         }
-        return false;
-    }
-
-    /**
-     * Add a new intersection to the city map.
-     * @param intersection The intersection to be added to the CityMap.
-     */
-    public void addIntersection(Intersection intersection){
-        intersections.push(intersection);
-        minLongitude = min(minLongitude, intersection.longitude);
-        maxLongitude = max(maxLongitude, intersection.longitude);
-        minLatitude = min(minLatitude, intersection.latitude);
-        maxLatitude = max(maxLatitude, intersection.latitude);
-    }
-
-    /**
-     * Add a new segment to the city map.
-     * @param segment The segment to be added to the CityMap.
-     */
-    public void addSegment(Segment segment){
-        segments.push(segment);
-    }
-
-    public void setIntersectionsSegmentsWarehouse(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
-        this.intersections = intersections;
-        this.segments = segments;
-        this.warehouse = warehouse;
-        this.updateMinMax();
-        this.notifyObservers(NotifType.FULL_UPDATE);
-    }
-
-    /**
-     * Set the warehouse of the CityMap.
-     * @param warehouse warehouse to be set as the warehouse of the CityMap
-     */
-    public void setWarehouse(Warehouse warehouse){
-        this.warehouse = warehouse;
+        return hasChanged;
     }
 
     /**
@@ -209,12 +159,17 @@ public class CityMap extends Observable {
         return equalWarehouses && equalIntersections && equalSegments;
     }
 
-    public DeliveryRequest getSelectedDelivery() {
-        return this.selectedDelivery;
+    public DeliveryRequest getTemporaryDelivery() {
+        return this.temporaryDelivery;
     }
 
-    public void updateMinMax(){
-        if(!this.intersections.isEmpty()){
+    public void updateMinMax() {
+        if (this.intersections.isEmpty()) {
+            this.minLatitude = Double.MAX_VALUE;
+            this.minLongitude = Double.MAX_VALUE;
+            this.maxLatitude = Double.MIN_VALUE;
+            this.maxLongitude = Double.MIN_VALUE;
+        } else {
             minLatitude = intersections.get(0).latitude;
             maxLatitude = intersections.get(0).latitude;
             minLongitude = intersections.get(0).longitude;
@@ -222,7 +177,6 @@ public class CityMap extends Observable {
             for(Intersection i : intersections ){
                 minLatitude = min(minLatitude, i.latitude);
                 maxLatitude = max(maxLatitude, i.latitude);
-
                 minLongitude = min(minLongitude, i.longitude);
                 maxLongitude = max(maxLongitude, i.longitude);
             }
@@ -279,13 +233,13 @@ public class CityMap extends Observable {
         for(DeliveryRequest deliveryRequest : deliveries) {
             ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(length, Double.MAX_VALUE));
             ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(length, null));
-            int index = idMap.get(deliveryRequest.getDestination().id);
+            int index = idMap.get(deliveryRequest.getIntersection().id);
             distances.set(index, 0.0);
             Dijkstra(index, adjList, distances, parents);
             adjMatrix.add(new ArrayList<>());
             for (DeliveryRequest delivery : deliveries) {
                 adjMatrix.get(adjMatrix.size() - 1)
-                        .add(distances.get(idMap.get(delivery.getDestination().id)));
+                        .add(distances.get(idMap.get(delivery.getIntersection().id)));
             }
             parentSegments.add(parents);
             graphIndices.add(index);
@@ -341,85 +295,13 @@ public class CityMap extends Observable {
         }
     }
 
-    /**
-     * Find the closest intersection to a point
-     * @param longitude
-     * @param latitude
-     * @return intersectionMin the closer intersection in terms of distance
-     */
-    public Intersection getClosestIntersection(double longitude, double latitude){
-        if(!this.intersections.isEmpty()){
-            double distanceMin = Double.MAX_VALUE;
-            double distanceTmp;
-            Intersection intersectionMin = null;
-
-            for(Intersection intersection : this.intersections) {
-                distanceTmp = Math.sqrt(Math.pow(intersection.latitude-latitude,2)+Math.pow(intersection.longitude - longitude, 2));
-
-                if(distanceTmp < distanceMin){
-                    distanceMin = distanceTmp;
-                    intersectionMin = intersection;
-                }
-            }
-            return intersectionMin;
-        }
-        return null;
-
-    }
-
-    /**
-     * Find the closest delivery to a point
-     * @param longitude
-     * @param latitude
-     * @return intersectionMin the closer intersection in terms of distance
-     */
-    public DeliveryRequest getClosestDelivery(double longitude, double latitude){
-        double distanceMin = Double.MAX_VALUE;
-        DeliveryRequest deliveryMin = null;
-        for(Tour tour : this.tours) {
-            for(DeliveryRequest delivery : tour.getDeliveries()) {
-                Intersection intersection = delivery.getDestination();
-                double distanceTmp = Math.sqrt(Math.pow(intersection.latitude - latitude, 2) + Math.pow(intersection.longitude - longitude, 2));
-                if (distanceTmp < distanceMin) {
-                    distanceMin = distanceTmp;
-                    deliveryMin = delivery;
-                }
-            }
-        }
-        return deliveryMin;
-
-    }
-
-    public void selectDelivery(DeliveryRequest delivery) {
-        this.selectedDelivery = delivery;
-        //this.notifyObservers(NotifType.LIGHT_UPDATE);
-    }
-
-    public void clearDeliverySelection() {
-        this.selectedDelivery = null;
-        this.notifyObservers(NotifType.LIGHT_UPDATE);
+    public void clearTemporaryDelivery() {
+        DeliveryRequest deliveryRequest = this.temporaryDelivery;
+        this.temporaryDelivery = null;
+        this.notifyObservers(NotifType.REMOVE, deliveryRequest);
     }
 
     public LinkedList<Intersection> getIntersections() {
         return intersections;
-    }
-
-    public DeliveryRequest findDeliverybyIntersection(Intersection i) {
-        DeliveryRequest deliveryClicked = null;
-        int tourIterator = 0;
-        ArrayList<DeliveryRequest> deliveries;
-        int deliveryIterator = 0;
-        while(tourIterator < tours.size() && deliveryClicked == null){
-            if(deliveryIterator >= tours.get(tourIterator).getDeliveries().size()){
-                ++tourIterator;
-                deliveryIterator = 0;
-            }
-            deliveries = tours.get(tourIterator).getDeliveries();
-            if(deliveries.get(deliveryIterator).getDestination().id.equals(i.id)){
-                deliveryClicked = deliveries.get(deliveryIterator);
-            }
-            ++deliveryIterator;
-        }
-        return deliveryClicked;
     }
 }

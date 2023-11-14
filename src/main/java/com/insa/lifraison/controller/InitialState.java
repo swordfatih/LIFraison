@@ -21,7 +21,7 @@ public class InitialState implements State {
      * @param m the city map
      */
     @Override
-    public void loadMap(Controller c, CityMap m, View view, ListOfCommands l){
+    public void loadMap(Controller c, View view, ListOfCommands l){
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -29,7 +29,7 @@ public class InitialState implements State {
             fileChooser.setInitialDirectory(new File("."));
             File file = fileChooser.showOpenDialog(view.getStage());
 
-            CityMapDeserializer.load(m, file);
+            c.setMap(CityMapDeserializer.load(file));
             l.reset();
 
             c.setCurrentState(c.loadedMapState);
