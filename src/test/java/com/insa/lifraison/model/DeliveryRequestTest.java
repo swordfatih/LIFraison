@@ -1,4 +1,4 @@
-package com.insa.lifraison;
+package com.insa.lifraison.model;
 
 import com.insa.lifraison.model.DeliveryRequest;
 import com.insa.lifraison.model.Intersection;
@@ -39,20 +39,12 @@ public class DeliveryRequestTest {
     }
 
     @Test
-    void setTimeWindowStartTest() {
+    void setTimeWindowTest() {
         DeliveryRequest deliveryRequest = new DeliveryRequest(null);
         LocalTime timeWindowStart = LocalTime.of(10, 30);
-        deliveryRequest.setTimeWindowStart(timeWindowStart);
+        LocalTime timeWindowEnd = LocalTime.of(11, 30);
+        deliveryRequest.setTimeWindow(timeWindowStart, timeWindowEnd);
         assertEquals(timeWindowStart, deliveryRequest.getTimeWindowStart());
-    }
-
-    @Test
-    void setTimeWindowEndTest() {
-        DeliveryRequest deliveryRequest = new DeliveryRequest(null);
-        LocalTime timeWindowEnd = LocalTime.of(10, 30);
-        deliveryRequest.setTimeWindowEnd(timeWindowEnd);
         assertEquals(timeWindowEnd, deliveryRequest.getTimeWindowEnd());
     }
-
-
 }

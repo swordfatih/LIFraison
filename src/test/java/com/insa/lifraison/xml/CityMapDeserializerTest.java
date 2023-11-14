@@ -54,8 +54,8 @@ public class CityMapDeserializerTest {
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
-        if (root.getNodeName().equals("map")) {
-            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+        if (root.getNodeName().equals("main")) {
+            CityMapDeserializer.buildFromDOMXML(root);
         }
 
         assertEquals(targetMap, mapFromXML);
@@ -69,7 +69,7 @@ public class CityMapDeserializerTest {
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
         try {
-            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+            CityMapDeserializer.buildFromDOMXML(root);
             fail("Expected exception due to invalid warehouse");
         } catch(ExceptionXML e){
             assertEquals(e.getMessage(),"Unknown warehouse address: '4'.");
@@ -83,7 +83,7 @@ public class CityMapDeserializerTest {
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
         try {
-            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+            CityMapDeserializer.buildFromDOMXML(root);
             fail("Expected exception due to invalid segment");
         } catch(ExceptionXML e){
             assertEquals(e.getMessage(),"Unknown intersection destination: '4'.");
@@ -97,7 +97,7 @@ public class CityMapDeserializerTest {
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
         try {
-            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+            CityMapDeserializer.buildFromDOMXML(root);
             fail("Expected exception due to negative length");
         } catch(ExceptionXML e){
             assertEquals(e.getMessage(),"Length cannot be negative: '-3.0'.");
@@ -111,7 +111,7 @@ public class CityMapDeserializerTest {
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
         try {
-            CityMapDeserializer.buildFromDOMXML(root, mapFromXML);
+            CityMapDeserializer.buildFromDOMXML(root);
             fail("Expected exception due to invalid length");
         } catch(ExceptionXML e){
             assertEquals(e.getMessage(),"Length is not a number: 'three'.");

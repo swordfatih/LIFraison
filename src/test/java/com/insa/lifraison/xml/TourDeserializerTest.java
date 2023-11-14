@@ -37,8 +37,6 @@ public class TourDeserializerTest {
      */
     @Test
     void testTourDeserializer() throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
-
-
         ArrayList<Tour> toursSources = new ArrayList<>();
 
         ArrayList<Intersection> deliveryList1 = new ArrayList<>();
@@ -80,10 +78,9 @@ public class TourDeserializerTest {
         TourDeserializer.buildFromDOMXML(root, tourFromXML, cityIntersections);
         assertEquals(tourFromXML, toursSources);
     }
+
     @Test
     void testTourDeserializerEmptyTime() throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
-
-
         ArrayList<Tour> toursSources = new ArrayList<>();
 
         LinkedList<Intersection> deliveryList1 = new LinkedList<>();
@@ -102,10 +99,12 @@ public class TourDeserializerTest {
         DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
         Document document = docBuilder.parse(XMLFile);
         Element root = document.getDocumentElement();
-        ArrayList<Tour> tourFromXML = new ArrayList<>();
-        TourDeserializer.buildFromDOMXML(root, tourFromXML, deliveryList1);
-        assertEquals(tourFromXML, toursSources);
+        ArrayList<Tour> toursFromXML = new ArrayList<>();
+        TourDeserializer.buildFromDOMXML(root, toursFromXML, deliveryList1);
+
+        assertEquals(toursFromXML, toursSources);
     }
+
     @Test
     void testTourDeserializerInvalidIntersection() throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
 
