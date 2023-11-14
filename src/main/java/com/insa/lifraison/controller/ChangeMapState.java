@@ -28,7 +28,7 @@ public class ChangeMapState implements State {
                 c.setMap(CityMapDeserializer.load(file));
                 l.reset();
                 c.setCurrentState(c.loadedMapState);
-                view.navigate("map");
+                view.navigate("main");
             } else {
                 c.setCurrentState(c.loadedDeliveryState);
             }
