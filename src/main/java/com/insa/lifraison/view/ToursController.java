@@ -15,6 +15,7 @@ public class ToursController extends ViewController implements Observer {
     @FXML
     private VBox tourList;
 
+    private CityMap map;
     private ArrayList<Tour> tours;
 
     public void initialize() {
@@ -23,6 +24,9 @@ public class ToursController extends ViewController implements Observer {
 
     @Override
     public void update(Observable.NotifType type, Observable observed, Object arg) {
+        if(observed instanceof Tour && type == Observable.NotifType.UPDATE) {
+            update((Tour) observed);
+        }
         if (arg instanceof Tour) {
             Tour tour = (Tour) arg;
             if(type == Observable.NotifType.ADD) {
@@ -31,7 +35,7 @@ public class ToursController extends ViewController implements Observer {
             else if(type == Observable.NotifType.REMOVE) {
                 remove(tour);
             }
-        } else if (arg == null && type == Observable.NotifType.UPDATE){
+        } else if (arg == null && observed instanceof CityMap && type == Observable.NotifType.UPDATE){
             refresh( (CityMap) observed);
         }
     }
@@ -43,8 +47,27 @@ public class ToursController extends ViewController implements Observer {
         }
     }
     public void setMap(CityMap map) {
+        this.map = map;
         map.addObserver(this);
         this.refresh(map);
+    }
+
+    private void update(Tour tour) {
+        ButtonTour buttonTour = null;
+        for(Node n : this.tourList.getChildren()) {
+            if(n instanceof ButtonTour) {
+                if(((ButtonTour) n).getTour() == tour) {
+                    buttonTour = (ButtonTour) n;
+                }
+            }
+        }
+        if(buttonTour != null) {
+            if(tour.isSelected()) {
+                buttonTour.setTextFill(map.getSelectionColor());
+            } else {
+                buttonTour.setTextFill(tour.getColor());
+            }
+        }
     }
 
     private void remove(Tour tour) {
@@ -62,7 +85,13 @@ public class ToursController extends ViewController implements Observer {
     }
 
     private void add(Tour tour) {
-        ButtonTour buttonTour = new ButtonTour(tour);
+        tour.addObserver(this);
+        ButtonTour buttonTour;
+        if(tour.isSelected()) {
+            buttonTour = new ButtonTour(tour, map.getSelectionColor());
+        } else {
+            buttonTour = new ButtonTour(tour, tour.getColor());
+        }
         buttonTour.setOnAction(this::buttonTourClicked);
         buttonTour.setStyle("-fx-max-width: 1000");
         int i = 0;

@@ -14,7 +14,7 @@ public interface State {
 
     public default void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l){};
 
-    public default void addDelivery(Controller c, View view){};
+    public default void addDelivery(Controller c, CityMap m, View view){};
 
     public default void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t,  ListOfCommands l){};
 
@@ -24,7 +24,7 @@ public interface State {
 
     public default void cancel(Controller c, View view){};
 
-    public default void deleteDelivery(Controller c, View view){};
+    public default void deleteDelivery(Controller c, CityMap m, View view){};
 
     public default void computePlan(CityMap m, ListOfCommands l){};
 

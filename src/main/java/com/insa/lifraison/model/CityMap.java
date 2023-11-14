@@ -6,6 +6,8 @@ import java.util.*;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+
+import com.insa.lifraison.observer.Selectable;
 import com.insa.lifraison.utils.*;
 import javafx.scene.paint.Color;
 
@@ -17,7 +19,8 @@ import java.time.LocalTime;
  */
 public class CityMap extends Observable {
 
-    private final Color[] tourColors = {Color.BLUE, Color.ORANGE, Color.LAWNGREEN, Color.LIGHTGOLDENRODYELLOW};
+    private final Color selectionColor = Color.PURPLE;
+    private final Color[] tourColors = {Color.BLUE, Color.ORANGE, Color.LAWNGREEN, Color.PINK};
     /**
      * List of all {@link com.insa.lifraison.model.Intersection} of the city
      */
@@ -37,6 +40,8 @@ public class CityMap extends Observable {
 
     private double minLatitude, maxLatitude, minLongitude, maxLongitude;
 
+    private Selectable selectedComponent;
+
     public CityMap(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
         this.intersections = intersections;
         this.segments = segments;
@@ -44,7 +49,27 @@ public class CityMap extends Observable {
         this.updateMinMax();
         this.tours = new LinkedList<>();
         this.addTour(new Tour());
+        this.selectedComponent = null;
         this.temporaryDelivery = null;
+    }
+
+    public void selectComponent(Selectable obj) {
+        if(this.selectedComponent != null) {
+            this.selectedComponent.unselect();
+        }
+        this.selectedComponent = obj;
+        this.selectedComponent.select();
+    }
+
+    public void clearSelection() {
+        if(this.selectedComponent != null) {
+            this.selectedComponent.unselect();
+        }
+        this.selectedComponent = null;
+    }
+
+    public Selectable getSelectedComponent() {
+        return this.selectedComponent;
     }
 
     /**
@@ -57,6 +82,10 @@ public class CityMap extends Observable {
             sum += tour.getDeliveries().size();
         }
         return sum;
+    }
+
+    public Color getSelectionColor() {
+        return selectionColor;
     }
 
     public LinkedList<Tour> getTours() { return tours; }
