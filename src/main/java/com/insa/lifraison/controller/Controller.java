@@ -64,7 +64,6 @@ public class Controller {
             this.currentState = state;
             this.currentState.entryAction(map, view);
         }
-        System.out.println(currentState);
     }
 
     /**

@@ -49,7 +49,7 @@ public class FilledMapMainState extends NoDeliveriesMainState {
             File file = fileChooser.showSaveDialog(view.getStage());
 
             if (file != null) {
-                System.out.println(file.exists());
+                //System.out.println(file.exists());
                 TourSerializer instance = TourSerializer.getInstance();
                 instance.save(m.getTours(), file);
             }
