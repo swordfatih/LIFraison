@@ -7,6 +7,8 @@ import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 
+import java.time.LocalTime;
+
 public class AddDeliveryState2 implements State {
 
     @Override
@@ -52,7 +54,13 @@ public class AddDeliveryState2 implements State {
         DeliveryRequest deliveryRequest = m.getTemporaryDelivery();
         m.clearTemporaryDelivery();
         l.add(new AddDeliveryCommand(t, deliveryRequest));
+        System.out.println(deliveryRequest.getTimeWindowStart() + " to " +deliveryRequest.getTimeWindowEnd());
         c.setCurrentState(c.filledMapMainState);
+    }
+
+    @Override
+    public void timeWindowChanged(CityMap m, LocalTime timeWindowStart, LocalTime timeWindowEnd) {
+        m.getTemporaryDelivery().setTimeWindow(timeWindowStart, timeWindowEnd);
     }
 
     @Override

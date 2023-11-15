@@ -6,6 +6,8 @@ import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.View;
 
+import java.time.LocalTime;
+
 public interface State {
 
     public default void entryAction(CityMap m, View view) {};
@@ -42,4 +44,5 @@ public interface State {
 
     public default void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l){};
 
+    public default void timeWindowChanged(CityMap m, LocalTime timeWindowStart, LocalTime timeWindowEnd) {};
 }

@@ -8,6 +8,8 @@ import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.View;
 import javafx.stage.Stage;
 
+import java.time.LocalTime;
+
 public class Controller {
     private View view;
     private CityMap map;
@@ -150,6 +152,8 @@ public class Controller {
     public void removeTour() { currentState.removeTour(this, map); }
 
     public void tourButtonClicked(Tour tour) { currentState.tourButtonClicked(this, map, tour, view, listOfCommands); }
+
+    public void timeWindowChanged(LocalTime timeWindowStart, LocalTime timeWindowEnd) {currentState.timeWindowChanged(map, timeWindowStart, timeWindowEnd);}
 
     public void setMap(CityMap map) {
         this.map = map;
