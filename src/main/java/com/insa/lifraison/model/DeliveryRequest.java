@@ -13,6 +13,7 @@ public class DeliveryRequest extends Observable {
      */
     private LocalTime timeWindowStart;
     private LocalTime timeWindowEnd;
+    private DeliveryState state;
 
     /**
      * Point to which this delivery must be made
@@ -23,12 +24,14 @@ public class DeliveryRequest extends Observable {
         this.timeWindowStart = null;
         this.timeWindowEnd = null;
         this.intersection = intersection;
+        this.state = DeliveryState.NotCalculated;
     }
 
     public DeliveryRequest(LocalTime timeWindowStart, LocalTime timeWindowEnd, Intersection intersection) {
         this.timeWindowStart = timeWindowStart;
         this.timeWindowEnd = timeWindowEnd;
         this.intersection = intersection;
+        this.state = DeliveryState.NotCalculated;
     }
 
     public LocalTime getTimeWindowStart(){
@@ -51,5 +54,21 @@ public class DeliveryRequest extends Observable {
     public void setIntersection(Intersection intersection) {
         this.intersection = intersection;
         this.notifyObservers(NotifType.UPDATE);
+    }
+
+    public void setTimeWindowStart(LocalTime timeWindowStart) {
+        this.timeWindowStart = timeWindowStart;
+    }
+
+    public void setTimeWindowEnd(LocalTime timeWindowEnd) {
+        this.timeWindowEnd = timeWindowEnd;
+    }
+
+    public DeliveryState getState() {
+        return state;
+    }
+
+    public void setState(DeliveryState state) {
+        this.state = state;
     }
 }

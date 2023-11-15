@@ -244,26 +244,39 @@ public class CityMap extends Observable {
         ArrayList<ArrayList<Edge>> parentSegments = new ArrayList<>();
         ArrayList<Integer> graphIndices = new ArrayList<>();
 
-        for(DeliveryRequest deliveryRequest : deliveries) {
+        boolean hasImpossible = false;
+
+        for(int i = 0; i < deliveries.size(); i++) {
+            DeliveryRequest deliveryRequest = deliveries.get(i);
             ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(intersectionCnt, Double.MAX_VALUE));
             ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(intersectionCnt, null));
             int index = intersectionIdMap.get(deliveryRequest.getIntersection().id);
             distances.set(index, 0.0);
             Dijkstra(index, distances, parents);
 
+            if(checkImpossible(distances, deliveries, i)) {
+                hasImpossible = true;
+            }
+
             adjMatrix.add(new ArrayList<>());
-            for (int i = 0; i < deliveries.size(); i++) {
-                if (deliveries.get(i).getTimeWindowStart() != null &&
+            for (int j = 0; j < deliveries.size(); j++) {
+                if (deliveries.get(j).getTimeWindowStart() != null &&
                         deliveryRequest.getTimeWindowStart() != null &&
-                        deliveries.get(i).getTimeWindowStart().isBefore(deliveryRequest.getTimeWindowStart())) {
-                    distances.set(i, Double.MAX_VALUE);
+                        deliveries.get(j).getTimeWindowStart().isBefore(deliveryRequest.getTimeWindowStart())) {
+                    distances.set(intersectionIdMap.get(deliveries.get(j).getIntersection().id), Double.MAX_VALUE);
                 }
                 adjMatrix.get(adjMatrix.size() - 1)
-                        .add(distances.get(intersectionIdMap.get(deliveries.get(0).getIntersection().id)));
+                        .add(distances.get(intersectionIdMap.get(deliveries.get(j).getIntersection().id)));
             }
 
             parentSegments.add(parents);
             graphIndices.add(index);
+        }
+
+        if(hasImpossible) {
+            deliveries.remove(0);
+            tour.setTourSteps(new LinkedList<>());
+            return tour.getTourSteps();
         }
 
         Graph graph = new Graph(adjMatrix);
@@ -297,9 +310,18 @@ public class CityMap extends Observable {
                 var delta = Duration.between(endTime, deliveries.get(finalNode).getTimeWindowStart());
                 startTime = startTime.plus(delta);
                 endTime = endTime.plus(delta);
+            } else if(deliveries.get(finalNode).getTimeWindowStart() == null) {
+                int windowStart = endTime.getHour();
+                deliveries.get(finalNode).setTimeWindowStart(LocalTime.of(windowStart, 0));
+                deliveries.get(finalNode).setTimeWindowEnd(LocalTime.of(windowStart + 1, 0));
             }
+            if (endTime.isAfter(deliveries.get(finalNode).getTimeWindowStart())) {
+                deliveries.get(finalNode).setState(DeliveryState.Late);
+            } else {
+                deliveries.get(finalNode).setState(DeliveryState.Ok);
+            }
+
             tourSteps.add(new TourStep(path, startTime, endTime));
-            System.out.println(startTime.toString() + " " + endTime.toString());
         }
 
         deliveries.remove(0);
@@ -326,11 +348,10 @@ public class CityMap extends Observable {
     }
 
     private void ComputeTimeWindows(ArrayList<DeliveryRequest> deliveries) {
-        System.out.println(deliveries.size());
-        ArrayList<Integer> timeWindows = new ArrayList<>(Collections.nCopies(5, 0));
+        ArrayList<Integer> timeWindows = new ArrayList<>(Collections.nCopies(4, 0));
         for(DeliveryRequest deliveryRequest : deliveries) {
             if(deliveryRequest.getTimeWindowStart() != null) {
-                int index = (deliveryRequest.getTimeWindowStart().getHour() - 8)/2;
+                int index = deliveryRequest.getTimeWindowStart().getHour() - 8;
                 timeWindows.set(index, timeWindows.get(index) + 1);
             }
         }
@@ -338,10 +359,30 @@ public class CityMap extends Observable {
         for(DeliveryRequest deliveryRequest : deliveries) {
             if(deliveryRequest.getTimeWindowStart() == null) {
                 int index = timeWindows.indexOf(Collections.min(timeWindows));
-                deliveryRequest.setTimeWindow(LocalTime.of(8 + 2*index, 0), LocalTime.of(10 + 2*index, 0));
+                deliveryRequest.setTimeWindow(LocalTime.of(8 + index, 0), LocalTime.of(9 + index, 0));
                 timeWindows.set(index, timeWindows.get(index) + 1);
             }
         }
+    }
+
+    private boolean checkImpossible(ArrayList<Double> distances, ArrayList<DeliveryRequest> deliveries, int index) {
+        boolean hasImpossible = false;
+
+        if(index != 0 && distances.get(0).equals(Double.MAX_VALUE)) {
+            deliveries.get(index).setState(DeliveryState.NotPossible);
+            return true;
+        } else if(index == 0) {
+            for(int i = 1; i < deliveries.size(); i++) {
+                if(distances
+                        .get(intersectionIdMap.get(deliveries.get(index).getIntersection().id))
+                        .equals(Double.MAX_VALUE)) {
+                    hasImpossible = true;
+                    deliveries.get(i).setState(DeliveryState.NotPossible);
+                }
+            }
+        }
+
+        return hasImpossible;
     }
 
     /**
