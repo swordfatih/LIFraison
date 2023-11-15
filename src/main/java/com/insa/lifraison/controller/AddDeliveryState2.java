@@ -31,11 +31,7 @@ public class AddDeliveryState2 implements State {
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
         m.clearTemporaryDelivery();
         view.<MainController>getController("main").getInformationController().clearInformations();
-        if (m.getNumberDeliveries() != 0){
-            c.setCurrentState(c.loadedDeliveryState);
-        } else {
-            c.setCurrentState(c.loadedMapState);
-        }
+        c.setCurrentStateToMain();
     }
 
     @Override
@@ -44,7 +40,7 @@ public class AddDeliveryState2 implements State {
         m.clearTemporaryDelivery();
         l.add(new AddDeliveryCommand(t, deliveryRequest));
         v.<MainController>getController("main").getInformationController().clearInformations();
-        c.setCurrentState(c.loadedDeliveryState);
+        c.setCurrentState(c.filledMapMainState);
     }
 
     protected void entryAction(Intersection i, CityMap m, ListOfCommands l){

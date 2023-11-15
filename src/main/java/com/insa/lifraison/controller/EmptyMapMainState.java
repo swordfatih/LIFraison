@@ -4,8 +4,8 @@ import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
-import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.CityMapDeserializer;
+import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourDeserializer;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
@@ -15,7 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
-public class LoadedMapState implements State {
+public class EmptyMapMainState implements State {
     @Override
     public void loadMap(Controller c, View view, ListOfCommands l){
         try{
@@ -28,7 +28,7 @@ public class LoadedMapState implements State {
             if (file != null) {
                 c.setMap(CityMapDeserializer.load(file));
                 l.reset();
-                c.setCurrentState(c.loadedMapState);
+                c.setCurrentState(c.emptyMapMainState);
             }
 
             view.navigate("main");
@@ -59,14 +59,12 @@ public class LoadedMapState implements State {
 
             if (file != null) {
                 CompoundCommand loadDeliveriesCommand = new CompoundCommand();
-                if (m.getTours().size() == 1) {
-                    loadDeliveriesCommand.addCommand(new ReverseCommand(new AddTourCommand(m, m.getTours().get(0))));
-                }
+                loadDeliveriesCommand.addCommand(new ReverseCommand(new AddTourCommand(m, m.getTours().get(0))));
                 for (Tour tour : TourDeserializer.load(m.getIntersections(), file)) {
                     loadDeliveriesCommand.addCommand(new AddTourCommand(m, tour));
                 }
                 l.add(loadDeliveriesCommand);
-                c.setCurrentState(c.loadedDeliveryState);
+                c.setCurrentStateToMain();
             }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());
@@ -77,34 +75,22 @@ public class LoadedMapState implements State {
     public void undo(Controller c, CityMap m, ListOfCommands l) {
         m.clearSelection();
         l.undo();
-        if (m.getNumberDeliveries() != 0){
-            c.setCurrentState(c.loadedDeliveryState);
-        } else {
-            c.setCurrentState(c.loadedMapState);
-        }
+        c.setCurrentStateToMain();
     }
 
     @Override
     public void redo(Controller c, CityMap m, ListOfCommands l) {
         m.clearSelection();
         l.redo();
-        if (m.getNumberDeliveries() != 0){
-            c.setCurrentState(c.loadedDeliveryState);
-        } else {
-            c.setCurrentState(c.loadedMapState);
-        }
+        c.setCurrentStateToMain();
     }
 
     @Override
-    public void addTour(CityMap m, ListOfCommands l) {
+    public void addTour(Controller c, CityMap m, ListOfCommands l) {
         l.add(new AddTourCommand(m, new Tour()));
+        c.setCurrentState(c.noDeliveriesMainState);
     }
 
-    @Override
-    public void removeTour(Controller c, CityMap m){
-        if(m.getTours().size() > 1)
-            c.setCurrentState(c.deleteTourState);
-    }
 
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){

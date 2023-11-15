@@ -31,7 +31,7 @@ public class InitialState implements State {
             if (file != null) {
                 c.setMap(CityMapDeserializer.load(file));
                 l.reset();
-                c.setCurrentState(c.loadedMapState);
+                c.setCurrentState(c.emptyMapMainState);
                 view.navigate("main");
             }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){

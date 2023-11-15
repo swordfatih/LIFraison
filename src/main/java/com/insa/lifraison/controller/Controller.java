@@ -14,12 +14,14 @@ public class Controller {
     private ListOfCommands listOfCommands;
     private State currentState;
     protected final InitialState initialState = new InitialState();
-    protected final LoadedMapState loadedMapState = new LoadedMapState();
+    protected final NoDeliveriesMainState noDeliveriesMainState = new NoDeliveriesMainState();
     protected final AddDeliveryState1 addDeliveryState1 = new AddDeliveryState1();
     protected final AddDeliveryState2 addDeliveryState2 = new AddDeliveryState2();
-    protected final LoadedDeliveryState loadedDeliveryState = new LoadedDeliveryState();
+    protected final FilledMapMainState filledMapMainState = new FilledMapMainState();
     protected final DeleteDeliveryState1 deleteDeliveryState1 = new DeleteDeliveryState1();
     protected final ChangeMapState changeMapState = new ChangeMapState();
+
+    protected final EmptyMapMainState emptyMapMainState = new EmptyMapMainState();
 
     protected final DeleteTourState deleteTourState = new DeleteTourState();
 
@@ -48,9 +50,24 @@ public class Controller {
      * @param state new state
      */
     protected void setCurrentState(State state) {
+        this.currentState.exitAction();
         this.currentState = state;
+        this.currentState.entryAction();
 
         System.out.println(currentState);
+    }
+
+    /**
+     * Change the current state
+     */
+    protected void setCurrentStateToMain() {
+        if(this.map.getNumberDeliveries() > 0) {
+            this.setCurrentState(this.filledMapMainState);
+        } else if(this.map.getTours().size()>1) {
+            this.setCurrentState(this.noDeliveriesMainState);
+        } else {
+            this.setCurrentState(this.emptyMapMainState);
+        }
     }
 
     /**
@@ -129,7 +146,7 @@ public class Controller {
 
     public void save(){ currentState.save( map, view);};
 
-    public void addTour() { currentState.addTour(map, listOfCommands); }
+    public void addTour() { currentState.addTour(this, map, listOfCommands); }
 
     public void removeTour() { currentState.removeTour(this, map); }
 

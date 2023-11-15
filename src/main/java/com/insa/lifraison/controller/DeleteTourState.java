@@ -12,11 +12,11 @@ public class DeleteTourState implements State{
             command.addCommand(new ReverseCommand(new AddTourCommand(m, t)));
             command.addCommand(new AddTourCommand(m, new Tour()));
             l.add(command);
-            leavingAction(c, m);
+            c.setCurrentStateToMain();
         } else {
             l.add(new ReverseCommand(new AddTourCommand(m, t)));
             if(m.getTours().size() == 1 && m.getNumberDeliveries() == 0){
-                c.setCurrentState(c.loadedMapState);
+                c.setCurrentState(c.emptyMapMainState);
             }
         }
 
@@ -24,14 +24,7 @@ public class DeleteTourState implements State{
 
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
-        leavingAction(c, m);
+        c.setCurrentStateToMain();
     }
 
-    public void leavingAction(Controller c, CityMap m) {
-        if (m.getNumberDeliveries() != 0){
-            c.setCurrentState(c.loadedDeliveryState);
-        } else {
-            c.setCurrentState(c.loadedMapState);
-        }
-    }
 }

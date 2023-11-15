@@ -25,10 +25,10 @@ public class ChangeMapState implements State {
             if (file != null) {
                 c.setMap(CityMapDeserializer.load(file));
                 l.reset();
-                c.setCurrentState(c.loadedMapState);
+                c.setCurrentState(c.emptyMapMainState);
                 view.navigate("main");
             } else {
-                c.setCurrentState(c.loadedDeliveryState);
+                c.setCurrentState(c.filledMapMainState);
             }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
@@ -40,6 +40,6 @@ public class ChangeMapState implements State {
     @Override
     public void cancel(Controller c, View view){
         view.<MainController>getController("main").getInformationController().clearInformations();
-        c.setCurrentState(c.loadedDeliveryState);
+        c.setCurrentState(c.filledMapMainState);
     }
 }

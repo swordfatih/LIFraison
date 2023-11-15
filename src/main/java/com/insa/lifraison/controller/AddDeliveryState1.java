@@ -29,10 +29,6 @@ public class AddDeliveryState1 implements State {
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
         view.<MainController>getController("main").getInformationController().clearInformations();
-        if (m.getNumberDeliveries() != 0){
-            c.setCurrentState(c.loadedDeliveryState);
-        } else {
-            c.setCurrentState(c.loadedMapState);
-        }
+        c.setCurrentStateToMain();
     }
 }
