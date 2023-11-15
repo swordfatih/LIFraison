@@ -20,6 +20,22 @@ import java.io.IOException;
 public class FilledMapMainState extends NoDeliveriesMainState {
 
     @Override
+    public void entryAction(CityMap m, View view) {
+        super.entryAction(m, view);
+        view.<MainController>getController("main").enableButton("#computePlanButton");
+        view.<MainController>getController("main").enableButton("#saveButton");
+        view.<MainController>getController("main").enableButton("#removeDeliveryButton");
+    }
+
+    @Override
+    public void exitAction(CityMap m, View view) {
+        super.exitAction(m, view);
+        view.<MainController>getController("main").disableButton("#computePlanButton");
+        view.<MainController>getController("main").disableButton("#saveButton");
+        view.<MainController>getController("main").disableButton("#removeDeliveryButton");
+    }
+
+    @Override
     public void computePlan(CityMap m, ListOfCommands l) {
         m.clearSelection();
         l.add(new ComputePlanCommand(m));
@@ -46,7 +62,7 @@ public class FilledMapMainState extends NoDeliveriesMainState {
     }
 
     @Override
-    public void deleteDelivery(Controller c, CityMap m, View view){
+    public void removeDelivery(Controller c, CityMap m, View view){
         c.setCurrentState(c.deleteDeliveryState1);
     }
 

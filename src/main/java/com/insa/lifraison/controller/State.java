@@ -26,7 +26,7 @@ public interface State {
 
     public default void cancel(Controller c, View view){};
 
-    public default void deleteDelivery(Controller c, CityMap m, View view){};
+    public default void removeDelivery(Controller c, CityMap m, View view){};
 
     public default void computePlan(CityMap m, ListOfCommands l){};
 

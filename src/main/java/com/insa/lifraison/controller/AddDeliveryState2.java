@@ -11,12 +11,17 @@ public class AddDeliveryState2 implements State {
 
     @Override
     public void entryAction(CityMap m, View view) {
+        view.<MainController>getController("main").enableButton("#addTourButton");
+
         view.<MainController>getController("main").getInformationController().displayAddDelivery2Informations();
     }
 
     @Override
     public void exitAction(CityMap m, View view) {
         m.clearTemporaryDelivery();
+
+        view.<MainController>getController("main").disableButton("#addTourButton");
+
         view.<MainController>getController("main").getInformationController().clearInformations();
     }
 

@@ -17,9 +17,28 @@ import java.io.IOException;
 
 public class EmptyMapMainState implements State {
 
+
+    @Override
+    public void entryAction(CityMap m, View view) {
+        view.<MainController>getController("main").enableButton("#loadMapButton");
+        view.<MainController>getController("main").enableButton("#addDeliveryButton");
+        view.<MainController>getController("main").enableButton("#loadDeliveriesButton");
+        view.<MainController>getController("main").enableButton("#undoButton");
+        view.<MainController>getController("main").enableButton("#redoButton");
+        view.<MainController>getController("main").enableButton("#addTourButton");
+
+
+    }
     @Override
     public void exitAction(CityMap m, View view) {
         m.clearSelection();
+
+        view.<MainController>getController("main").disableButton("#loadMapButton");
+        view.<MainController>getController("main").disableButton("#addDeliveryButton");
+        view.<MainController>getController("main").disableButton("#loadDeliveriesButton");
+        view.<MainController>getController("main").disableButton("#undoButton");
+        view.<MainController>getController("main").disableButton("#redoButton");
+        view.<MainController>getController("main").disableButton("#addTourButton");
     }
 
     @Override

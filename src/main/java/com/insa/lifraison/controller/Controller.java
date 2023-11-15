@@ -119,8 +119,8 @@ public class Controller {
     /**
      * Method called after a click on the "Delete Delivery" button
      */
-    public void deleteDelivery(){
-        currentState.deleteDelivery(this, map, view);
+    public void removeDelivery(){
+        currentState.removeDelivery(this, map, view);
     };
 
     /**

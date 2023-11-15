@@ -2,6 +2,7 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
+import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourDeserializer;
@@ -13,6 +14,20 @@ import java.io.File;
 import java.io.IOException;
 
 public class NoDeliveriesMainState extends EmptyMapMainState {
+
+    @Override
+    public void entryAction(CityMap m, View view) {
+        super.entryAction(m, view);
+        view.<MainController>getController("main").enableButton("#removeTourButton");
+
+    }
+
+    @Override
+    public void exitAction(CityMap m, View view) {
+        super.exitAction(m, view);
+        view.<MainController>getController("main").disableButton("#removeTourButton");
+
+    }
 
     @Override
     public void loadMap(Controller c, CityMap m, View view, ListOfCommands l) {

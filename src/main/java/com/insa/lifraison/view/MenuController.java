@@ -7,10 +7,42 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.GridPane;
 
 public class MenuController extends ViewController {
+
+    @FXML
+    private Button loadMapButton;
+
+    @FXML
+    private Button loadDeliveriesButton;
+
+    @FXML
+    private Button addDeliveryButton;
+
+    @FXML
+    private Button removeDeliveryButton;
+
     @FXML
     private Button undoButton;
+
+    @FXML
+    private Button redoButton;
+
+    @FXML
+    private Button addTourButton;
+
+    @FXML
+    private Button removeTourButton;
+
+    @FXML
+    private Button computePlanButton;
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
+    private GridPane buttons;
 
     @Override
     public void setController(Controller controller) {
@@ -30,7 +62,9 @@ public class MenuController extends ViewController {
                 newScene.getAccelerators().put(kcCancel, () -> this.controller.rightClick());
             }
         });
+        buttons.getChildren().forEach((button) -> button.setDisable(true));;
     }
+
 
     @FXML
     private void loadMap(ActionEvent event) {
@@ -55,9 +89,9 @@ public class MenuController extends ViewController {
     }
 
     @FXML
-    private void deleteDelivery(ActionEvent event) {
+    private void removeDelivery(ActionEvent event) {
         event.consume();
-        this.controller.deleteDelivery();
+        this.controller.removeDelivery();
     }
 
     @FXML
