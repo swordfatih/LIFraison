@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class LoadDeliveriesCommand implements Command {
-    private CityMap cityMap;
-    private File file;
+    private final CityMap cityMap;
+    private final File file;
     private ArrayList<Tour> tours;
 
     /**

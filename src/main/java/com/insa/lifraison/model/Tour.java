@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 /**
  * Object that stores all the deliveries for a courier.
- * Provides a method that can calculate the optimal solution for the tour.
+ * This class extends from {@link com.insa.lifraison.observer.Observable}
  */
 public class Tour extends Observable{
     /**
@@ -25,6 +25,9 @@ public class Tour extends Observable{
     private int id;
     private Color color;
 
+    /**
+     * Constructor of Tour
+     */
     public Tour() {
         id = -1;
         color = null;
@@ -32,14 +35,29 @@ public class Tour extends Observable{
         tourSteps = new LinkedList<>();
     }
 
+    /**
+     * Set id of a tour
+     * @param id the id
+     */
     void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Set color of a tour
+     * @param color the color
+     */
     void setColor(Color color) {
         this.color = color;
     }
 
+    /**
+     * Add a {@link com.insa.lifraison.model.DeliveryRequest} to a tour.
+     * If the delivery is added notify {@link com.insa.lifraison.observer.Observer}
+     * @param deliveryRequest the delivery added to the tour
+     * @return <code>true</code> the delivery was added successfully
+     *         <code>false</code> otherwise.
+     */
     public boolean addDelivery(DeliveryRequest deliveryRequest) {
         boolean hasChanged = deliveries.add(deliveryRequest);
         if(hasChanged){
@@ -48,28 +66,54 @@ public class Tour extends Observable{
         return hasChanged;
     }
 
+    /**
+     * Remove a {@link com.insa.lifraison.model.DeliveryRequest} to a tour.
+     * If the delivery is removed notify {@link com.insa.lifraison.observer.Observer}
+     * @param deliveryRequest the delivery removed to the tour
+     * @return <code>true</code> the delivery was removed successfully
+     *         <code>false</code> otherwise.
+     */
     public boolean removeDelivery(DeliveryRequest deliveryRequest) {
         boolean hasChanged = deliveries.remove(deliveryRequest);
         if (hasChanged) notifyObservers(NotifType.REMOVE, deliveryRequest);
         return hasChanged;
     }
+
+    /**
+     * Give all deliveries of a tour
+     * @return ArrayList<DeliveryRequest> deliveries
+     */
     public ArrayList<DeliveryRequest> getDeliveries(){
         return deliveries;
     }
-    
+
+    /**
+     * Set a list of {@link com.insa.lifraison.model.TourStep} to a tour.
+     * Notify  {@link com.insa.lifraison.observer.Observer}
+     * @param tourSteps the list of tourStep
+     */
     public void setTourSteps(LinkedList<TourStep> tourSteps) { 
         this.tourSteps = tourSteps;
         notifyObservers(NotifType.UPDATE);
     }
 
+    /**
+     * @return  LinkedList<TourStep> tourSteps of the tour
+     */
     public LinkedList<TourStep> getTourSteps() { 
         return tourSteps; 
     }
 
+    /**
+     * @return id of the tour
+     */
     public int getId() {
         return this.id;
     }
 
+    /**
+     * @return color of the tour
+     */
     public Paint getColor() {
         return  this.color;
     }

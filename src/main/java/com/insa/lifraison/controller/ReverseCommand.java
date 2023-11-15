@@ -1,7 +1,7 @@
 package com.insa.lifraison.controller;
 
 public class ReverseCommand implements Command{
-    private Command cmd;
+    private final Command cmd;
 
     /**
      * Create the command reverse to cmd (so that cmd.doCommand corresponds to this.undoCommand, and vice-versa)

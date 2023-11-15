@@ -7,10 +7,13 @@ import com.insa.lifraison.observer.Observable;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-
+/**
+ * ComputePlanCommand is a class which permits to compute all tours of the CityMap
+ * The class extends Command {@link com.insa.lifraison.controller.Command}
+ */
 public class ComputePlanCommand implements Command {
-    private CityMap cityMap;
-    private ArrayList<LinkedList<TourStep>> tours;
+    private final CityMap cityMap;
+    private final ArrayList<LinkedList<TourStep>> tours;
 
     /**
      * Create the command that compute the delivery plan of a cityMap

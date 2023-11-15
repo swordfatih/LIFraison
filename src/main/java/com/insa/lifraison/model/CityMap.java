@@ -5,7 +5,6 @@ import com.insa.lifraison.observer.Observable;
 import java.time.Duration;
 import java.util.*;
 
-import static java.lang.Integer.valueOf;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -16,8 +15,11 @@ import javafx.scene.paint.Color;
 import java.time.LocalTime;
 
 /**
- * Object that stores all the intersections and segments in the city,
+ * CityMap is the class in model that stores all
+ * intersections and segments in the city,
  * as well as the warehouse instance.
+ * It also has tours of the city.
+ * This class extends from the class Observable {@link com.insa.lifraison.observer.Observable}
  */
 public class CityMap extends Observable {
 
@@ -35,17 +37,30 @@ public class CityMap extends Observable {
      * Unique {@link com.insa.lifraison.model.Warehouse} of the city
      */
     private final Warehouse warehouse;
-
+    /**
+     * List of all {@link com.insa.lifraison.model.Tour} of the city
+     */
     private LinkedList<Tour> tours;
-
+    /**
+     * Temporary {@link com.insa.lifraison.model.DeliveryRequest} of the city
+     */
     private DeliveryRequest temporaryDelivery;
 
     private double minLatitude, maxLatitude, minLongitude, maxLongitude;
 
     private ArrayList<ArrayList<Edge>> adjList;
     private HashMap<String, Integer> intersectionIdMap;
+    /**
+     * Temporary {@link com.insa.lifraison.observer.Selectable}
+     */
     private Selectable selectedComponent;
 
+    /**
+     * CityMap constructor
+     * @param intersections list of all intersections of the cityMap
+     * @param segments list of all segments of the cityMap
+     * @param warehouse the warehouse of the firm in the particular city
+     */
     public CityMap(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
         this.intersections = intersections;
         this.segments = segments;
@@ -58,6 +73,11 @@ public class CityMap extends Observable {
         this.adjList = createAdjacencyList();
     }
 
+    /**
+     * Give to the CityMap the selected component {@link com.insa.lifraison.observer.Selectable} and select it
+     * If the selectedComponent is already present (not null), we unselect it first
+     * @param obj the selected component
+     */
     public void selectComponent(Selectable obj) {
         if(this.selectedComponent != null) {
             this.selectedComponent.unselect();
@@ -66,6 +86,10 @@ public class CityMap extends Observable {
         this.selectedComponent.select();
     }
 
+    /**
+     * unselect the selected component {@link com.insa.lifraison.observer.Selectable} and make the
+     * selectComponent to null in the CityMap
+     */
     public void clearSelection() {
         if(this.selectedComponent != null) {
             this.selectedComponent.unselect();
@@ -73,6 +97,10 @@ public class CityMap extends Observable {
         this.selectedComponent = null;
     }
 
+    /**
+     * Give the selectedComponent of the CityMap
+     * @return the selectedComponent
+     */
     public Selectable getSelectedComponent() {
         return this.selectedComponent;
     }
@@ -89,29 +117,41 @@ public class CityMap extends Observable {
         return sum;
     }
 
+    /**
+     * Give the color of the selected component
+     * @return color
+     */
     public Color getSelectionColor() {
         return selectionColor;
     }
 
+    /**
+     * Give all tours of the CityMap
+     * @return LinkedList<Tour> tours
+     */
     public LinkedList<Tour> getTours() { return tours; }
 
+    /**
+     * Give all segments of the CityMap
+     * @return LinkedList<Segment> segments
+     */
     public LinkedList<Segment> getSegments() {
         return this.segments;
     }
 
     /**
-     * add a delivery to the uncomputedDeliveries list
-     * @param newDelivery the delivery you want to add
-     * @return succes of the adding
+     * Give all intersections of the CityMap
+     * @return LinkedList<Intersection> intersections
      */
-    public boolean addDelivery(int index, DeliveryRequest newDelivery){
-        return tours.get(index).addDelivery(newDelivery);
+    public LinkedList<Intersection> getIntersections() {
+        return intersections;
     }
 
     /**
-     * add delivery which is selected to the cityMap
-     * @param newDelivery
-     * @return
+     * Add a delivery which isn't linked to a tour in the CityMap
+     * This delivery is temporary and will be deleted as soon as the user add it to a tour
+     * Notify observers {@link com.insa.lifraison.observer.Observer} that a new delivery has been added {@link }
+     * @param newDelivery the temporary delivery
      */
     public void setTemporaryDelivery(DeliveryRequest newDelivery){
         if(this.temporaryDelivery != null)
@@ -120,6 +160,28 @@ public class CityMap extends Observable {
         notifyObservers(NotifType.ADD, newDelivery);
     }
 
+    /**
+     * Give the temporaryDelivery
+     * @return temporaryDelivery
+     */
+    public DeliveryRequest getTemporaryDelivery() {
+        return this.temporaryDelivery;
+    }
+
+    /**
+     * Clear the delivery which is temporal
+     */
+    public void clearTemporaryDelivery() {
+        DeliveryRequest deliveryRequest = this.temporaryDelivery;
+        this.temporaryDelivery = null;
+        this.notifyObservers(NotifType.REMOVE, deliveryRequest);
+    }
+
+    /**
+     * Add a new tour to tours of the CityMap
+     * Notify observers {@link com.insa.lifraison.observer.Observer} that a new tour have been added
+     * @param tour the new tour which is added
+     */
     public void addTour(Tour tour) {
         for(Tour t : this.tours) {
             System.out.println(t.getId());
@@ -141,18 +203,31 @@ public class CityMap extends Observable {
         notifyObservers(NotifType.ADD, tour);
     }
 
+    /**
+     * Remove a tour from tours of the CityMap
+     * Notify observers {@link com.insa.lifraison.observer.Observer} that a tour have been removed
+     * @param tour the tour which is removed
+     */
     public boolean removeTour(Tour tour) {
         boolean hasChanged = this.tours.remove(tour);
         if (hasChanged) notifyObservers(NotifType.REMOVE, tour);
         return hasChanged;
     }
 
+    /**
+     * Add a collection of tour in the CityMap
+     * @param tours the collection of tour which will be added to tours of the CityMap
+     */
     public void addTours(Collection<Tour> tours) {
         for(Tour tour : tours) {
             this.addTour(tour);
         }
     }
 
+    /**
+     * Remove a collection of tour in the CityMap
+     * @param tours the collection of tour which will be removed to tours of the CityMap
+     */
     public boolean removeTours(Collection<Tour> tours) {
         boolean hasChanged = false;
         for(Tour tour : tours) {
@@ -163,11 +238,11 @@ public class CityMap extends Observable {
 
     /**
      * Get the warehouse of the CityMap
-     * @return
+     * @return the warehouse of the CityMap
      */
     public Warehouse getWarehouse(){return this.warehouse;}
+
     /**
-     *
      * Compares two City maps. It returns true if, and only if,
      * they have the same intersections, segments, and the warehouses
      * are located on the same intersection.
@@ -192,10 +267,10 @@ public class CityMap extends Observable {
         return equalWarehouses && equalIntersections && equalSegments;
     }
 
-    public DeliveryRequest getTemporaryDelivery() {
-        return this.temporaryDelivery;
-    }
-
+    /**
+     * Find the new maximum and minimum latitude and longitude values of intersections of the CityMap.
+     * Update attributes minLatitude, minLongitude, maxLatitude, maxLongitude of the class.
+     */
     public void updateMinMax() {
         if (this.intersections.isEmpty()) {
             this.minLatitude = Double.MAX_VALUE;
@@ -217,18 +292,34 @@ public class CityMap extends Observable {
         }
     }
 
+    /**
+     * Give the minLatitude of the CityMap
+     * @return double minLatitude
+     */
     public double getMinLatitude(){
         return minLatitude;
     }
 
+    /**
+     * Give the maxLatitude of the CityMap
+     * @return double maxLatitude
+     */
     public double getMaxLatitude(){
         return maxLatitude;
     }
 
+    /**
+     * Give the minLongitude of the CityMap
+     * @return double minLongitude
+     */
     public double getMinLongitude(){
         return minLongitude;
     }
 
+    /**
+     * Give the maxLongitude of the CityMap
+     * @return double maxLongitude
+     */
     public double getMaxLongitude(){
         return maxLongitude;
     }
@@ -413,62 +504,4 @@ public class CityMap extends Observable {
         return hasImpossible;
     }
 
-    /**
-     * Find the closest intersection to a point
-     * @param longitude
-     * @param latitude
-     * @return intersectionMin the closer intersection in terms of distance
-     */
-    public Intersection getClosestIntersection(double longitude, double latitude){
-        if(!this.intersections.isEmpty()){
-            double distanceMin = Double.MAX_VALUE;
-            double distanceTmp;
-            Intersection intersectionMin = null;
-
-            for(Intersection intersection : this.intersections) {
-                distanceTmp = Math.sqrt(Math.pow(intersection.latitude-latitude,2)+Math.pow(intersection.longitude - longitude, 2));
-
-                if(distanceTmp < distanceMin){
-                    distanceMin = distanceTmp;
-                    intersectionMin = intersection;
-                }
-            }
-            return intersectionMin;
-        }
-        return null;
-
-    }
-
-    /**
-     * Find the closest delivery to a point
-     * @param longitude
-     * @param latitude
-     * @return intersectionMin the closer intersection in terms of distance
-     */
-    public DeliveryRequest getClosestDelivery(double longitude, double latitude){
-        double distanceMin = Double.MAX_VALUE;
-        DeliveryRequest deliveryMin = null;
-        for(Tour tour : this.tours) {
-            for(DeliveryRequest delivery : tour.getDeliveries()) {
-                Intersection intersection = delivery.getIntersection();
-                double distanceTmp = Math.sqrt(Math.pow(intersection.latitude - latitude, 2) + Math.pow(intersection.longitude - longitude, 2));
-                if (distanceTmp < distanceMin) {
-                    distanceMin = distanceTmp;
-                    deliveryMin = delivery;
-                }
-            }
-        }
-        return deliveryMin;
-
-    }
-
-    public void clearTemporaryDelivery() {
-        DeliveryRequest deliveryRequest = this.temporaryDelivery;
-        this.temporaryDelivery = null;
-        this.notifyObservers(NotifType.REMOVE, deliveryRequest);
-    }
-
-    public LinkedList<Intersection> getIntersections() {
-        return intersections;
-    }
 }

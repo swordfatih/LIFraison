@@ -42,7 +42,7 @@ public class DeleteDeliveryState1 implements State {
      *
      * @param c    the controller
      * @param m    the cityMap
-     * @param view
+     * @param view the view
      */
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){

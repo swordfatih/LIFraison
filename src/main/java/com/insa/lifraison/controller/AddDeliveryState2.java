@@ -9,6 +9,11 @@ import com.insa.lifraison.view.View;
 
 import java.time.LocalTime;
 
+/**
+ * AddDeliveryState2 implements a State {@link com.insa.lifraison.controller.State}
+ * It corresponds to the state when the user had clicked on the "addDelivery" button
+ * and has created a delivery request
+ */
 public class AddDeliveryState2 implements State {
 
     @Override
@@ -29,7 +34,6 @@ public class AddDeliveryState2 implements State {
 
     /**
      * Change the position of the delivery request
-     *
      * @param c The controller
      * @param m the city map
      * @param i the intersection the user have just clicked
@@ -40,7 +44,7 @@ public class AddDeliveryState2 implements State {
     }
 
     /**
-     * cancel the action
+     * Cancel the action
      * @param c the Controller
      * @param m the City map
      */
@@ -49,6 +53,14 @@ public class AddDeliveryState2 implements State {
         c.setCurrentStateToMain();
     }
 
+    /**
+     * Add the delivery request to the chosen tour
+     * @param c the Controller
+     * @param m the CityMap
+     * @param t the chosen tour
+     * @param v the view
+     * @param l the list of command
+     */
     @Override
     public void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l) {
         DeliveryRequest deliveryRequest = m.getTemporaryDelivery();

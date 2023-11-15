@@ -5,7 +5,8 @@ import com.insa.lifraison.observer.Observable;
 import java.time.LocalTime;
 
 /**
- * Object that includes an {@link com.insa.lifraison.model.Intersection} to deliver.
+ * Class that includes an {@link com.insa.lifraison.model.Intersection} to deliver.
+ * It extends form {@link com.insa.lifraison.observer.Observable}
  */
 public class DeliveryRequest extends Observable {
     /**
@@ -16,10 +17,14 @@ public class DeliveryRequest extends Observable {
     private DeliveryState state;
 
     /**
-     * Point to which this delivery must be made
+     * Intersection to which this delivery must be made {@link com.insa.lifraison.model.Intersection}
      */
     private Intersection intersection;
 
+    /**
+     * Constructor of the DeliveryRequest
+     * @param intersection the intersection on which the deliveryRequest is created
+     */
     public DeliveryRequest(Intersection intersection) {
         this.timeWindowStart = null;
         this.timeWindowEnd = null;
@@ -27,6 +32,12 @@ public class DeliveryRequest extends Observable {
         this.state = DeliveryState.NotCalculated;
     }
 
+    /**
+     * Constructor of the DeliveryRequest
+     * @param timeWindowStart the beginning of the time window of the delivery
+     * @param timeWindowEnd the end of the time window of the delivery
+     * @param intersection the intersection on which the deliveryRequest is created
+     */
     public DeliveryRequest(LocalTime timeWindowStart, LocalTime timeWindowEnd, Intersection intersection) {
         this.timeWindowStart = timeWindowStart;
         this.timeWindowEnd = timeWindowEnd;
@@ -34,23 +45,42 @@ public class DeliveryRequest extends Observable {
         this.state = DeliveryState.NotCalculated;
     }
 
+    /**
+     * @return the timeWindowStart
+     */
     public LocalTime getTimeWindowStart(){
         return timeWindowStart;
     }
+
+    /**
+     * @return the timeWindowEnd
+     */
     public LocalTime getTimeWindowEnd(){
         return timeWindowEnd;
     }
 
+    /**
+     * @return the intersection on which is the delivery
+     */
     public Intersection getIntersection(){
         return this.intersection;
     }
 
+    /**
+     * Set the time window of the delivery and notify {@link com.insa.lifraison.observer.Observer}
+     * @param timeWindowStart the beginning of the time window of the delivery
+     * @param timeWindowEnd the end of the time window of the delivery
+     */
     public void setTimeWindow(LocalTime timeWindowStart, LocalTime timeWindowEnd) {
         this.timeWindowStart = timeWindowStart;
         this.timeWindowEnd = timeWindowEnd;
         this.notifyObservers(NotifType.UPDATE);
     }
 
+    /**
+     * Set the intersection of the delivery and notify {@link com.insa.lifraison.observer.Observer}
+     * @param intersection the new intersection on which the delivery is made
+     */
     public void setIntersection(Intersection intersection) {
         this.intersection = intersection;
         this.notifyObservers(NotifType.UPDATE);

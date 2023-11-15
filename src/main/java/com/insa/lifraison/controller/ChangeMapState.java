@@ -11,7 +11,11 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-
+/**
+ * ChangeMapState implements a State {@link com.insa.lifraison.controller.State}
+ * It is specifically used when a user want to load a new map but the CityMap contains
+ * delivery request
+ */
 public class ChangeMapState implements State {
 
     @Override
@@ -49,6 +53,11 @@ public class ChangeMapState implements State {
         }
     }
 
+    /**
+     * Cancel the action
+     * @param c the Controller
+     * @param view the View
+     */
     @Override
     public void cancel(Controller c, View view){
         c.setCurrentState(c.filledMapMainState);

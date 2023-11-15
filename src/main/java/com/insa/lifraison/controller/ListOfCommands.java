@@ -3,7 +3,7 @@ package com.insa.lifraison.controller;
 import java.util.LinkedList;
 
 public class ListOfCommands {
-    private LinkedList<Command> list;
+    private final LinkedList<Command> list;
     private int currentIndex;
 
     public ListOfCommands(){

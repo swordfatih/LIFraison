@@ -10,39 +10,39 @@ import java.time.LocalTime;
 
 public interface State {
 
-    public default void entryAction(CityMap m, View view) {};
+    default void entryAction(CityMap m, View view) {}
 
-    public default void exitAction(CityMap m, View view) {};
+    default void exitAction(CityMap m, View view) {}
 
-    public default void loadMap(Controller c, CityMap m, View view, ListOfCommands l){};
+    default void loadMap(Controller c, CityMap m, View view, ListOfCommands l){}
 
-    public default void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l){};
+    default void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l){}
 
-    public default void addDelivery(Controller c, CityMap m, View view){};
+    default void addDelivery(Controller c, CityMap m, View view){}
 
-    public default void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t,  ListOfCommands l){};
+    default void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t,  ListOfCommands l){}
 
-    public default void rightClick(Controller c, CityMap m, View view, ListOfCommands l){};
+    default void rightClick(Controller c, CityMap m, View view, ListOfCommands l){}
 
-    public default void confirm(Controller c, CityMap m, View view, ListOfCommands l){};
+    default void confirm(Controller c, CityMap m, View view, ListOfCommands l){}
 
-    public default void cancel(Controller c, View view){};
+    default void cancel(Controller c, View view){}
 
-    public default void removeDelivery(Controller c, CityMap m, View view){};
+    default void removeDelivery(Controller c, CityMap m, View view){}
 
-    public default void computePlan(CityMap m, ListOfCommands l){};
+    default void computePlan(CityMap m, ListOfCommands l){}
 
-    public default void undo(Controller c, CityMap m, ListOfCommands l){};
+    default void undo(Controller c, CityMap m, ListOfCommands l){}
 
-    public default void redo(Controller c, CityMap m, ListOfCommands l){};
+    default void redo(Controller c, CityMap m, ListOfCommands l){}
 
-    public default void save(CityMap m, View view){};
+    default void save(CityMap m, View view){}
 
-    public default void addTour(Controller c, CityMap m, ListOfCommands l){};
+    default void addTour(Controller c, CityMap m, ListOfCommands l){}
 
-    public default void removeTour(Controller c, CityMap m){};
+    default void removeTour(Controller c, CityMap m){}
 
-    public default void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l){};
+    default void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l){}
 
-    public default void timeWindowChanged(CityMap m, LocalTime timeWindowStart, LocalTime timeWindowEnd) {};
+    default void timeWindowChanged(CityMap m, LocalTime timeWindowStart, LocalTime timeWindowEnd) {}
 }

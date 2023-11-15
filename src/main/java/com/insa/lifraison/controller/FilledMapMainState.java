@@ -7,15 +7,12 @@ import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
-import com.insa.lifraison.xml.TourDeserializer;
 import com.insa.lifraison.xml.TourSerializer;
 import javafx.stage.FileChooser;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.File;
-import java.io.IOException;
 
 public class FilledMapMainState extends NoDeliveriesMainState {
 
