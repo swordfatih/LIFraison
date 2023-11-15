@@ -73,7 +73,7 @@ public class Controller {
      * Method called after a click on the "Add Delivery" button
      */
     public void addDelivery(){
-        currentState.addDelivery(this,view);
+        currentState.addDelivery(this, map, view);
     };
 
     /**
@@ -104,7 +104,7 @@ public class Controller {
      * Method called after a click on the "Delete Delivery" button
      */
     public void deleteDelivery(){
-        currentState.deleteDelivery(this, view);
+        currentState.deleteDelivery(this, map, view);
     };
 
     /**

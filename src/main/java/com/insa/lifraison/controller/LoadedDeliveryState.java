@@ -1,12 +1,13 @@
 package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
-import com.insa.lifraison.view.MainController;
-import com.insa.lifraison.view.MenuController;
+import com.insa.lifraison.model.DeliveryRequest;
+import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.Tour;
+import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
-import com.insa.lifraison.xml.TourDeserializer;
 import com.insa.lifraison.xml.ExceptionXML;
+import com.insa.lifraison.xml.TourDeserializer;
 import com.insa.lifraison.xml.TourSerializer;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class LoadedDeliveryState implements State{
     @Override
     public void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l) {
+        m.clearSelection();
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -40,18 +42,21 @@ public class LoadedDeliveryState implements State{
     }
 
     @Override
-    public void addDelivery(Controller c, View view) {
+    public void addDelivery(Controller c, CityMap m, View view) {
+        m.clearSelection();
         view.<MainController>getController("main").getInformationController().displayAddDeliveryInformations();
         c.setCurrentState(c.addDeliveryState1);
     }
 
     @Override
     public void computePlan(CityMap m, ListOfCommands l) {
+        m.clearSelection();
         l.add(new ComputePlanCommand(m));
     }
 
     @Override
     public void save(CityMap m, View view){
+        m.clearSelection();
         try {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -70,13 +75,15 @@ public class LoadedDeliveryState implements State{
     }
 
     @Override
-    public void deleteDelivery(Controller c, View view){
+    public void deleteDelivery(Controller c, CityMap m, View view){
+        m.clearSelection();
         view.<MainController>getController("main").getInformationController().displayDeleteDeliveryInformations();
         c.setCurrentState(c.deleteDeliveryState1);
     }
 
     @Override
     public void undo(Controller c, CityMap m, ListOfCommands l) {
+        m.clearSelection();
         l.undo();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
@@ -87,6 +94,7 @@ public class LoadedDeliveryState implements State{
 
     @Override
     public void redo(Controller c, CityMap m, ListOfCommands l) {
+        m.clearSelection();
         l.redo();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
@@ -103,9 +111,31 @@ public class LoadedDeliveryState implements State{
 
     @Override
     public void addTour(CityMap m, ListOfCommands l) {
+        m.clearSelection();
         l.add(new AddTourCommand(m, new Tour()));
     }
 
     @Override
-    public void removeTour(Controller c, CityMap m){c.setCurrentState(c.deleteTourState);}
+    public void removeTour(Controller c, CityMap m){
+        m.clearSelection();
+        c.setCurrentState(c.deleteTourState);
+    }
+
+    @Override
+    public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t, ListOfCommands l){
+        System.out.println("left click");
+        if (d != null) {
+            m.selectComponent(d);
+        }
+    }
+
+    @Override
+    public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
+        m.clearSelection();
+    }
+
+    @Override
+    public void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l) {
+        m.selectComponent(t);
+    }
 }

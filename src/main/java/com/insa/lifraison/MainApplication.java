@@ -1,7 +1,6 @@
 package com.insa.lifraison;
 
 import com.insa.lifraison.controller.Controller;
-import com.insa.lifraison.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

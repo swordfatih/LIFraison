@@ -4,19 +4,20 @@ import com.insa.lifraison.model.*;
 import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+
 import java.util.LinkedList;
 import java.util.Objects;
+
 import static java.lang.Math.min;
 
 public class MapController extends ViewController implements Observer {
@@ -69,12 +70,20 @@ public class MapController extends ViewController implements Observer {
                     CircleDelivery circleDelivery = findCircleDelivery(deliveryRequest);
                     circleDelivery.setCenterX(scale * deliveryRequest.getIntersection().longitude + longitudeOffset);
                     circleDelivery.setCenterY(-scale * deliveryRequest.getIntersection().latitude + latitudeOffset);
+                    if(deliveryRequest.isSelected()) {
+                        circleDelivery.setFill(map.getSelectionColor());
+                    } else {
+                        circleDelivery.setFill(circleDelivery.getTour().getColor());
+                    }
                 }
             }
             case ADD -> {
                 if(observable instanceof CityMap && arg instanceof Tour){
                     Tour tour = (Tour) arg;
                     tour.addObserver(this);
+                    for(DeliveryRequest deliveryRequest : tour.getDeliveries()) {
+                        deliveryRequest.addObserver(this);
+                    }
                     drawTour(tour);
                 }
                 else if(arg instanceof DeliveryRequest){
@@ -84,7 +93,7 @@ public class MapController extends ViewController implements Observer {
                         Tour tour = (Tour) observable;
                         drawDeliveryPoint(newDelivery, tour, tour.getColor());
                     } else {
-                        drawDeliveryPoint(newDelivery, null, Color.PURPLE);
+                        drawDeliveryPoint(newDelivery, null, map.getSelectionColor());
                     }
                 }
             }
@@ -113,10 +122,6 @@ public class MapController extends ViewController implements Observer {
         this.refresh();
     }
 
-    public void observeTour(Tour tour){
-        tour.addObserver(this);
-    }
-
     public void drawTour(Tour tour){
         PathTour path = new PathTour(tour);
         Intersection tmp = map.getWarehouse().intersection;
@@ -133,10 +138,18 @@ public class MapController extends ViewController implements Observer {
         }
         path.setId("Tour" + tour.getId());
         path.setStrokeWidth(5);
-        path.setStroke(tour.getColor());
+        if(tour.isSelected()) {
+            path.setStroke(map.getSelectionColor());
+        } else {
+            path.setStroke(tour.getColor());
+        }
         this.pane.getChildren().add(path);
         for (DeliveryRequest delivery : tour.getDeliveries()) {
-            drawDeliveryPoint(delivery, tour, tour.getColor());
+            if(tour.isSelected()) {
+                drawDeliveryPoint(delivery, tour, map.getSelectionColor());
+            } else {
+                drawDeliveryPoint(delivery, tour, tour.getColor());
+            }
         }
     }
 
@@ -193,7 +206,7 @@ public class MapController extends ViewController implements Observer {
         //draw the delivery which is selected
         DeliveryRequest temporaryDelivery = map.getTemporaryDelivery();
         if (temporaryDelivery != null) {
-            drawDeliveryPoint(temporaryDelivery, null ,Color.PURPLE);
+            drawDeliveryPoint(temporaryDelivery, null ,map.getSelectionColor());
         }
 
         //draw deliveries and path
@@ -230,7 +243,12 @@ public class MapController extends ViewController implements Observer {
     public void drawDeliveryPoint(DeliveryRequest deliveryRequest, Tour tour, Paint color){
         double yCoordinate = -scale * deliveryRequest.getIntersection().latitude + latitudeOffset;
         double xCoordinate = scale * deliveryRequest.getIntersection().longitude + longitudeOffset;
-        CircleDelivery circleDelivery = new CircleDelivery(xCoordinate, yCoordinate, deliveryPointSize, color, deliveryRequest, tour);
+        CircleDelivery circleDelivery;
+        if(deliveryRequest.isSelected()) {
+            circleDelivery = new CircleDelivery(xCoordinate, yCoordinate, deliveryPointSize, map.getSelectionColor(), deliveryRequest, tour);
+        } else {
+            circleDelivery = new CircleDelivery(xCoordinate, yCoordinate, deliveryPointSize, color, deliveryRequest, tour);
+        }
 
         circleDelivery.setOnMouseClicked(this::onDeliveryClick);
         this.pane.getChildren().add(circleDelivery);
@@ -269,7 +287,6 @@ public class MapController extends ViewController implements Observer {
 
     /**
      * Highlight a segment of the tour
-     * @param gc The graphical context = drawer
      * @param segment The segment to highlight
      */
     public void drawSegmentLine(Segment segment, Color color, double strokeWidth){

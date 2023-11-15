@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 
-public class Observable {
+public class Observable extends Selectable {
     public enum NotifType {
         UPDATE,
         ADD,
@@ -29,5 +29,17 @@ public class Observable {
     }
     public void notifyObservers(NotifType type){
         notifyObservers(type, null);
+    }
+
+    @Override
+    public void select() {
+        super.select();
+        notifyObservers(NotifType.UPDATE);
+    }
+
+    @Override
+    public void unselect() {
+        super.unselect();
+        notifyObservers(NotifType.UPDATE);
     }
 }

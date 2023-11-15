@@ -1,8 +1,6 @@
 package com.insa.lifraison.controller;
 
-import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.view.MainController;
-import com.insa.lifraison.view.MenuController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.ExceptionXML;

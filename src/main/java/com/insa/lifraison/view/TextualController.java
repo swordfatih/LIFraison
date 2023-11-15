@@ -25,6 +25,10 @@ public class TextualController extends ViewController implements Observer {
 
     @Override
     public void update(Observable.NotifType type, Observable observed, Object arg) {
+        if(type == Observable.NotifType.ADD && arg instanceof Observable) {
+            ((Observable) arg).addObserver(this);
+        }
+
         printContent();
     }
 

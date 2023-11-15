@@ -41,13 +41,15 @@ public class LoadedMapState implements State {
     }
 
     @Override
-    public void addDelivery(Controller c, View view) {
+    public void addDelivery(Controller c, CityMap m, View view) {
+        m.clearSelection();
         view.<MainController>getController("main").getInformationController().displayAddDeliveryInformations();
         c.setCurrentState(c.addDeliveryState1);
     }
 
     @Override
     public void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l) {
+        m.clearSelection();
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -73,6 +75,7 @@ public class LoadedMapState implements State {
 
     @Override
     public void undo(Controller c, CityMap m, ListOfCommands l) {
+        m.clearSelection();
         l.undo();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
@@ -83,6 +86,7 @@ public class LoadedMapState implements State {
 
     @Override
     public void redo(Controller c, CityMap m, ListOfCommands l) {
+        m.clearSelection();
         l.redo();
         if (m.getNumberDeliveries() != 0){
             c.setCurrentState(c.loadedDeliveryState);
@@ -100,5 +104,15 @@ public class LoadedMapState implements State {
     public void removeTour(Controller c, CityMap m){
         if(m.getTours().size() > 1)
             c.setCurrentState(c.deleteTourState);
+    }
+
+    @Override
+    public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
+        m.clearSelection();
+    }
+
+    @Override
+    public void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l) {
+        m.selectComponent(t);
     }
 }
