@@ -18,7 +18,8 @@
         <Button text="Add Tour" fx:id="addTourButton" onAction="#addTour" styleClass="menuButton" GridPane.rowIndex="3" GridPane.columnIndex="0" />
         <Button text="Remove Tour" fx:id="removeTourButton" onAction="#removeTour" styleClass="menuButton" GridPane.rowIndex="3" GridPane.columnIndex="1" />
         <Button text="Compute Plan" fx:id="computePlanButton" onAction="#computePlan" styleClass="menuButton" GridPane.rowIndex="4" GridPane.columnIndex="0" maxWidth="Infinity" />
-        <Button text="Save" fx:id="saveButton" onAction="#saveDeliveries" styleClass="menuButton" GridPane.rowIndex="4" GridPane.columnIndex="1" maxWidth="Infinity" />
+        <Button text="Save Deliveries" fx:id="saveDeliveriesButton" onAction="#saveDeliveries" styleClass="menuButton" GridPane.rowIndex="4" GridPane.columnIndex="1" maxWidth="Infinity" />
+        <Button text="Export Roadmap" fx:id="saveRoadmapButton" onAction="#saveRoadmap" styleClass="menuButton" GridPane.rowIndex="5" GridPane.columnIndex="0" maxWidth="Infinity" />
 
         <columnConstraints>
             <ColumnConstraints percentWidth="50" />

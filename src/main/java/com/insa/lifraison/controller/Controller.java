@@ -29,6 +29,8 @@ public class Controller {
     protected final EmptyMapMainState emptyMapMainState = new EmptyMapMainState();
     protected final DeleteTourState deleteTourState = new DeleteTourState();
 
+    protected final SaveRoadmapState saveRoadmapState = new SaveRoadmapState();
+
     /**
      * Create the controller of the application
      * @param stage the stage of the view
@@ -159,7 +161,7 @@ public class Controller {
     /**
      * Method called after a click on the "Save" button
      */
-    public void save(){ currentState.save( map, view);}
+    public void saveDeliveries(){ currentState.saveDeliveries( map, view);}
 
     /**
      * Method called after a click on the "AddTour" button
@@ -177,6 +179,9 @@ public class Controller {
     public void tourButtonClicked(Tour tour) { currentState.tourButtonClicked(this, map, tour, view, listOfCommands); }
 
     public void timeWindowChanged(LocalTime timeWindowStart, LocalTime timeWindowEnd) {currentState.timeWindowChanged(map, timeWindowStart, timeWindowEnd);}
+
+    public void saveRoadmap(){ currentState.saveRoadmap(this);}
+
 
     /**
      * Set the CityMap of the Controller
