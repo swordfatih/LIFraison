@@ -183,9 +183,6 @@ public class CityMap extends Observable {
      * @param tour the new tour which is added
      */
     public void addTour(Tour tour) {
-        for(Tour t : this.tours) {
-            System.out.println(t.getId());
-        }
         int i = 0;
         if (tour.getId() == -1) {
             while (i < this.tours.size() && this.tours.get(i).getId() == i) {
@@ -429,12 +426,8 @@ public class CityMap extends Observable {
                 var delta = Duration.between(endTime, deliveries.get(finalNode).getTimeWindowStart());
                 startTime = startTime.plus(delta);
                 endTime = endTime.plus(delta);
-            } else if(deliveries.get(finalNode).getTimeWindowStart() == null) {
-                int windowStart = endTime.getHour();
-                deliveries.get(finalNode).setTimeWindowStart(LocalTime.of(windowStart, 0));
-                deliveries.get(finalNode).setTimeWindowEnd(LocalTime.of(windowStart + 1, 0));
             }
-            if (endTime.isAfter(deliveries.get(finalNode).getTimeWindowStart())) {
+            if (deliveries.get(finalNode).getTimeWindowEnd() != null && endTime.isAfter(deliveries.get(finalNode).getTimeWindowEnd())) {
                 deliveries.get(finalNode).setState(DeliveryState.Late);
             } else {
                 deliveries.get(finalNode).setState(DeliveryState.Ok);
