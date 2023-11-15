@@ -54,7 +54,6 @@ public class AddDeliveryState2 implements State {
         DeliveryRequest deliveryRequest = m.getTemporaryDelivery();
         m.clearTemporaryDelivery();
         l.add(new AddDeliveryCommand(t, deliveryRequest));
-        System.out.println(deliveryRequest.getTimeWindowStart() + " to " +deliveryRequest.getTimeWindowEnd());
         c.setCurrentState(c.filledMapMainState);
     }
 

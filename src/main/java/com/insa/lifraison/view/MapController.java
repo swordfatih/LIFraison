@@ -70,6 +70,7 @@ public class MapController extends ViewController implements Observer {
                     CircleDelivery circleDelivery = findCircleDelivery(deliveryRequest);
                     circleDelivery.setCenterX(scale * deliveryRequest.getIntersection().longitude + longitudeOffset);
                     circleDelivery.setCenterY(-scale * deliveryRequest.getIntersection().latitude + latitudeOffset);
+                    circleDelivery.updateStroke();
                     if(deliveryRequest.isSelected() || circleDelivery.getTour() == null) {
                         circleDelivery.setFill(map.getSelectionColor());
                     } else {
