@@ -50,10 +50,11 @@ public class Controller {
      * @param state new state
      */
     protected void setCurrentState(State state) {
-        this.currentState.exitAction();
-        this.currentState = state;
-        this.currentState.entryAction();
-
+        if(this.currentState != state) {
+            this.currentState.exitAction(map, view);
+            this.currentState = state;
+            this.currentState.entryAction(map, view);
+        }
         System.out.println(currentState);
     }
 
@@ -74,10 +75,8 @@ public class Controller {
      * Method called after a click on the "load Map" button
      */
     public void loadMap(){
-        currentState.loadMap(this, view, listOfCommands);
+        currentState.loadMap(this, map, view, listOfCommands);
     };
-
-    public void changeMap(){currentState.changeMap(this, view);};
 
     /**
      * Method called after a click on the "load Deliveries" button

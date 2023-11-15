@@ -8,7 +8,17 @@ import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 
 public class AddDeliveryState2 implements State {
-    private DeliveryRequest currentDelivery;
+
+    @Override
+    public void entryAction(CityMap m, View view) {
+        view.<MainController>getController("main").getInformationController().displayAddDelivery2Informations();
+    }
+
+    @Override
+    public void exitAction(CityMap m, View view) {
+        m.clearTemporaryDelivery();
+        view.<MainController>getController("main").getInformationController().clearInformations();
+    }
 
     /**
      * Change the position of the delivery request
@@ -19,7 +29,7 @@ public class AddDeliveryState2 implements State {
      */
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t, ListOfCommands l){
-        currentDelivery.setIntersection(i);
+        m.getTemporaryDelivery().setIntersection(i);
     }
 
     /**
@@ -29,8 +39,6 @@ public class AddDeliveryState2 implements State {
      */
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
-        m.clearTemporaryDelivery();
-        view.<MainController>getController("main").getInformationController().clearInformations();
         c.setCurrentStateToMain();
     }
 
@@ -39,12 +47,11 @@ public class AddDeliveryState2 implements State {
         DeliveryRequest deliveryRequest = m.getTemporaryDelivery();
         m.clearTemporaryDelivery();
         l.add(new AddDeliveryCommand(t, deliveryRequest));
-        v.<MainController>getController("main").getInformationController().clearInformations();
         c.setCurrentState(c.filledMapMainState);
     }
 
-    protected void entryAction(Intersection i, CityMap m, ListOfCommands l){
-        currentDelivery = new DeliveryRequest(i);
-        m.setTemporaryDelivery(currentDelivery);
+    @Override
+    public void addTour(Controller c, CityMap m, ListOfCommands l) {
+        l.add(new AddTourCommand(m, new Tour()));
     }
 }

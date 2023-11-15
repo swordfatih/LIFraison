@@ -2,9 +2,21 @@ package com.insa.lifraison.controller;
 
 import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.model.Tour;
+import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 
 public class DeleteTourState implements State{
+
+    @Override
+    public void entryAction(CityMap m, View view) {
+        view.<MainController>getController("main").getInformationController().displayDeleteTourInformations();
+    }
+
+    @Override
+    public void exitAction(CityMap m, View view) {
+        view.<MainController>getController("main").getInformationController().clearInformations();
+    }
+
     @Override
     public void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l) {
         if(m.getTours().size() == 1) {
@@ -24,6 +36,11 @@ public class DeleteTourState implements State{
 
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
+        c.setCurrentStateToMain();
+    }
+
+    @Override
+    public void confirm(Controller c, CityMap m, View view, ListOfCommands l) {
         c.setCurrentStateToMain();
     }
 

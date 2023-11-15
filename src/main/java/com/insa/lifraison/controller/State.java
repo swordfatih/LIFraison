@@ -8,13 +8,11 @@ import com.insa.lifraison.view.View;
 
 public interface State {
 
-    public default void entryAction() {};
+    public default void entryAction(CityMap m, View view) {};
 
-    public default void exitAction() {};
+    public default void exitAction(CityMap m, View view) {};
 
-    public default void loadMap(Controller c, View view, ListOfCommands l){};
-
-    public default void changeMap(Controller c, View view){};
+    public default void loadMap(Controller c, CityMap m, View view, ListOfCommands l){};
 
     public default void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l){};
 

@@ -15,6 +15,11 @@ import java.io.IOException;
 public class NoDeliveriesMainState extends EmptyMapMainState {
 
     @Override
+    public void loadMap(Controller c, CityMap m, View view, ListOfCommands l) {
+        c.setCurrentState(c.changeMapState);
+    }
+
+    @Override
     public void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l) {
         m.clearSelection();
         try{
@@ -44,7 +49,6 @@ public class NoDeliveriesMainState extends EmptyMapMainState {
 
     @Override
     public void removeTour(Controller c, CityMap m){
-        if(m.getTours().size() > 1)
-            c.setCurrentState(c.deleteTourState);
+        c.setCurrentState(c.deleteTourState);
     }
 }

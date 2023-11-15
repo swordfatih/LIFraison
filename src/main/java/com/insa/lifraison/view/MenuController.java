@@ -36,7 +36,6 @@ public class MenuController extends ViewController {
     private void loadMap(ActionEvent event) {
         event.consume();
         this.controller.loadMap();
-        this.controller.changeMap();
     }
 
     @FXML

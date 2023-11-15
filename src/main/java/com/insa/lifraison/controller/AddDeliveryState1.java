@@ -8,6 +8,16 @@ import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.View;
 
 public class AddDeliveryState1 implements State {
+
+    @Override
+    public void entryAction(CityMap m, View view) {
+        view.<MainController>getController("main").getInformationController().displayAddDelivery1Informations();
+    }
+
+    @Override
+    public void exitAction(CityMap m, View view) {
+        view.<MainController>getController("main").getInformationController().clearInformations();
+    }
     /**
      * click on the intersection where you want to add a delivery request
      *
@@ -17,8 +27,13 @@ public class AddDeliveryState1 implements State {
      */
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t, ListOfCommands l){
-        c.addDeliveryState2.entryAction(i, m, l);
+        m.setTemporaryDelivery(new DeliveryRequest(i));
         c.setCurrentState(c.addDeliveryState2);
+    }
+
+    @Override
+    public void addTour(Controller c, CityMap m, ListOfCommands l) {
+        l.add(new AddTourCommand(m, new Tour()));
     }
 
     /**
@@ -28,7 +43,6 @@ public class AddDeliveryState1 implements State {
      */
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
-        view.<MainController>getController("main").getInformationController().clearInformations();
         c.setCurrentStateToMain();
     }
 }

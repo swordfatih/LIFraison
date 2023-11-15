@@ -20,7 +20,7 @@ import java.time.LocalTime;
 public class CityMap extends Observable {
 
     private final Color selectionColor = Color.PURPLE;
-    private final Color[] tourColors = {Color.BLUE, Color.ORANGE, Color.LAWNGREEN, Color.PINK};
+    private final Color[] tourColors = {Color.BLUE, Color.ORANGE, Color.GREEN, Color.BROWN};
     /**
      * List of all {@link com.insa.lifraison.model.Intersection} of the city
      */

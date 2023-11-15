@@ -16,8 +16,15 @@ import java.io.File;
 import java.io.IOException;
 
 public class EmptyMapMainState implements State {
+
     @Override
-    public void loadMap(Controller c, View view, ListOfCommands l){
+    public void exitAction(CityMap m, View view) {
+        m.clearSelection();
+    }
+
+    @Override
+    public void loadMap(Controller c, CityMap m, View view, ListOfCommands l){
+        m.clearSelection();
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -42,8 +49,6 @@ public class EmptyMapMainState implements State {
 
     @Override
     public void addDelivery(Controller c, CityMap m, View view) {
-        m.clearSelection();
-        view.<MainController>getController("main").getInformationController().displayAddDeliveryInformations();
         c.setCurrentState(c.addDeliveryState1);
     }
 

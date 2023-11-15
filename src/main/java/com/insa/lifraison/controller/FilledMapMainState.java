@@ -47,15 +47,7 @@ public class FilledMapMainState extends NoDeliveriesMainState {
 
     @Override
     public void deleteDelivery(Controller c, CityMap m, View view){
-        m.clearSelection();
-        view.<MainController>getController("main").getInformationController().displayDeleteDeliveryInformations();
         c.setCurrentState(c.deleteDeliveryState1);
-    }
-
-    @Override
-    public void changeMap(Controller c, View view){
-        view.<MainController>getController("main").getInformationController().displayDeleteMapInformations();
-        c.setCurrentState(c.changeMapState);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.insa.lifraison.controller;
 
+import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.CityMapDeserializer;
@@ -12,8 +13,19 @@ import java.io.File;
 import java.io.IOException;
 
 public class ChangeMapState implements State {
+
     @Override
-    public void loadMap(Controller c, View view, ListOfCommands l){
+    public void entryAction(CityMap m, View view) {
+        view.<MainController>getController("main").getInformationController().displayDeleteMapInformations();
+    }
+
+    @Override
+    public void exitAction(CityMap m, View view) {
+        view.<MainController>getController("main").getInformationController().clearInformations();
+    }
+
+    @Override
+    public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
         view.<MainController>getController("main").getInformationController().clearInformations();
         try{
             FileChooser fileChooser = new FileChooser();
@@ -39,7 +51,6 @@ public class ChangeMapState implements State {
 
     @Override
     public void cancel(Controller c, View view){
-        view.<MainController>getController("main").getInformationController().clearInformations();
         c.setCurrentState(c.filledMapMainState);
     }
 }
