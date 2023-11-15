@@ -8,6 +8,9 @@ import com.insa.lifraison.view.View;
 
 import java.time.LocalTime;
 
+/**
+ * Interface of the states
+ */
 public interface State {
 
     default void entryAction(CityMap m, View view) {}

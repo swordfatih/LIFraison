@@ -12,7 +12,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-
+/**
+ * NoDeliveriesMainState extends a State {@link com.insa.lifraison.controller.EmptyMapMainState}
+ * It is the main second state. It corresponds to the state where the user has loaded a map but any deliveries yet.
+ */
 public class NoDeliveriesMainState extends EmptyMapMainState {
 
     @Override
@@ -29,11 +32,25 @@ public class NoDeliveriesMainState extends EmptyMapMainState {
 
     }
 
+    /**
+     * Go to ChangeMapState
+     * @param c the Controller
+     * @param m the CityMap
+     * @param view the View
+     * @param l the list of commands
+     */
     @Override
     public void loadMap(Controller c, CityMap m, View view, ListOfCommands l) {
         c.setCurrentState(c.changeMapState);
     }
 
+    /**
+     * Load deliveries
+     * @param c the Controller
+     * @param m the CityMap
+     * @param view the View
+     * @param l the list of commands
+     */
     @Override
     public void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l) {
         m.clearSelection();
@@ -57,11 +74,22 @@ public class NoDeliveriesMainState extends EmptyMapMainState {
         }
     }
 
+    /**
+     * Add a tour
+     * @param c the Controller
+     * @param m the CityMap
+     * @param l the list of commands
+     */
     @Override
     public void addTour(Controller c, CityMap m, ListOfCommands l) {
         l.add(new AddTourCommand(m, new Tour()));
     }
 
+    /**
+     * Go to state DeleteTourState
+     * @param c the Controller
+     * @param m the CityMap
+     */
     @Override
     public void removeTour(Controller c, CityMap m){
         c.setCurrentState(c.deleteTourState);

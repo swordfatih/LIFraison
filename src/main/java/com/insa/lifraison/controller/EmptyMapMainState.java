@@ -14,7 +14,11 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-
+/**
+ * EmptyMapMainState implements a State {@link com.insa.lifraison.controller.State}
+ * It is the main first state when the user hasn't loaded a map yet.
+ * The CityMap is empty.
+ */
 public class EmptyMapMainState implements State {
 
 
@@ -41,6 +45,13 @@ public class EmptyMapMainState implements State {
         view.<MainController>getController("main").disableButton("#addTourButton");
     }
 
+    /**
+     * Load a new map
+     * @param c the Controller
+     * @param m the CityMap
+     * @param view the View
+     * @param l the list of commands
+     */
     @Override
     public void loadMap(Controller c, CityMap m, View view, ListOfCommands l){
         m.clearSelection();
@@ -66,11 +77,24 @@ public class EmptyMapMainState implements State {
         }
     }
 
+    /**
+     * Go to addDeliveryState1
+     * @param c the Controller
+     * @param m the CityMap
+     * @param view the View
+     */
     @Override
     public void addDelivery(Controller c, CityMap m, View view) {
         c.setCurrentState(c.addDeliveryState1);
     }
 
+    /**
+     * Load deliveries from a file
+     * @param c the Controller
+     * @param m the CityMap
+     * @param view the View
+     * @param l the list of commands
+     */
     @Override
     public void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l) {
         m.clearSelection();
@@ -109,6 +133,12 @@ public class EmptyMapMainState implements State {
         c.setCurrentStateToMain();
     }
 
+    /**
+     * Add a tour
+     * @param c the Controller
+     * @param m the CityMap
+     * @param l the list of commands
+     */
     @Override
     public void addTour(Controller c, CityMap m, ListOfCommands l) {
         l.add(new AddTourCommand(m, new Tour()));
@@ -116,11 +146,24 @@ public class EmptyMapMainState implements State {
     }
 
 
+    /**
+     * Clear the selection
+     * @param c the Controller
+     * @param m the CityMap
+     * @param view the View
+     * @param l the list of commands
+     */
     @Override
     public void rightClick(Controller c, CityMap m, View view, ListOfCommands l){
         m.clearSelection();
     }
 
+    /**
+     * Select the component clicked
+     * @param c the Controller
+     * @param m the CityMap
+     * @param l the list of commands
+     */
     @Override
     public void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l) {
         m.selectComponent(t);

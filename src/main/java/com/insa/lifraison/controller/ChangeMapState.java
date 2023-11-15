@@ -28,6 +28,13 @@ public class ChangeMapState implements State {
         view.<MainController>getController("main").getInformationController().clearInformations();
     }
 
+    /**
+     * Load the file after confirm
+     * @param c the Controller
+     * @param m the CityMap
+     * @param view the View
+     * @param l the list of commands
+     */
     @Override
     public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
         view.<MainController>getController("main").getInformationController().clearInformations();
