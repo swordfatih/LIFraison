@@ -3,8 +3,11 @@ package com.insa.lifraison.view;
 import com.insa.lifraison.controller.Controller;
 import com.insa.lifraison.model.CityMap;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 
 public class MainController extends ViewController {
     @FXML
@@ -21,6 +24,21 @@ public class MainController extends ViewController {
 
     @FXML
     private ToursController toursController;
+
+    @FXML
+    private BorderPane main;
+
+    public void disableAllButtons() {
+        GridPane buttons = (GridPane) this.main.getScene().lookup("#buttons");
+        buttons.getChildren().forEach((button) -> button.setDisable(true));
+    }
+    public void disableButton(String id) {
+        this.main.getScene().lookup(id).setDisable(true);
+    }
+
+    public void enableButton(String id) {
+        this.main.getScene().lookup(id).setDisable(false);
+    }
 
     @Override
     public void setController(Controller controller) {

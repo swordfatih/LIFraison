@@ -7,9 +7,12 @@ import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.View;
 
 public interface State {
-    public default void loadMap(Controller c, View view, ListOfCommands l){};
 
-    public default void changeMap(Controller c, View view){};
+    public default void entryAction(CityMap m, View view) {};
+
+    public default void exitAction(CityMap m, View view) {};
+
+    public default void loadMap(Controller c, CityMap m, View view, ListOfCommands l){};
 
     public default void loadDeliveries(Controller c, CityMap m, View view, ListOfCommands l){};
 
@@ -23,7 +26,7 @@ public interface State {
 
     public default void cancel(Controller c, View view){};
 
-    public default void deleteDelivery(Controller c, CityMap m, View view){};
+    public default void removeDelivery(Controller c, CityMap m, View view){};
 
     public default void computePlan(CityMap m, ListOfCommands l){};
 
@@ -33,7 +36,7 @@ public interface State {
 
     public default void save(CityMap m, View view){};
 
-    public default void addTour(CityMap m, ListOfCommands l){};
+    public default void addTour(Controller c, CityMap m, ListOfCommands l){};
 
     public default void removeTour(Controller c, CityMap m){};
 

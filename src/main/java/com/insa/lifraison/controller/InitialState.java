@@ -1,5 +1,6 @@
 package com.insa.lifraison.controller;
 
+import com.insa.lifraison.model.CityMap;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.CityMapDeserializer;
@@ -20,7 +21,7 @@ public class InitialState implements State {
      * @param l the list of commands for the undo/redo
      */
     @Override
-    public void loadMap(Controller c, View view, ListOfCommands l){
+    public void loadMap(Controller c, CityMap m, View view, ListOfCommands l){
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -31,7 +32,7 @@ public class InitialState implements State {
             if (file != null) {
                 c.setMap(CityMapDeserializer.load(file));
                 l.reset();
-                c.setCurrentState(c.loadedMapState);
+                c.setCurrentState(c.emptyMapMainState);
                 view.navigate("main");
             }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
