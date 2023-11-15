@@ -2,8 +2,10 @@ package com.insa.lifraison.model;
 
 import com.insa.lifraison.observer.Observable;
 
+import java.time.Duration;
 import java.util.*;
 
+import static java.lang.Integer.valueOf;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -24,7 +26,7 @@ public class CityMap extends Observable {
     /**
      * List of all {@link com.insa.lifraison.model.Intersection} of the city
      */
-    private final LinkedList<Intersection> intersections;
+    private LinkedList<Intersection> intersections;
     /**
      * List of all {@link com.insa.lifraison.model.Segment} of the city
      */
@@ -40,6 +42,8 @@ public class CityMap extends Observable {
 
     private double minLatitude, maxLatitude, minLongitude, maxLongitude;
 
+    private ArrayList<ArrayList<Edge>> adjList;
+    private HashMap<String, Integer> intersectionIdMap;
     private Selectable selectedComponent;
 
     public CityMap(LinkedList<Intersection> intersections, LinkedList<Segment> segments, Warehouse warehouse) {
@@ -51,6 +55,7 @@ public class CityMap extends Observable {
         this.addTour(new Tour());
         this.selectedComponent = null;
         this.temporaryDelivery = null;
+        this.adjList = createAdjacencyList();
     }
 
     public void selectComponent(Selectable obj) {
@@ -228,28 +233,37 @@ public class CityMap extends Observable {
         return maxLongitude;
     }
 
-    public LinkedList<TourStep> computePath(Tour tour) {
-        HashMap<String, Integer> idMap = new HashMap<>();
+    private ArrayList<ArrayList<Edge>> createAdjacencyList() {
+        this.intersectionIdMap = new HashMap<>();
         int length = intersections.size();
         for(Intersection inter : intersections) {
-            idMap.put(inter.id, idMap.size());
+            intersectionIdMap.put(inter.id, intersectionIdMap.size());
         }
         ArrayList<ArrayList<Edge>> adjList = new ArrayList<>();
         for(int i = 0; i < length; i++) {
             adjList.add(new ArrayList<>());
         }
         for(Segment segment : segments) {
-            int originIndex = idMap.get(segment.origin.id);
-            int destinationIndex = idMap.get(segment.destination.id);
+            int originIndex = intersectionIdMap.get(segment.origin.id);
+            int destinationIndex = intersectionIdMap.get(segment.destination.id);
             adjList.get(originIndex)
                     .add(new Edge(originIndex, destinationIndex, segment.length, segment));
         }
 
+        return adjList;
+    }
+
+    public LinkedList<TourStep> computePath(Tour tour) {
         ArrayList<DeliveryRequest> deliveries = tour.getDeliveries();
+        int intersectionCnt = intersections.size();
 
         if(deliveries.isEmpty()) {
             tour.setTourSteps(new LinkedList<>());
             return tour.getTourSteps();
+        }
+
+        if(deliveries.stream().anyMatch(d -> d.getTimeWindowStart() != null)) {
+            ComputeTimeWindows(deliveries);
         }
 
         deliveries.add(0, new DeliveryRequest(warehouse.intersection));
@@ -258,19 +272,39 @@ public class CityMap extends Observable {
         ArrayList<ArrayList<Edge>> parentSegments = new ArrayList<>();
         ArrayList<Integer> graphIndices = new ArrayList<>();
 
-        for(DeliveryRequest deliveryRequest : deliveries) {
-            ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(length, Double.MAX_VALUE));
-            ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(length, null));
-            int index = idMap.get(deliveryRequest.getIntersection().id);
+        boolean hasImpossible = false;
+
+        for(int i = 0; i < deliveries.size(); i++) {
+            DeliveryRequest deliveryRequest = deliveries.get(i);
+            ArrayList<Double> distances = new ArrayList<>(Collections.nCopies(intersectionCnt, Double.MAX_VALUE));
+            ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(intersectionCnt, null));
+            int index = intersectionIdMap.get(deliveryRequest.getIntersection().id);
             distances.set(index, 0.0);
-            Dijkstra(index, adjList, distances, parents);
-            adjMatrix.add(new ArrayList<>());
-            for (DeliveryRequest delivery : deliveries) {
-                adjMatrix.get(adjMatrix.size() - 1)
-                        .add(distances.get(idMap.get(delivery.getIntersection().id)));
+            Dijkstra(index, distances, parents);
+
+            if(checkImpossible(distances, deliveries, i)) {
+                hasImpossible = true;
             }
+
+            adjMatrix.add(new ArrayList<>());
+            for (int j = 0; j < deliveries.size(); j++) {
+                if (deliveries.get(j).getTimeWindowStart() != null &&
+                        deliveryRequest.getTimeWindowStart() != null &&
+                        deliveries.get(j).getTimeWindowStart().isBefore(deliveryRequest.getTimeWindowStart())) {
+                    distances.set(intersectionIdMap.get(deliveries.get(j).getIntersection().id), Double.MAX_VALUE);
+                }
+                adjMatrix.get(adjMatrix.size() - 1)
+                        .add(distances.get(intersectionIdMap.get(deliveries.get(j).getIntersection().id)));
+            }
+
             parentSegments.add(parents);
             graphIndices.add(index);
+        }
+
+        if(hasImpossible) {
+            deliveries.remove(0);
+            tour.setTourSteps(new LinkedList<>());
+            return tour.getTourSteps();
         }
 
         Graph graph = new Graph(adjMatrix);
@@ -280,9 +314,10 @@ public class CityMap extends Observable {
         LinkedList<TourStep> tourSteps = new LinkedList<>();
 
         for(int i = 0; i < deliveries.size(); i++) {
-            int currentNode = solver.getSolution(i), nextNode = graphIndices.get(0);
+            int currentNode = solver.getSolution(i), nextNode = graphIndices.get(0), finalNode = 0;
             if(i + 1 != deliveries.size()) {
                 nextNode = graphIndices.get(solver.getSolution(i + 1));
+                finalNode = i + 1;
             }
 
             LinkedList<Segment> path = new LinkedList<>();
@@ -294,10 +329,26 @@ public class CityMap extends Observable {
                 pathLength += parentEdge.getLength();
             }
 
-            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().departure);
+            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().arrival);
             int hourDuration = (int)Math.floor(pathLength / Constants.courierSpeed);
             int minutesDuration = (int)Math.ceil(60.0 * (pathLength - Constants.courierSpeed*hourDuration) / Constants.courierSpeed);
             LocalTime endTime = startTime.plusHours(hourDuration).plusMinutes(minutesDuration);
+            if(deliveries.get(finalNode).getTimeWindowStart() != null &&
+                    endTime.isBefore(deliveries.get(finalNode).getTimeWindowStart())) {
+                var delta = Duration.between(endTime, deliveries.get(finalNode).getTimeWindowStart());
+                startTime = startTime.plus(delta);
+                endTime = endTime.plus(delta);
+            } else if(deliveries.get(finalNode).getTimeWindowStart() == null) {
+                int windowStart = endTime.getHour();
+                deliveries.get(finalNode).setTimeWindowStart(LocalTime.of(windowStart, 0));
+                deliveries.get(finalNode).setTimeWindowEnd(LocalTime.of(windowStart + 1, 0));
+            }
+            if (endTime.isAfter(deliveries.get(finalNode).getTimeWindowStart())) {
+                deliveries.get(finalNode).setState(DeliveryState.Late);
+            } else {
+                deliveries.get(finalNode).setState(DeliveryState.Ok);
+            }
+
             tourSteps.add(new TourStep(path, startTime, endTime));
         }
 
@@ -306,7 +357,7 @@ public class CityMap extends Observable {
         return tourSteps;
     }
 
-    private void Dijkstra(int root, ArrayList<ArrayList<Edge>> adjList, ArrayList<Double> distances, ArrayList<Edge> parent) {
+    private void Dijkstra(int root, ArrayList<Double> distances, ArrayList<Edge> parent) {
         PriorityQueue<Node> priority_queue = new PriorityQueue<>();
         priority_queue.add(new Node(root, 0));
         while(!priority_queue.isEmpty()) {
@@ -322,6 +373,93 @@ public class CityMap extends Observable {
                 }
             }
         }
+    }
+
+    private void ComputeTimeWindows(ArrayList<DeliveryRequest> deliveries) {
+        ArrayList<Integer> timeWindows = new ArrayList<>(Collections.nCopies(4, 0));
+        for(DeliveryRequest deliveryRequest : deliveries) {
+            if(deliveryRequest.getTimeWindowStart() != null) {
+                int index = deliveryRequest.getTimeWindowStart().getHour() - 8;
+                timeWindows.set(index, timeWindows.get(index) + 1);
+            }
+        }
+
+        for(DeliveryRequest deliveryRequest : deliveries) {
+            if(deliveryRequest.getTimeWindowStart() == null) {
+                int index = timeWindows.indexOf(Collections.min(timeWindows));
+                deliveryRequest.setTimeWindow(LocalTime.of(8 + index, 0), LocalTime.of(9 + index, 0));
+                timeWindows.set(index, timeWindows.get(index) + 1);
+            }
+        }
+    }
+
+    private boolean checkImpossible(ArrayList<Double> distances, ArrayList<DeliveryRequest> deliveries, int index) {
+        boolean hasImpossible = false;
+
+        if(index != 0 && distances.get(0).equals(Double.MAX_VALUE)) {
+            deliveries.get(index).setState(DeliveryState.NotPossible);
+            return true;
+        } else if(index == 0) {
+            for(int i = 1; i < deliveries.size(); i++) {
+                if(distances
+                        .get(intersectionIdMap.get(deliveries.get(index).getIntersection().id))
+                        .equals(Double.MAX_VALUE)) {
+                    hasImpossible = true;
+                    deliveries.get(i).setState(DeliveryState.NotPossible);
+                }
+            }
+        }
+
+        return hasImpossible;
+    }
+
+    /**
+     * Find the closest intersection to a point
+     * @param longitude
+     * @param latitude
+     * @return intersectionMin the closer intersection in terms of distance
+     */
+    public Intersection getClosestIntersection(double longitude, double latitude){
+        if(!this.intersections.isEmpty()){
+            double distanceMin = Double.MAX_VALUE;
+            double distanceTmp;
+            Intersection intersectionMin = null;
+
+            for(Intersection intersection : this.intersections) {
+                distanceTmp = Math.sqrt(Math.pow(intersection.latitude-latitude,2)+Math.pow(intersection.longitude - longitude, 2));
+
+                if(distanceTmp < distanceMin){
+                    distanceMin = distanceTmp;
+                    intersectionMin = intersection;
+                }
+            }
+            return intersectionMin;
+        }
+        return null;
+
+    }
+
+    /**
+     * Find the closest delivery to a point
+     * @param longitude
+     * @param latitude
+     * @return intersectionMin the closer intersection in terms of distance
+     */
+    public DeliveryRequest getClosestDelivery(double longitude, double latitude){
+        double distanceMin = Double.MAX_VALUE;
+        DeliveryRequest deliveryMin = null;
+        for(Tour tour : this.tours) {
+            for(DeliveryRequest delivery : tour.getDeliveries()) {
+                Intersection intersection = delivery.getIntersection();
+                double distanceTmp = Math.sqrt(Math.pow(intersection.latitude - latitude, 2) + Math.pow(intersection.longitude - longitude, 2));
+                if (distanceTmp < distanceMin) {
+                    distanceMin = distanceTmp;
+                    deliveryMin = delivery;
+                }
+            }
+        }
+        return deliveryMin;
+
     }
 
     public void clearTemporaryDelivery() {
