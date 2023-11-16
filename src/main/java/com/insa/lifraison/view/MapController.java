@@ -4,6 +4,7 @@ import com.insa.lifraison.model.*;
 import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -419,18 +420,27 @@ public class MapController extends ViewController implements Observer {
     /**
      * modify the zoom base on the value of zoomFactor
      */
-    public void zoomIn() {
+    public void zoomIn(ScrollEvent event) {
+        Point2D cursorPoint = getMousePointInView(event);
+        double zoomFactor = 1.2;
+
         pane.setScaleX(pane.getScaleX() * zoomFactor);
         pane.setScaleY(pane.getScaleY() * zoomFactor);
+
+        recenter(cursorPoint, zoomFactor);
     }
 
     /**
      * modify the zoom base on the value of zoomFactor
      */
-    public void zoomOut() {
+    public void zoomOut(ScrollEvent event) {
         if (pane.getScaleX() > 1) {
+            Point2D cursorPoint = getMousePointInView(event);
+
             pane.setScaleX(pane.getScaleX() / zoomFactor);
             pane.setScaleY(pane.getScaleY() / zoomFactor);
+
+            recenter(cursorPoint, zoomFactor);
         }
     }
 
@@ -440,10 +450,38 @@ public class MapController extends ViewController implements Observer {
      */
     private void onScrollEvent(ScrollEvent event){
         if (event.getDeltaY() > 0) {
-            zoomIn();
+            zoomIn(event);
         } else {
-            zoomOut();
+            zoomOut(event);
         }
         event.consume();
+    }
+
+    private void recenter(Point2D cursorPoint, double zoomFactor) {
+        double hValue = this.scrollPane.getHvalue();
+        double vValue = this.scrollPane.getVvalue();
+
+        double newWidth = this.pane.getWidth() * zoomFactor;
+        double newHeight = this.pane.getHeight() * zoomFactor;
+
+        double deltaX = cursorPoint.getX() - (hValue * (newWidth - this.scrollPane.getViewportBounds().getWidth()));
+        double deltaY = cursorPoint.getY() - (vValue * (newHeight - this.scrollPane.getViewportBounds().getHeight()));
+
+        this.scrollPane.setHvalue(deltaX / newWidth);
+        this.scrollPane.setVvalue(deltaY / newHeight);
+    }
+
+    private Point2D getMousePointInView(ScrollEvent event) {
+        // Assuming mapScrollPane is the viewport for your mapPane
+        double mouseX = event.getX();
+        double mouseY = event.getY();
+
+        double centerX = this.scrollPane.getHvalue() * (this.pane.getWidth() - this.scrollPane.getViewportBounds().getWidth());
+        double centerY = this.scrollPane.getVvalue() * (this.pane.getHeight() - this.scrollPane.getViewportBounds().getHeight());
+
+        double relativeMouseX = mouseX + centerX;
+        double relativeMouseY = mouseY + centerY;
+
+        return new Point2D(relativeMouseX, relativeMouseY);
     }
 }

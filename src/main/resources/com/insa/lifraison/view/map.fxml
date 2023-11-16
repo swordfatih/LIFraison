@@ -6,6 +6,6 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.insa.lifraison.view.MapController" fx:id="scrollPane" hbarPolicy="NEVER" pannable="true" vbarPolicy="NEVER">
     <Group>
-        <Pane fx:id="pane" prefWidth="1280" prefHeight="500" />
+        <Pane fx:id="pane" />
     </Group>
 </ScrollPane>
