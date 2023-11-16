@@ -14,10 +14,13 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Polygon;
+import javafx.scene.transform.Rotate;
 
 import java.util.LinkedList;
 import java.util.Objects;
 
+import static java.lang.Math.atan2;
 import static java.lang.Math.min;
 
 public class MapController extends ViewController implements Observer {
@@ -145,6 +148,13 @@ public class MapController extends ViewController implements Observer {
             path.setStroke(tour.getColor());
         }
         this.pane.getChildren().add(path);
+
+        for (TourStep tourStep : tour.getTourSteps()) {
+            for (Segment segment : tourStep.segments) {
+                drawSegmentDirection(segment, tour.getColor().darker().darker(), 5, 10);
+            }
+        }
+
         for (DeliveryRequest delivery : tour.getDeliveries()) {
             if(tour.isSelected()) {
                 drawDeliveryPoint(delivery, tour, map.getSelectionColor());
@@ -299,6 +309,21 @@ public class MapController extends ViewController implements Observer {
         segmentLine.setStroke(color);
         segmentLine.setStrokeWidth(strokeWidth);
         this.pane.getChildren().add(segmentLine);
+    }
+
+    public void drawSegmentDirection(Segment segment, Color color, double baseWidth, double height) {
+        double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
+        double xOrigin = scale * segment.origin.longitude + longitudeOffset;
+        double yDest = -scale * segment.destination.latitude + latitudeOffset;
+        double xDest = scale * segment.destination.longitude + longitudeOffset;
+
+        Polygon direction = new Polygon(xOrigin + height, yOrigin, xOrigin, yOrigin - baseWidth, xOrigin, yOrigin + baseWidth);
+        direction.setFill(color);
+
+        double angle = (atan2(xDest - xOrigin, yDest - yOrigin) * (-180 / Math.PI) + 360) % 360 + 90;
+        direction.getTransforms().add(new Rotate(angle, xOrigin, yOrigin));
+
+        this.pane.getChildren().add(direction);
     }
 
     public void zoomIn() {

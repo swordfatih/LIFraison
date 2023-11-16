@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,6 +68,26 @@ public class TextualController extends ViewController implements Observer {
             }
             else {
                 ObservableList<DeliveryRequest> deliveries = FXCollections.observableArrayList(tour.getDeliveries());
+
+                deliveries.sort((a, b) -> {
+                    LinkedList<TourStep> steps = tour.getTourSteps();
+
+                    if(steps == null || steps.isEmpty()) {
+                        return 0;
+                    }
+
+                    List<TourStep> aStep = steps.stream().filter((step) -> step.segments.get(0).origin.equals(a.getIntersection())).toList();
+                    List<TourStep> bStep = steps.stream().filter((step) -> step.segments.get(0).origin.equals(b.getIntersection())).toList();
+
+                    if(aStep.isEmpty()) {
+                        return 1;
+                    } else if(bStep.isEmpty()) {
+                        return -1;
+                    }
+
+                    return steps.indexOf(aStep.get(0)) - steps.indexOf(bStep.get(0));
+                });
+
                 TableView<DeliveryRequest> deliveryTable = new TableView<>(deliveries);
 
                 TableColumn<DeliveryRequest, String> idCol = new TableColumn<>("Delivery");
@@ -106,8 +127,6 @@ public class TextualController extends ViewController implements Observer {
                 deliveryTable.getColumns().add(statusCol);
                 deliveryTable.getColumns().add(winCol);
                 deliveryTable.getColumns().add(coordsCol);
-
-                deliveryTable.getSortOrder().add(winCol);
 
                 deliveryTable.setRowFactory(tv -> {
                     TableRow<DeliveryRequest> row = new TableRow<>() {
