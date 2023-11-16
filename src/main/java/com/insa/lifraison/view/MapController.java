@@ -14,10 +14,13 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Polygon;
+import javafx.scene.transform.Rotate;
 
 import java.util.LinkedList;
 import java.util.Objects;
 
+import static java.lang.Math.atan2;
 import static java.lang.Math.min;
 
 /**
@@ -176,6 +179,13 @@ public class MapController extends ViewController implements Observer {
 
         //Addition to the pane
         this.pane.getChildren().add(path);
+
+        //Addition of the direction to the pane
+        for (TourStep tourStep : tour.getTourSteps()) {
+            for (Segment segment : tourStep.segments) {
+                drawSegmentDirection(segment, tour.getColor().darker().darker(), 5, 10);
+            }
+        }
 
         //Addition of the deliveries to the pane
         for (DeliveryRequest delivery : tour.getDeliveries()) {
@@ -382,6 +392,28 @@ public class MapController extends ViewController implements Observer {
         segmentLine.setStroke(color);
         segmentLine.setStrokeWidth(strokeWidth);
         this.pane.getChildren().add(segmentLine);
+    }
+
+    /**
+     * Highlight the direction of a segment
+     * @param segment The segment to highlight
+     * @param color The color
+     * @param baseWidth the baseWidth
+     * @param height the height
+     */
+    public void drawSegmentDirection(Segment segment, Color color, double baseWidth, double height) {
+        double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
+        double xOrigin = scale * segment.origin.longitude + longitudeOffset;
+        double yDest = -scale * segment.destination.latitude + latitudeOffset;
+        double xDest = scale * segment.destination.longitude + longitudeOffset;
+
+        Polygon direction = new Polygon(xOrigin + height, yOrigin, xOrigin, yOrigin - baseWidth, xOrigin, yOrigin + baseWidth);
+        direction.setFill(color);
+
+        double angle = (atan2(xDest - xOrigin, yDest - yOrigin) * (-180 / Math.PI) + 360) % 360 + 90;
+        direction.getTransforms().add(new Rotate(angle, xOrigin, yOrigin));
+
+        this.pane.getChildren().add(direction);
     }
 
     /**

@@ -2,7 +2,6 @@ package com.insa.lifraison.model;
 
 import com.insa.lifraison.observer.Observable;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -114,7 +113,7 @@ public class Tour extends Observable{
     /**
      * @return color of the tour
      */
-    public Paint getColor() {
+    public Color getColor() {
         return  this.color;
     }
 }
