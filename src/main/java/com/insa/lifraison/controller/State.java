@@ -36,7 +36,9 @@ public interface State {
 
     default void redo(Controller c, CityMap m, ListOfCommands l){}
 
-    default void save(CityMap m, View view){}
+    default void saveDeliveries(CityMap m, View view){}
+
+    default void saveRoadmap(Controller c){}
 
     default void addTour(Controller c, CityMap m, ListOfCommands l){}
 

@@ -110,6 +110,14 @@ public class InformationController extends ViewController {
         this.information.getChildren().addAll(info, confirm, cancel);
     }
 
+    public void displaySaveRoadmapInformations(){
+        clearInformations();
+        Label info = new Label("Click on a Tour button to save it");
+        Button cancel = new Button("cancel");
+        cancel.setOnAction(this::cancelAction);
+        this.information.getChildren().addAll(info, cancel);
+    }
+
     public void clearInformations(){
         this.information.getChildren().clear();
     }
