@@ -21,24 +21,41 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static java.lang.Double.valueOf;
 
+/**
+ * The textual view of the application
+ * {@link com.insa.lifraison.view.ViewController}
+ * {@link com.insa.lifraison.observer.Observer}
+ */
 public class TextualController extends ViewController implements Observer {
+    /**
+     * {@link javafx.scene.layout.VBox}
+     */
     @FXML
     private VBox console;
-
+    /**
+     * {@link com.insa.lifraison.model.CityMap}
+     */
     private CityMap map;
 
+    /**
+     * update the textual view
+     * @param type the type of notification
+     * @param observed the observable which has notified the observer
+     * @param arg optional information about the update
+     */
     @Override
     public void update(Observable.NotifType type, Observable observed, Object arg) {
         if(type == Observable.NotifType.ADD && arg instanceof Observable) {
             ((Observable) arg).addObserver(this);
         }
-
         printContent();
     }
 
+    /**
+     * write and display the text
+     */
     private void printContent() {
         this.console.getChildren().clear();
 
@@ -46,7 +63,7 @@ public class TextualController extends ViewController implements Observer {
             Tour tour = map.getTours().get(i);
 
             Label title = new Label();
-            title.setText("Tour [" + i + "]");
+            title.setText("Tour " + tour.getId() );
             title.setStyle("--fx-font-weight: 800");
             title.getStyleClass().add("selectable");
 

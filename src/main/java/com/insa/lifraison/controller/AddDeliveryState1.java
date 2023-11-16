@@ -18,14 +18,14 @@ public class AddDeliveryState1 implements State {
     public void entryAction(CityMap m, View view) {
         view.<MainController>getController("main").enableButton("#addTourButton");
 
-        view.<MainController>getController("main").getInformationController().displayAddDelivery1Informations();
+        view.<MainController>getController("main").getInformationController().displayAddDelivery1Information();
     }
 
     @Override
     public void exitAction(CityMap m, View view) {
         view.<MainController>getController("main").disableButton("#addTourButton");
 
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformation();
     }
     /**
      * Create a delivery request at an intersection given by the user. Go to AddDeliveryState2

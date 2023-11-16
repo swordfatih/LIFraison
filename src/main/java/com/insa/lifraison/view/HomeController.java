@@ -1,24 +1,27 @@
 package com.insa.lifraison.view;
 
 import javafx.animation.FadeTransition;
-import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.shape.CubicCurveTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.stage.FileChooser;
 import javafx.util.Duration;
-
-import java.io.File;
-
+/**
+ * Class HomeController extends from {@link com.insa.lifraison.view.ViewController}
+ * Create a window with a "Load Map" button, based on the home.fxml file
+ */
 public class HomeController extends ViewController {
+    /**
+     * {@link javafx.scene.control.Label}
+     */
     @FXML
     private Label label;
 
+    /**
+     * initialize the home window
+     * This methods is automatically called at the creation of the class
+     */
     public void initialize() {
         FadeTransition ft = new FadeTransition(Duration.millis(500), label);
         ft.setFromValue(1.0);
@@ -33,10 +36,13 @@ public class HomeController extends ViewController {
         });
     }
 
+    /**
+     * This function is automatically called when there is a click on the "Load File" button
+     * @param event the input event
+     */
     @FXML
     private void loadMap(ActionEvent event) {
         event.consume();
-
         this.controller.loadMap();
     }
 }
