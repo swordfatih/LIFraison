@@ -342,7 +342,7 @@ public class CityMap extends Observable {
     }
 
     /**
-     * Computes the optimal path to be taken to complete a tour. Takes into account the time windows that were of
+     * Computes the optimal path to be taken to complete a {@link Tour}. Takes into account the time windows that were of
      * each {@link DeliveryRequest} and updates its state.
      *
      * @param tour The tour for which the path should be calculated
@@ -523,6 +523,24 @@ public class CityMap extends Observable {
         }
 
         return hasImpossible;
+    }
+
+    /**
+     * compute the path of every {@link Tour}
+     */
+    public void computePlan() {
+        for(Tour tour : this.tours) {
+            computePath(tour);
+        }
+    }
+
+    /**
+     * clear the path and the delivery state of every tour
+     */
+    public void clearPlan() {
+        for(Tour tour : this.tours) {
+            tour.clearPath();
+        }
     }
 
 }
