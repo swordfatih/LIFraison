@@ -341,6 +341,13 @@ public class CityMap extends Observable {
         return adjList;
     }
 
+    /**
+     * Computes the optimal path to be taken to complete a tour. Takes into account the time windows that were of
+     * each {@link DeliveryRequest} and updates its state.
+     *
+     * @param tour The tour for which the path should be calculated
+     * @return A list with the {@link TourStep} that describes the path
+     */
     public LinkedList<TourStep> computePath(Tour tour) {
         ArrayList<DeliveryRequest> deliveries = tour.getDeliveries();
         int intersectionCnt = intersections.size();
@@ -354,6 +361,7 @@ public class CityMap extends Observable {
             ComputeTimeWindows(deliveries);
         }
 
+        // Add the starting point to the tour
         deliveries.add(0, new DeliveryRequest(warehouse.intersection));
 
         ArrayList<ArrayList<Double>> adjMatrix = new ArrayList<>();
@@ -368,14 +376,20 @@ public class CityMap extends Observable {
             ArrayList<Edge> parents = new ArrayList<>(Collections.nCopies(intersectionCnt, null));
             int index = intersectionIdMap.get(deliveryRequest.getIntersection().id);
             distances.set(index, 0.0);
+            // For each delivery request, obtain each the distance to the others
+            // The parents array allows the reconstruction of the path to be taken between two intersections
             Dijkstra(index, distances, parents);
 
+            // Checks if there is a delivery in an intersection that the courier can't reach
             if(checkImpossible(distances, deliveries, i)) {
                 hasImpossible = true;
             }
 
+            // Adds a row to the adjacency matrix that represents the distance between every pair of deliveries
             adjMatrix.add(new ArrayList<>());
             for (int j = 0; j < deliveries.size(); j++) {
+                // Removes the edges between a node 'i' and a node 'j' if the time window of 'i' starts after
+                // the time window of 'j'
                 if (deliveries.get(j).getTimeWindowStart() != null &&
                         deliveryRequest.getTimeWindowStart() != null &&
                         deliveries.get(j).getTimeWindowStart().isBefore(deliveryRequest.getTimeWindowStart())) {
@@ -389,6 +403,7 @@ public class CityMap extends Observable {
             graphIndices.add(index);
         }
 
+        // If there is a delivery that we can't complete, we don't compute the tour
         if(hasImpossible) {
             deliveries.remove(0);
             tour.setTourSteps(new LinkedList<>());
@@ -397,6 +412,7 @@ public class CityMap extends Observable {
 
         Graph graph = new Graph(adjMatrix);
         TSP solver = new TSP();
+        // Solves the TSP with a maximum execution time
         solver.searchSolution(Constants.tspMaximumTimeMillis, graph);
 
         LinkedList<TourStep> tourSteps = new LinkedList<>();
@@ -408,6 +424,7 @@ public class CityMap extends Observable {
                 finalNode = i + 1;
             }
 
+            // Rebuilds the path between two consecutive deliveries
             LinkedList<Segment> path = new LinkedList<>();
             double pathLength = 0;
             while(nextNode != graphIndices.get(currentNode)) {
@@ -417,17 +434,26 @@ public class CityMap extends Observable {
                 pathLength += parentEdge.getLength();
             }
 
+            // Calculate when the delivery will be made
             LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().arrival);
             int hourDuration = (int)Math.floor(pathLength / Constants.courierSpeed);
             int minutesDuration = (int)Math.ceil(60.0 * (pathLength - Constants.courierSpeed*hourDuration) / Constants.courierSpeed);
             LocalTime endTime = startTime.plusHours(hourDuration).plusMinutes(minutesDuration);
+
+            // Prevents a delivery from being made before the start of its time window
             if(deliveries.get(finalNode).getTimeWindowStart() != null &&
                     endTime.isBefore(deliveries.get(finalNode).getTimeWindowStart())) {
                 var delta = Duration.between(endTime, deliveries.get(finalNode).getTimeWindowStart());
                 startTime = startTime.plus(delta);
                 endTime = endTime.plus(delta);
+            } // Assigns a time window to the deliveries that did not have one
+            else if(deliveries.get(finalNode).getTimeWindowStart() == null) {
+                int windowStart = endTime.getHour();
+                deliveries.get(finalNode).setTimeWindowStart(LocalTime.of(windowStart, 0));
+                deliveries.get(finalNode).setTimeWindowEnd(LocalTime.of(windowStart + 1, 0));
             }
-            if (deliveries.get(finalNode).getTimeWindowEnd() != null && endTime.isAfter(deliveries.get(finalNode).getTimeWindowEnd())) {
+            // Updates delivery status
+            if (endTime.isAfter(deliveries.get(finalNode).getTimeWindowEnd())) {
                 deliveries.get(finalNode).setState(DeliveryState.Late);
             } else {
                 deliveries.get(finalNode).setState(DeliveryState.Ok);
@@ -436,7 +462,9 @@ public class CityMap extends Observable {
             tourSteps.add(new TourStep(path, startTime, endTime));
         }
 
+        // Removes the warehouse from the delivery list
         deliveries.remove(0);
+
         tour.setTourSteps(tourSteps);
         return tourSteps;
     }
