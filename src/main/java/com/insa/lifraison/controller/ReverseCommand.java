@@ -1,5 +1,8 @@
 package com.insa.lifraison.controller;
-
+/**
+ * ReverseCommand is the class which reverse a command
+ * The class extends Command {@link com.insa.lifraison.controller.Command}
+ */
 public class ReverseCommand implements Command{
     private final Command cmd;
 

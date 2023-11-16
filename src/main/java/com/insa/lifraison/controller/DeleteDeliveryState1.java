@@ -6,17 +6,21 @@ import com.insa.lifraison.model.Intersection;
 import com.insa.lifraison.model.Tour;
 import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
-
+/**
+ * DeleteDeliveryState1 implements a State {@link com.insa.lifraison.controller.State}
+ * It corresponds to the state when the user had clicked on the "DeleteDelivery" button
+ * and want to delete one or more deliveries
+ */
 public class DeleteDeliveryState1 implements State {
 
     @Override
     public void entryAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().displayDeleteDeliveryInformations();
+        view.<MainController>getController("main").getInformationController().displayDeleteDeliveryInformation();
     }
 
     @Override
     public void exitAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformation();
     }
 
     /**
@@ -49,6 +53,13 @@ public class DeleteDeliveryState1 implements State {
         c.setCurrentState(c.filledMapMainState);
     }
 
+    /**
+     * Stop to delete deliveries
+     * @param c controller
+     * @param m citymap
+     * @param view view
+     * @param l list of commands
+     */
     @Override
     public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
         c.setCurrentState(c.filledMapMainState);

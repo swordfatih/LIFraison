@@ -13,7 +13,11 @@ import javafx.stage.FileChooser;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.File;
-
+/**
+ * FilledMapMainState extends a State {@link com.insa.lifraison.controller.NoDeliveriesMainState}
+ * It is the main last state. It corresponds to the state where the user can ask to go to
+ * any other state without any particular restriction.
+ */
 public class FilledMapMainState extends NoDeliveriesMainState {
 
     @Override
@@ -34,12 +38,22 @@ public class FilledMapMainState extends NoDeliveriesMainState {
         view.<MainController>getController("main").disableButton("#removeDeliveryButton");
     }
 
+    /**
+     * Compute the plan with all actual information
+     * @param m the CityMap
+     * @param l the list of commands
+     */
     @Override
     public void computePlan(CityMap m, ListOfCommands l) {
         m.clearSelection();
         l.add(new ComputePlanCommand(m));
     }
 
+    /**
+     * Save information about tours and deliveries on a file
+     * @param m the CityMap
+     * @param view the View
+     */
     @Override
     public void saveDeliveries(CityMap m, View view){
         m.clearSelection();
@@ -60,6 +74,12 @@ public class FilledMapMainState extends NoDeliveriesMainState {
         }
     }
 
+    /**
+     * Go to deleteDeliveryState1
+     * @param c the Controller
+     * @param m the CityMap
+     * @param view the View
+     */
     @Override
     public void saveRoadmap(Controller c) {
         c.setCurrentState(c.saveRoadmapState);
@@ -70,6 +90,12 @@ public class FilledMapMainState extends NoDeliveriesMainState {
         c.setCurrentState(c.deleteDeliveryState1);
     }
 
+    /**
+     * Select a component
+     * @param c the Controller
+     * @param m the CityMap
+     * @param l the list of commands
+     */
     @Override
     public void leftClick(Controller c, CityMap m, Intersection i, DeliveryRequest d, Tour t, ListOfCommands l){
         if (d != null) {

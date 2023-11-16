@@ -20,7 +20,7 @@ public class AddDeliveryState2 implements State {
     public void entryAction(CityMap m, View view) {
         view.<MainController>getController("main").enableButton("#addTourButton");
 
-        view.<MainController>getController("main").getInformationController().displayAddDelivery2Informations();
+        view.<MainController>getController("main").getInformationController().displayAddDelivery2Information();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class AddDeliveryState2 implements State {
 
         view.<MainController>getController("main").disableButton("#addTourButton");
 
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformation();
     }
 
     /**

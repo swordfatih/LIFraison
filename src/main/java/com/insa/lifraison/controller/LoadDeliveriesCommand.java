@@ -11,7 +11,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
+/**
+ * LoadDeliveriesCommand is the class which does the specific command of loading deliveries
+ * {@link com.insa.lifraison.model.DeliveryRequest}
+ * The class extends Command {@link com.insa.lifraison.controller.Command}
+ */
 public class LoadDeliveriesCommand implements Command {
     private final CityMap cityMap;
     private final File file;
@@ -28,6 +32,9 @@ public class LoadDeliveriesCommand implements Command {
         tours = new ArrayList<>();
     }
 
+    /**
+     * Add tours and deliveries
+     */
     @Override
     public void doCommand() {
         try {
@@ -41,6 +48,9 @@ public class LoadDeliveriesCommand implements Command {
         cityMap.addTours(tours);
     }
 
+    /**
+     * Remove tours and deliveries
+     */
     @Override
     public void undoCommand() {
         cityMap.removeTours(tours);

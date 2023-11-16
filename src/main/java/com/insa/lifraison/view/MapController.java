@@ -23,22 +23,45 @@ import java.util.Objects;
 import static java.lang.Math.atan2;
 import static java.lang.Math.min;
 
+/**
+ * Class MainController extends from {@link com.insa.lifraison.view.ViewController}
+ * It manage the main app window. It's based on the main.fxml file
+ */
 public class MapController extends ViewController implements Observer {
+    /**
+     * {@link javafx.scene.layout.Pane}
+     */
     @FXML
     private Pane pane;
+    /**
+     * {@link javafx.scene.control.ScrollPane}
+     */
     @FXML
     private ScrollPane scrollPane;
+    /**
+     * {@link com.insa.lifraison.model.CityMap}
+     */
     private CityMap map;
+    /**
+     * {@link com.insa.lifraison.model.Tour}
+     */
+    private LinkedList<Tour> tours;
+    /**
+     * {@link java.lang.Number}
+     */
+    private Number mapWidth, mapHeight;
     private double scale;
     private double longitudeOffset;
     private double latitudeOffset;
-    private final double pointSize = 10;
+
     private final double zoomFactor = 1.2;
-    private LinkedList<Tour> tours;
     private final double deliveryPointSize = 6;
     private final double intersectionPointSize = 3;
-    private Number mapWidth, mapHeight;
 
+    /**
+     * initialize the home window
+     * This methods is automatically called at the creation of the class
+     */
     public void initialize() {
         scrollPane.addEventFilter(ScrollEvent.ANY, this::onScrollEvent);
 
@@ -55,7 +78,9 @@ public class MapController extends ViewController implements Observer {
 
     /**
      * Redraw the map when the model is modified
-     * @param notifType : the type of update
+     * @param notifType the type of notification
+     * @param observable the observable which has notified the observer
+     * @param arg optional information about the update
      */
     @Override
     public void update(Observable.NotifType notifType, Observable observable, Object arg){
@@ -90,11 +115,9 @@ public class MapController extends ViewController implements Observer {
                     }
                     drawTour(tour);
                 }
-                else if(arg instanceof DeliveryRequest){
-                    DeliveryRequest newDelivery = (DeliveryRequest) arg;
+                else if(arg instanceof DeliveryRequest newDelivery){
                     newDelivery.addObserver(this);
-                    if (observable instanceof Tour) {
-                        Tour tour = (Tour) observable;
+                    if (observable instanceof Tour tour) {
                         drawDeliveryPoint(newDelivery, tour, tour.getColor());
                     } else {
                         drawDeliveryPoint(newDelivery, null, map.getSelectionColor());
@@ -104,8 +127,7 @@ public class MapController extends ViewController implements Observer {
             case REMOVE -> {
                 if(arg instanceof Tour){
                     eraseTour((Tour) arg);
-                }else if(arg instanceof DeliveryRequest){
-                    DeliveryRequest newDelivery = (DeliveryRequest) arg;
+                }else if(arg instanceof DeliveryRequest newDelivery){
                     eraseDeliveryRequest(newDelivery);
                 }
 
@@ -126,8 +148,22 @@ public class MapController extends ViewController implements Observer {
         this.refresh();
     }
 
+    /**
+     *
+     * @param tour
+     */
     public void drawTour(Tour tour){
+        //initialisation of the path
         PathTour path = new PathTour(tour);
+        path.setId("Tour" + tour.getId());
+        path.setStrokeWidth(5);
+        if(tour.isSelected()) {
+            path.setStroke(map.getSelectionColor());
+        } else {
+            path.setStroke(tour.getColor());
+        }
+
+        //construction of th path
         Intersection tmp = map.getWarehouse().intersection;
         path.getElements().add(getmoveTo(tmp));
         for (TourStep tourStep : tour.getTourSteps()) {
@@ -140,21 +176,18 @@ public class MapController extends ViewController implements Observer {
                 path.getElements().add(getLineTo(tmp));
             }
         }
-        path.setId("Tour" + tour.getId());
-        path.setStrokeWidth(5);
-        if(tour.isSelected()) {
-            path.setStroke(map.getSelectionColor());
-        } else {
-            path.setStroke(tour.getColor());
-        }
+
+        //Addition to the pane
         this.pane.getChildren().add(path);
 
+        //Addition of the direction to the pane
         for (TourStep tourStep : tour.getTourSteps()) {
             for (Segment segment : tourStep.segments) {
                 drawSegmentDirection(segment, tour.getColor().darker().darker(), 5, 10);
             }
         }
 
+        //Addition of the deliveries to the pane
         for (DeliveryRequest delivery : tour.getDeliveries()) {
             if(tour.isSelected()) {
                 drawDeliveryPoint(delivery, tour, map.getSelectionColor());
@@ -164,6 +197,10 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * Remove the visual of a tour
+     * @param tour the tour to erase
+     */
     private void eraseTour(Tour tour) {
         PathTour pathTour = findPathTour(tour);
         if(pathTour != null) {
@@ -174,6 +211,11 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * get the pathTour from the tour
+     * @param tour the tour we are looking for
+     * @return the pathTour
+     */
     private PathTour findPathTour(Tour tour) {
         for (javafx.scene.Node node : this.pane.getChildren()) {
             if (node instanceof PathTour && Objects.equals(((PathTour) node).getTour(),tour)) {
@@ -184,7 +226,7 @@ public class MapController extends ViewController implements Observer {
     }
 
     /**
-     * redraw the background of the map meaning roads and the warehouse
+     * clear the map view and redraw everything
      */
     public void refresh(){
         //computing scale
@@ -226,12 +268,24 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * convert the intersection coordinate to screen coordinate
+     * return a LineTo for the path
+     * @param i an intersection {@link com.insa.lifraison.model.Intersection}
+     * @return the corresponding LineTo {@link javafx.scene.shape.LineTo}
+     */
     private LineTo getLineTo(Intersection i){
         double yCoordinate = -scale * i.latitude + latitudeOffset;
         double xCoordinate = scale * i.longitude + longitudeOffset;
         return new LineTo(xCoordinate, yCoordinate);
     }
 
+    /**
+     * convert the intersection coordinate to screen coordinate
+     * return a MoveTo for the path
+     * @param i an intersection {@link com.insa.lifraison.model.Intersection}
+     * @return the corresponding LineTo {@link javafx.scene.shape.MoveTo}
+     */
     private MoveTo getmoveTo(Intersection i){
         double yCoordinate = -scale * i.latitude + latitudeOffset;
         double xCoordinate = scale * i.longitude + longitudeOffset;
@@ -241,6 +295,8 @@ public class MapController extends ViewController implements Observer {
     /**
      * Highlight an intersection of the delivery
      * @param intersection The Intersection to draw
+     * @param radius the radius size of the circle
+     * @param color the color of the circle
      */
     public void drawIntersectionPoint(Intersection intersection, double radius, Color color){
         double yCoordinate = -scale * intersection.latitude + latitudeOffset;
@@ -251,6 +307,12 @@ public class MapController extends ViewController implements Observer {
         this.pane.getChildren().add(circleIntersection);
     }
 
+    /**
+     * show the delivery request on the map with a colored dot
+     * @param deliveryRequest the deliveryRequest {@link com.insa.lifraison.model.DeliveryRequest}
+     * @param tour the tour containing the delivery request {@link com.insa.lifraison.model.Tour}
+     * @param color the color {@link javafx.scene.paint.Color}
+     */
     public void drawDeliveryPoint(DeliveryRequest deliveryRequest, Tour tour, Paint color){
         double yCoordinate = -scale * deliveryRequest.getIntersection().latitude + latitudeOffset;
         double xCoordinate = scale * deliveryRequest.getIntersection().longitude + longitudeOffset;
@@ -265,6 +327,10 @@ public class MapController extends ViewController implements Observer {
         this.pane.getChildren().add(circleDelivery);
     }
 
+    /**
+     * remove the dot of the delivery from the graphical view
+     * @param deliveryRequest the delivery request to remove {@link com.insa.lifraison.model.DeliveryRequest}
+     */
     public void eraseDeliveryRequest(DeliveryRequest  deliveryRequest){
         CircleDelivery foundCircle = findCircleDelivery(deliveryRequest);
         if(foundCircle != null ){
@@ -272,6 +338,11 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * get the CircleDelivery corresponding to the DeliveryRequest
+     * @param deliveryRequest the delivery Request we are looking for
+     * @return the CircleDelivery if it exists or null
+     */
     private CircleDelivery findCircleDelivery(DeliveryRequest deliveryRequest) {
         for (javafx.scene.Node node : this.pane.getChildren()) {
             if (node instanceof CircleDelivery && Objects.equals(((CircleDelivery) node).getDeliveryRequest(),deliveryRequest)) {
@@ -281,6 +352,11 @@ public class MapController extends ViewController implements Observer {
         return null; // Circle with the specified id not found
     }
 
+    /**
+     * Called after a click on a CircleIntersection
+     * notify the controller
+     * @param event the input event
+     */
     private void onIntersectionClick(MouseEvent event){
         if(event.getButton() == MouseButton.PRIMARY) {
             CircleIntersection clicked = (CircleIntersection) event.getSource();
@@ -288,6 +364,11 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * Called after a click on a CircleDelivery
+     * notify the controller
+     * @param event the input event
+     */
     private void onDeliveryClick(MouseEvent event){
         if(event.getButton() == MouseButton.PRIMARY) {
             CircleDelivery clicked = (CircleDelivery) event.getSource();
@@ -299,6 +380,8 @@ public class MapController extends ViewController implements Observer {
     /**
      * Highlight a segment of the tour
      * @param segment The segment to highlight
+     * @param color The color
+     * @param strokeWidth the strokeWidth
      */
     public void drawSegmentLine(Segment segment, Color color, double strokeWidth){
         double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
@@ -311,6 +394,13 @@ public class MapController extends ViewController implements Observer {
         this.pane.getChildren().add(segmentLine);
     }
 
+    /**
+     * Highlight the direction of a segment
+     * @param segment The segment to highlight
+     * @param color The color
+     * @param baseWidth the baseWidth
+     * @param height the height
+     */
     public void drawSegmentDirection(Segment segment, Color color, double baseWidth, double height) {
         double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
         double xOrigin = scale * segment.origin.longitude + longitudeOffset;
@@ -326,11 +416,17 @@ public class MapController extends ViewController implements Observer {
         this.pane.getChildren().add(direction);
     }
 
+    /**
+     * modify the zoom base on the value of zoomFactor
+     */
     public void zoomIn() {
         pane.setScaleX(pane.getScaleX() * zoomFactor);
         pane.setScaleY(pane.getScaleY() * zoomFactor);
     }
 
+    /**
+     * modify the zoom base on the value of zoomFactor
+     */
     public void zoomOut() {
         if (pane.getScaleX() > 1) {
             pane.setScaleX(pane.getScaleX() / zoomFactor);
@@ -338,6 +434,10 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * called when the mouseWheel is moved on the map Pane
+     * @param event the input event
+     */
     private void onScrollEvent(ScrollEvent event){
         if (event.getDeltaY() > 0) {
             zoomIn();

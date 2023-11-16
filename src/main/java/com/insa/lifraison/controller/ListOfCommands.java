@@ -2,6 +2,9 @@ package com.insa.lifraison.controller;
 
 import java.util.LinkedList;
 
+/**
+ * List of the commands made by the user in a map that he can undo/redo
+ */
 public class ListOfCommands {
     private final LinkedList<Command> list;
     private int currentIndex;
