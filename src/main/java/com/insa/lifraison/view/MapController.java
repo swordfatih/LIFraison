@@ -10,6 +10,9 @@ import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import javafx.geometry.Point2D;
+
+
 public class MapController extends ViewController {
     @FXML
     private ScrollPane mapScrollPane;
@@ -56,16 +59,16 @@ public class MapController extends ViewController {
         informations = new MapBoxInformation();
         controlBox.getChildren().add(informations);
 
-        mapScrollPane.addEventFilter(ScrollEvent.ANY, this::onScrollEvent);
+        mapScrollPane.addEventFilter(ScrollEvent.ANY, this::onScroll);
     }
 
-    private void onScrollEvent(ScrollEvent event){
+    @FXML
+    private void onScroll(ScrollEvent event) {
         if (event.getDeltaY() > 0) {
-            zoomIn();
+            zoomIn(event);
         } else {
-            zoomOut();
+            zoomOut(event);
         }
-        event.consume();
     }
 
     @FXML
@@ -140,15 +143,63 @@ public class MapController extends ViewController {
         }
     }
 
-    public void zoomIn() {
+    public void zoomIn(ScrollEvent event) {
+        Point2D cursorPoint = getMousePointInView(event);
+        double zoomFactor = 1.2;
+
         mapPane.setScaleX(mapPane.getScaleX() * zoomFactor);
         mapPane.setScaleY(mapPane.getScaleY() * zoomFactor);
+
+        recenter(cursorPoint, zoomFactor);
     }
 
-    public void zoomOut() {
+    public void zoomOut(ScrollEvent event) {
         if (mapPane.getScaleX() > 1) {
+            Point2D cursorPoint = getMousePointInView(event);
             mapPane.setScaleX(mapPane.getScaleX() / zoomFactor);
             mapPane.setScaleY(mapPane.getScaleY() / zoomFactor);
+
+            recenter(cursorPoint, zoomFactor);
         }
     }
+
+
+
+
+
+
+
+    private void recenter(Point2D cursorPoint, double zoomFactor) {
+        double hValue = mapScrollPane.getHvalue();
+        double vValue = mapScrollPane.getVvalue();
+
+        double newWidth = mapPane.getWidth() * zoomFactor;
+        double newHeight = mapPane.getHeight() * zoomFactor;
+
+        double deltaX = cursorPoint.getX() - (hValue * (newWidth - mapScrollPane.getViewportBounds().getWidth()));
+        double deltaY = cursorPoint.getY() - (vValue * (newHeight - mapScrollPane.getViewportBounds().getHeight()));
+
+        mapScrollPane.setHvalue(deltaX / newWidth);
+        mapScrollPane.setVvalue(deltaY / newHeight);
+    }
+
+
+
+    private Point2D getMousePointInView(ScrollEvent event) {
+        // Assuming mapScrollPane is the viewport for your mapPane
+        double mouseX = event.getX();
+        double mouseY = event.getY();
+
+        double centerX = mapScrollPane.getHvalue() * (mapPane.getWidth() - mapScrollPane.getViewportBounds().getWidth());
+        double centerY = mapScrollPane.getVvalue() * (mapPane.getHeight() - mapScrollPane.getViewportBounds().getHeight());
+
+        double relativeMouseX = mouseX + centerX;
+        double relativeMouseY = mouseY + centerY;
+
+        return new Point2D(relativeMouseX, relativeMouseY);
+    }
+
+
+
+
 }
