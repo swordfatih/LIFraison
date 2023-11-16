@@ -12,26 +12,42 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
-
 import java.util.stream.Collectors;
-
 import static java.lang.Double.valueOf;
 
+/**
+ * The textual view of the application
+ * {@link com.insa.lifraison.view.ViewController}
+ * {@link com.insa.lifraison.observer.Observer}
+ */
 public class TextualController extends ViewController implements Observer {
+    /**
+     * {@link javafx.scene.layout.VBox}
+     */
     @FXML
     private VBox console;
-
+    /**
+     * {@link com.insa.lifraison.model.CityMap}
+     */
     private CityMap map;
 
+    /**
+     * update the textual view
+     * @param type the type of notification
+     * @param observed the observable which has notified the observer
+     * @param arg optional information about the update
+     */
     @Override
     public void update(Observable.NotifType type, Observable observed, Object arg) {
         if(type == Observable.NotifType.ADD && arg instanceof Observable) {
             ((Observable) arg).addObserver(this);
         }
-
         printContent();
     }
 
+    /**
+     * write and display the text
+     */
     private void printContent() {
         this.console.getChildren().clear();
 

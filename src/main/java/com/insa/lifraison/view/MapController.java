@@ -43,7 +43,6 @@ public class MapController extends ViewController implements Observer {
      * {@link com.insa.lifraison.model.Tour}
      */
     private LinkedList<Tour> tours;
-
     /**
      * {@link java.lang.Number}
      */
@@ -56,6 +55,10 @@ public class MapController extends ViewController implements Observer {
     private final double deliveryPointSize = 6;
     private final double intersectionPointSize = 3;
 
+    /**
+     * initialize the home window
+     * This methods is automatically called at the creation of the class
+     */
     public void initialize() {
         scrollPane.addEventFilter(ScrollEvent.ANY, this::onScrollEvent);
 
@@ -325,6 +328,11 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * get the CircleDelivery corresponding to the DeliveryRequest
+     * @param deliveryRequest the delivery Request we are looking for
+     * @return the CircleDelivery if it exists or null
+     */
     private CircleDelivery findCircleDelivery(DeliveryRequest deliveryRequest) {
         for (javafx.scene.Node node : this.pane.getChildren()) {
             if (node instanceof CircleDelivery && Objects.equals(((CircleDelivery) node).getDeliveryRequest(),deliveryRequest)) {
@@ -334,6 +342,11 @@ public class MapController extends ViewController implements Observer {
         return null; // Circle with the specified id not found
     }
 
+    /**
+     * Called after a click on a CircleIntersection
+     * notify the controller
+     * @param event the input event
+     */
     private void onIntersectionClick(MouseEvent event){
         if(event.getButton() == MouseButton.PRIMARY) {
             CircleIntersection clicked = (CircleIntersection) event.getSource();
@@ -341,6 +354,11 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * Called after a click on a CircleDelivery
+     * notify the controller
+     * @param event the input event
+     */
     private void onDeliveryClick(MouseEvent event){
         if(event.getButton() == MouseButton.PRIMARY) {
             CircleDelivery clicked = (CircleDelivery) event.getSource();
@@ -352,6 +370,8 @@ public class MapController extends ViewController implements Observer {
     /**
      * Highlight a segment of the tour
      * @param segment The segment to highlight
+     * @param color The color
+     * @param strokeWidth the strokeWidth
      */
     public void drawSegmentLine(Segment segment, Color color, double strokeWidth){
         double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
@@ -364,11 +384,17 @@ public class MapController extends ViewController implements Observer {
         this.pane.getChildren().add(segmentLine);
     }
 
+    /**
+     * modify the zoom base on the value of zoomFactor
+     */
     public void zoomIn() {
         pane.setScaleX(pane.getScaleX() * zoomFactor);
         pane.setScaleY(pane.getScaleY() * zoomFactor);
     }
 
+    /**
+     * modify the zoom base on the value of zoomFactor
+     */
     public void zoomOut() {
         if (pane.getScaleX() > 1) {
             pane.setScaleX(pane.getScaleX() / zoomFactor);
@@ -376,6 +402,10 @@ public class MapController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * called when the mouseWheel is moved on the map Pane
+     * @param event the input event
+     */
     private void onScrollEvent(ScrollEvent event){
         if (event.getDeltaY() > 0) {
             zoomIn();
