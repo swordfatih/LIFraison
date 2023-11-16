@@ -2,10 +2,13 @@
 
 <?import javafx.scene.layout.VBox ?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.ToursController" styleClass="toursBox" alignment="CENTER" spacing="20">
     <Label text="Tours" styleClass="title" />
-    <VBox fx:id="tourList" spacing="20">
-        <VBox.vgrow>ALWAYS</VBox.vgrow>
-    </VBox>
+    <ScrollPane styleClass="consoleBox" fitToWidth="true">
+        <VBox fx:id="tourList" spacing="20">
+            <VBox.vgrow>ALWAYS</VBox.vgrow>
+        </VBox>
+    </ScrollPane>
 </VBox>

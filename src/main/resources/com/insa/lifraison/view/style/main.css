@@ -45,3 +45,14 @@
 .leftPane {
     -fx-background-color: #AAAAAA20;
 }
+
+.selected {
+    -fx-text-fill: purple;
+    -fx-font-weight: 700;
+    -fx-border-color: purple;
+    -fx-border-width: 1px;
+}
+
+.selectable {
+    -fx-cursor: hand;
+}

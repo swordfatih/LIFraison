@@ -5,6 +5,7 @@ import com.insa.lifraison.observer.Observable;
 import com.insa.lifraison.observer.Observer;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 import static java.lang.Double.valueOf;
@@ -43,6 +45,7 @@ public class TextualController extends ViewController implements Observer {
             Label title = new Label();
             title.setText("Tour [" + i + "]");
             title.setStyle("--fx-font-weight: 800");
+            title.getStyleClass().add("selectable");
 
             if(tour.isSelected()) {
                 title.getStyleClass().add("selected");
@@ -63,23 +66,39 @@ public class TextualController extends ViewController implements Observer {
                 ObservableList<DeliveryRequest> deliveries = FXCollections.observableArrayList(tour.getDeliveries());
                 TableView<DeliveryRequest> deliveryTable = new TableView<>(deliveries);
 
-                TableColumn<DeliveryRequest, String> typeCol = new TableColumn<>("Type");
                 TableColumn<DeliveryRequest, String> idCol = new TableColumn<>("ID");
-                TableColumn<DeliveryRequest, String> lngCol = new TableColumn<>("Longitude");
-                TableColumn<DeliveryRequest, String> latCol = new TableColumn<>("Latitude");
+                TableColumn<DeliveryRequest, String> statusCol = new TableColumn<>("Status");
+                TableColumn<DeliveryRequest, String> startCol = new TableColumn<>("Window start");
+                TableColumn<DeliveryRequest, String> endCol = new TableColumn<>("Window end");
+                TableColumn<DeliveryRequest, String> coordsCol = new TableColumn<>("Coordinates");
 
-                typeCol.setCellValueFactory(p -> new ReadOnlyStringWrapper("Intersection"));
                 idCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getIntersection().getId()));
-                lngCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(valueOf(p.getValue().getIntersection().getLongitude()).toString()));
-                latCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(valueOf(p.getValue().getIntersection().getLatitude()).toString()));
+                statusCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getState().toString()));
+                startCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getTimeWindowStart() != null ? p.getValue().getTimeWindowStart().format(DateTimeFormatter.ISO_LOCAL_TIME) : ""));
+                endCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getTimeWindowEnd() != null ? p.getValue().getTimeWindowEnd().format(DateTimeFormatter.ISO_LOCAL_TIME) : ""));
+                coordsCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getIntersection().getLongitude() + "\n" + p.getValue().getIntersection().getLatitude()));
 
-                deliveryTable.getColumns().add(typeCol);
                 deliveryTable.getColumns().add(idCol);
-                deliveryTable.getColumns().add(lngCol);
-                deliveryTable.getColumns().add(latCol);
+                deliveryTable.getColumns().add(statusCol);
+                deliveryTable.getColumns().add(startCol);
+                deliveryTable.getColumns().add(endCol);
+                deliveryTable.getColumns().add(coordsCol);
+
+                deliveryTable.getSortOrder().add(startCol);
 
                 deliveryTable.setRowFactory(tv -> {
-                    TableRow<DeliveryRequest> row = new TableRow<>();
+                    TableRow<DeliveryRequest> row = new TableRow<>() {
+                        @Override
+                        protected void updateItem(DeliveryRequest delivery, boolean empty) {
+                            super.updateItem(delivery, empty);
+
+                            if(delivery != null && delivery.isSelected()) {
+                                this.getStyleClass().add("selected");
+                            }
+                        }
+                    };
+
+                    row.getStyleClass().add("selectable");
 
                     row.setOnMouseClicked(event -> {
                         if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
