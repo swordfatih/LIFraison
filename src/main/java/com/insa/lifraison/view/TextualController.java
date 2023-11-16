@@ -6,11 +6,13 @@ import com.insa.lifraison.observer.Observer;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 import java.util.stream.Collectors;
@@ -42,6 +44,12 @@ public class TextualController extends ViewController implements Observer {
             title.setText("Tour [" + i + "]");
             title.setStyle("--fx-font-weight: 800");
 
+            if(tour.isSelected()) {
+                title.getStyleClass().add("selected");
+            }
+
+            title.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> controller.tourButtonClicked(tour));
+
             this.console.getChildren().add(title);
 
             if(tour.getDeliveries().isEmpty()) {
@@ -72,12 +80,19 @@ public class TextualController extends ViewController implements Observer {
 
                 deliveryTable.setRowFactory(tv -> {
                     TableRow<DeliveryRequest> row = new TableRow<>();
+
                     row.setOnMouseClicked(event -> {
                         if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
                             DeliveryRequest delivery = row.getItem();
                             this.controller.leftClick(delivery.getIntersection(), delivery, tour);
                         }
                     });
+
+                    DeliveryRequest delivery = row.getItem();
+                    if(delivery != null && delivery.isSelected()) {
+                        row.setStyle("-fx-text-fill: #800080");
+                    }
+
                     return row;
                 });
 
@@ -118,6 +133,15 @@ public class TextualController extends ViewController implements Observer {
     public void setMap(CityMap map) {
         this.map = map;
         this.map.addObserver(this);
+
+        for (Tour tour: this.map.getTours()) {
+            tour.addObserver(this);
+
+            for(DeliveryRequest delivery: tour.getDeliveries()) {
+                delivery.addObserver(this);
+            }
+        }
+
         printContent();
     }
 }
