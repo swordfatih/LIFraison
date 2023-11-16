@@ -88,10 +88,12 @@ public class DeliveryRequest extends Observable {
 
     public void setTimeWindowStart(LocalTime timeWindowStart) {
         this.timeWindowStart = timeWindowStart;
+        this.notifyObservers(NotifType.UPDATE);
     }
 
     public void setTimeWindowEnd(LocalTime timeWindowEnd) {
         this.timeWindowEnd = timeWindowEnd;
+        this.notifyObservers(NotifType.UPDATE);
     }
 
     public DeliveryState getState() {
@@ -100,5 +102,6 @@ public class DeliveryRequest extends Observable {
 
     public void setState(DeliveryState state) {
         this.state = state;
+        notifyObservers(NotifType.UPDATE);
     }
 }

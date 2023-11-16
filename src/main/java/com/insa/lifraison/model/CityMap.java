@@ -407,6 +407,11 @@ public class CityMap extends Observable {
         if(hasImpossible) {
             deliveries.remove(0);
             tour.setTourSteps(new LinkedList<>());
+            for(DeliveryRequest deliveryRequest : tour.getDeliveries()) {
+                if(deliveryRequest.getState() != DeliveryState.NotPossible) {
+                    deliveryRequest.setState(DeliveryState.NotCalculated);
+                }
+            }
             return tour.getTourSteps();
         }
 
