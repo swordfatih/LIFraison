@@ -127,6 +127,12 @@ public class MenuController extends ViewController {
     @FXML
     private void saveDeliveries(ActionEvent event) {
         event.consume();
-        this.controller.save();
+        this.controller.saveDeliveries();
+    }
+
+    @FXML
+    private void saveRoadmap(ActionEvent event) {
+        event.consume();
+        this.controller.saveRoadmap();
     }
 }

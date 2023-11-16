@@ -15,12 +15,12 @@ public class DeleteDeliveryState1 implements State {
 
     @Override
     public void entryAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().displayDeleteDeliveryInformations();
+        view.<MainController>getController("main").getInformationController().displayDeleteDeliveryInformation();
     }
 
     @Override
     public void exitAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformation();
     }
 
     /**

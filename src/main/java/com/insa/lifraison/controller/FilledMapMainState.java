@@ -24,7 +24,8 @@ public class FilledMapMainState extends NoDeliveriesMainState {
     public void entryAction(CityMap m, View view) {
         super.entryAction(m, view);
         view.<MainController>getController("main").enableButton("#computePlanButton");
-        view.<MainController>getController("main").enableButton("#saveButton");
+        view.<MainController>getController("main").enableButton("#saveDeliveriesButton");
+        view.<MainController>getController("main").enableButton("#saveRoadmapButton");
         view.<MainController>getController("main").enableButton("#removeDeliveryButton");
     }
 
@@ -32,7 +33,8 @@ public class FilledMapMainState extends NoDeliveriesMainState {
     public void exitAction(CityMap m, View view) {
         super.exitAction(m, view);
         view.<MainController>getController("main").disableButton("#computePlanButton");
-        view.<MainController>getController("main").disableButton("#saveButton");
+        view.<MainController>getController("main").disableButton("#saveDeliveriesButton");
+        view.<MainController>getController("main").disableButton("#saveRoadmapButton");
         view.<MainController>getController("main").disableButton("#removeDeliveryButton");
     }
 
@@ -53,7 +55,7 @@ public class FilledMapMainState extends NoDeliveriesMainState {
      * @param view the View
      */
     @Override
-    public void save(CityMap m, View view){
+    public void saveDeliveries(CityMap m, View view){
         m.clearSelection();
         try {
             FileChooser fileChooser = new FileChooser();
@@ -78,6 +80,11 @@ public class FilledMapMainState extends NoDeliveriesMainState {
      * @param m the CityMap
      * @param view the View
      */
+    @Override
+    public void saveRoadmap(Controller c) {
+        c.setCurrentState(c.saveRoadmapState);
+    }
+
     @Override
     public void removeDelivery(Controller c, CityMap m, View view){
         c.setCurrentState(c.deleteDeliveryState1);
