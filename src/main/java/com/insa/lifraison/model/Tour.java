@@ -116,4 +116,12 @@ public class Tour extends Observable{
     public Color getColor() {
         return  this.color;
     }
+
+    public void clearPath() {
+        this.tourSteps = new LinkedList<>();
+        for(DeliveryRequest deliveryRequest : deliveries) {
+            deliveryRequest.setState(DeliveryState.NotCalculated);
+        }
+        notifyObservers(NotifType.UPDATE);
+    }
 }
