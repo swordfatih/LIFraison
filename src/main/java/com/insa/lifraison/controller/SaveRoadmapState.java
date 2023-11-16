@@ -28,7 +28,7 @@ public class SaveRoadmapState implements State {
     public void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l) {
         try {
             FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("HTML files (*.html)", "*.html");
             fileChooser.getExtensionFilters().add(extFilter);
             fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
             File file = fileChooser.showSaveDialog(v.getStage());
