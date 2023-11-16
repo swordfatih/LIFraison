@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * View is the class window
+ */
 public class View {
     private final Stage stage;
     private final Map<String, Pair<Scene, ViewController>> scenes;
@@ -24,6 +27,12 @@ public class View {
         this.scenes = new HashMap<>();
     }
 
+    /**
+     * Load a scene
+     * @param name name of the scene
+     * @param scenePath path to the .fxml of the scene
+     * @param stylePath path to the .css of the scene
+     */
     public void loadScene(String name, String scenePath, String stylePath) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(scenePath));
 
@@ -44,14 +53,25 @@ public class View {
         }
     }
 
+    /**
+     * Get a view controller of the view
+     * @param name name of the view controller we want
+     * @return the ViewController
+     * @param <T>
+     */
     @SuppressWarnings (value="unchecked")
     public <T extends ViewController> T getController(String name) {
         return (T) this.scenes.get(name).getValue();
     }
 
+    /**
+     * Navigate to another scene
+     * @param name string name of the scene
+     */
     public void navigate(String name) {
         this.stage.setScene(this.scenes.get(name).getKey());
     }
+
 
     public Stage getStage() {
         return this.stage;

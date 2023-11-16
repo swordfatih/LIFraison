@@ -20,17 +20,17 @@ public class ChangeMapState implements State {
 
     @Override
     public void entryAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().displayDeleteMapInformations();
+        view.<MainController>getController("main").getInformationController().displayDeleteMapInformation();
     }
 
     @Override
     public void exitAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformation();
     }
 
     @Override
     public void confirm(Controller c, CityMap m, View view, ListOfCommands l){
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformation();
         try{
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");

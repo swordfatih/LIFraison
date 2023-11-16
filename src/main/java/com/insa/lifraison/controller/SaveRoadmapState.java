@@ -6,7 +6,6 @@ import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.Roadmap;
-import com.insa.lifraison.xml.TourSerializer;
 import javafx.stage.FileChooser;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,12 +16,12 @@ public class SaveRoadmapState implements State {
 
     @Override
     public void entryAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().displaySaveRoadmapInformations();
+        view.<MainController>getController("main").getInformationController().displaySaveRoadmapInformation();
     }
 
     @Override
     public void exitAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformation();
     }
 
     @Override

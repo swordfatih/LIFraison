@@ -39,7 +39,7 @@ public class TextualController extends ViewController implements Observer {
             Tour tour = map.getTours().get(i);
 
             Label title = new Label();
-            title.setText("Tour [" + i + "]");
+            title.setText("Tour " + tour.getId() );
             title.setStyle("--fx-font-weight: 800");
 
             this.console.getChildren().add(title);

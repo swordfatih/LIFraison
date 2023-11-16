@@ -9,12 +9,12 @@ public class DeleteTourState implements State{
 
     @Override
     public void entryAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().displayDeleteTourInformations();
+        view.<MainController>getController("main").getInformationController().displayDeleteTourInformation();
     }
 
     @Override
     public void exitAction(CityMap m, View view) {
-        view.<MainController>getController("main").getInformationController().clearInformations();
+        view.<MainController>getController("main").getInformationController().clearInformation();
     }
 
     @Override
