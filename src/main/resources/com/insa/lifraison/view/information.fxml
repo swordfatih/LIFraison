@@ -2,6 +2,6 @@
 
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.InformationController" fx:id="information" styleClass="information">
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.insa.lifraison.view.InformationController" fx:id="information" styleClass="information" spacing="5">
 
 </VBox>
