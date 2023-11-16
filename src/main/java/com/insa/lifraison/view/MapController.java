@@ -156,6 +156,7 @@ public class MapController extends ViewController implements Observer {
     public void drawTour(Tour tour){
         //initialisation of the path
         PathTour path = new PathTour(tour);
+        path.getProperties().put("tour", tour);
         path.setId("Tour" + tour.getId());
         path.setStrokeWidth(5);
         if(tour.isSelected()) {
@@ -184,7 +185,8 @@ public class MapController extends ViewController implements Observer {
         //Addition of the direction to the pane
         for (TourStep tourStep : tour.getTourSteps()) {
             for (Segment segment : tourStep.segments) {
-                drawSegmentDirection(segment, tour.getColor().darker().darker(), 5, 10);
+                Polygon direction = drawSegmentDirection(segment, tour.getColor().darker().darker(), 5, 10);
+                direction.getProperties().put("tour", tour);
             }
         }
 
@@ -203,27 +205,14 @@ public class MapController extends ViewController implements Observer {
      * @param tour the tour to erase
      */
     private void eraseTour(Tour tour) {
-        PathTour pathTour = findPathTour(tour);
-        if(pathTour != null) {
-            this.pane.getChildren().remove(pathTour);
-        }
+        this.pane.getChildren().removeIf(node -> {
+            Tour t = (Tour) node.getProperties().get("tour");
+            return t != null && t.equals(tour);
+        });
+
         for(DeliveryRequest deliveryRequest : tour.getDeliveries()) {
             eraseDeliveryRequest(deliveryRequest);
         }
-    }
-
-    /**
-     * get the pathTour from the tour
-     * @param tour the tour we are looking for
-     * @return the pathTour
-     */
-    private PathTour findPathTour(Tour tour) {
-        for (javafx.scene.Node node : this.pane.getChildren()) {
-            if (node instanceof PathTour && Objects.equals(((PathTour) node).getTour(),tour)) {
-                return (PathTour) node;
-            }
-        }
-        return null;
     }
 
     /**
@@ -402,7 +391,7 @@ public class MapController extends ViewController implements Observer {
      * @param baseWidth the baseWidth
      * @param height the height
      */
-    public void drawSegmentDirection(Segment segment, Color color, double baseWidth, double height) {
+    public Polygon drawSegmentDirection(Segment segment, Color color, double baseWidth, double height) {
         double yOrigin = -scale * segment.origin.latitude + latitudeOffset;
         double xOrigin = scale * segment.origin.longitude + longitudeOffset;
         double yDest = -scale * segment.destination.latitude + latitudeOffset;
@@ -415,6 +404,8 @@ public class MapController extends ViewController implements Observer {
         direction.getTransforms().add(new Rotate(angle, xOrigin, yOrigin));
 
         this.pane.getChildren().add(direction);
+
+        return direction;
     }
 
     /**
