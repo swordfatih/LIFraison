@@ -14,9 +14,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Double.valueOf;
@@ -66,25 +69,45 @@ public class TextualController extends ViewController implements Observer {
                 ObservableList<DeliveryRequest> deliveries = FXCollections.observableArrayList(tour.getDeliveries());
                 TableView<DeliveryRequest> deliveryTable = new TableView<>(deliveries);
 
-                TableColumn<DeliveryRequest, String> idCol = new TableColumn<>("ID");
+                TableColumn<DeliveryRequest, String> idCol = new TableColumn<>("Delivery");
                 TableColumn<DeliveryRequest, String> statusCol = new TableColumn<>("Status");
-                TableColumn<DeliveryRequest, String> startCol = new TableColumn<>("Window start");
-                TableColumn<DeliveryRequest, String> endCol = new TableColumn<>("Window end");
+                TableColumn<DeliveryRequest, String> winCol = new TableColumn<>("Window");
                 TableColumn<DeliveryRequest, String> coordsCol = new TableColumn<>("Coordinates");
 
-                idCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getIntersection().getId()));
+                idCol.setCellValueFactory(p -> {
+                    List<Segment> segments = map.getSegments().stream().filter(segment -> segment.contains(p.getValue().getIntersection())).toList();
+                    return new ReadOnlyStringWrapper(segments.stream().map(segment -> segment.name + "\n").distinct().collect(Collectors.joining()));
+                });
+
                 statusCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getState().toString()));
-                startCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getTimeWindowStart() != null ? p.getValue().getTimeWindowStart().format(DateTimeFormatter.ISO_LOCAL_TIME) : ""));
-                endCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getTimeWindowEnd() != null ? p.getValue().getTimeWindowEnd().format(DateTimeFormatter.ISO_LOCAL_TIME) : ""));
-                coordsCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().getIntersection().getLongitude() + "\n" + p.getValue().getIntersection().getLatitude()));
+                winCol.setCellValueFactory(p -> {
+                    LocalTime startTime = p.getValue().getTimeWindowStart();
+                    LocalTime endTime = p.getValue().getTimeWindowEnd();
+
+                    if(p.getValue().getState() == DeliveryState.NotCalculated) {
+                        return new ReadOnlyStringWrapper("Not calculated");
+                    } else if(startTime == null || endTime == null) {
+                        return new ReadOnlyStringWrapper("");
+                    }
+
+                    String start = startTime.format(DateTimeFormatter.ISO_LOCAL_TIME);
+                    String end = endTime.format(DateTimeFormatter.ISO_LOCAL_TIME);
+
+                    return new ReadOnlyStringWrapper("start: " + start + "\nend: " + end);
+                });
+
+                coordsCol.setCellValueFactory(p -> {
+                    String lng = String.valueOf(p.getValue().getIntersection().getLongitude());
+                    String lat = String.valueOf(p.getValue().getIntersection().getLatitude());
+                    return new ReadOnlyStringWrapper( "lng: " + lng + "\nlat: " + lat);
+                });
 
                 deliveryTable.getColumns().add(idCol);
                 deliveryTable.getColumns().add(statusCol);
-                deliveryTable.getColumns().add(startCol);
-                deliveryTable.getColumns().add(endCol);
+                deliveryTable.getColumns().add(winCol);
                 deliveryTable.getColumns().add(coordsCol);
 
-                deliveryTable.getSortOrder().add(startCol);
+                deliveryTable.getSortOrder().add(winCol);
 
                 deliveryTable.setRowFactory(tv -> {
                     TableRow<DeliveryRequest> row = new TableRow<>() {
@@ -101,7 +124,7 @@ public class TextualController extends ViewController implements Observer {
                     row.getStyleClass().add("selectable");
 
                     row.setOnMouseClicked(event -> {
-                        if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
+                        if (!row.isEmpty()) {
                             DeliveryRequest delivery = row.getItem();
                             this.controller.leftClick(delivery.getIntersection(), delivery, tour);
                         }
@@ -116,35 +139,6 @@ public class TextualController extends ViewController implements Observer {
                 });
 
                 this.console.getChildren().add(deliveryTable);
-            }
-
-            if(tour.getTourSteps().isEmpty()) {
-                Label empty = new Label();
-                empty.setText("Tour doesn't have any step. Calculate it.");
-                empty.setStyle("-fx-text-fill: orange");
-
-                this.console.getChildren().add(empty);
-            }
-            else {
-                ObservableList<Segment> segments = FXCollections.observableArrayList(tour.getTourSteps().stream().flatMap((step) -> step.segments.stream()).collect(Collectors.toList()));
-                TableView<Segment> segmentTable = new TableView<>(segments);
-
-                TableColumn<Segment, String> typeCol = new TableColumn<>("Type");
-                TableColumn<Segment, String> nameCol = new TableColumn<>("Street");
-                TableColumn<Segment, String> origCol = new TableColumn<>("Origin");
-                TableColumn<Segment, String> destCol = new TableColumn<>("Destination");
-
-                typeCol.setCellValueFactory(p -> new ReadOnlyStringWrapper("Segment"));
-                nameCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().name));
-                origCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().origin.toString()));
-                destCol.setCellValueFactory(p -> new ReadOnlyStringWrapper(p.getValue().destination.toString()));
-
-                segmentTable.getColumns().add(typeCol);
-                segmentTable.getColumns().add(nameCol);
-                segmentTable.getColumns().add(origCol);
-                segmentTable.getColumns().add(destCol);
-
-                this.console.getChildren().add(segmentTable);
             }
         }
     }

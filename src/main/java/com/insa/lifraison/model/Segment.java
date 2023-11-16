@@ -47,6 +47,10 @@ public class Segment {
         return Double.compare(length, segment.length) == 0 && Objects.equals(origin, segment.origin) && Objects.equals(destination, segment.destination) && Objects.equals(name, segment.name);
     }
 
+    public boolean contains(Intersection intersection) {
+        return origin.equals(intersection) || destination.equals(intersection);
+    }
+
     /**
      * @return origin, destination, length and name of the segment as a string
      */

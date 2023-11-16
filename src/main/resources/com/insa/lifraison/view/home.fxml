@@ -10,8 +10,8 @@
     <VBox alignment="CENTER">
         <HBox alignment="CENTER">
             <VBox styleClass="box">
-                <Label fx:id="label" styleClass="label" text="Load Map File" />
-                <Button styleClass="buttonLoad" text="Load" onAction="#loadMap"/>
+                <Label fx:id="label" styleClass="label" text="Welcome to LIFraison !" />
+                <Button styleClass="buttonLoad" text="Load your map" onAction="#loadMap"/>
             </VBox>
         </HBox>
     </VBox>

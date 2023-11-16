@@ -22,8 +22,6 @@
     <bottom>
         <fx:include source="information.fxml" fx:id="information" />
     </bottom>
-    <right>
-    </right>
     <top>
         <HBox styleClass="titleBar" alignment="CENTER">
             <Label text="LIFraison" BorderPane.alignment="CENTER" styleClass="title" />
