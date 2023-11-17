@@ -118,6 +118,7 @@ public class TextualController extends ViewController implements Observer {
                 TableColumn<DeliveryRequest, String> statusCol = new TableColumn<>("Status");
                 TableColumn<DeliveryRequest, String> winCol = new TableColumn<>("Window");
                 TableColumn<DeliveryRequest, String> coordsCol = new TableColumn<>("Coordinates");
+                TableColumn<DeliveryRequest, String> timeCol = new TableColumn<>("Time");
 
                 idCol.setCellValueFactory(p -> {
                     List<Segment> segments = map.getSegments().stream().filter(segment -> segment.contains(p.getValue().getIntersection())).toList();
@@ -145,10 +146,29 @@ public class TextualController extends ViewController implements Observer {
                     return new ReadOnlyStringWrapper( "lng: " + lng + "\nlat: " + lat);
                 });
 
+                timeCol.setCellValueFactory(p -> {
+                    LinkedList<TourStep> steps = tour.getTourSteps();
+
+                    if(steps == null || steps.isEmpty()) {
+                        return new ReadOnlyStringWrapper("");
+                    }
+
+                    List<TourStep> step = steps.stream().filter((s) -> s.segments.get(0).origin.equals(p.getValue().getIntersection())).toList();
+
+                    if(step.isEmpty()) {
+                        return new ReadOnlyStringWrapper("");
+                    }
+
+                    String arrival = step.get(0).getArrival().format(DateTimeFormatter.ISO_LOCAL_TIME);
+                    String departure = step.get(0).getDeparture().format(DateTimeFormatter.ISO_LOCAL_TIME);
+                    return new ReadOnlyStringWrapper("arrival: " + arrival + "\ndeparture: " + departure);
+                });
+
                 deliveryTable.getColumns().add(idCol);
                 deliveryTable.getColumns().add(statusCol);
                 deliveryTable.getColumns().add(winCol);
                 deliveryTable.getColumns().add(coordsCol);
+                deliveryTable.getColumns().add(timeCol);
 
                 deliveryTable.setRowFactory(tv -> {
                     TableRow<DeliveryRequest> row = new TableRow<>() {

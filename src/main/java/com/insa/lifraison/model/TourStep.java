@@ -12,6 +12,7 @@ public class TourStep {
      * List of {@link com.insa.lifraison.model.Segment}
      */
     public final LinkedList<Segment> segments;
+
     public final LocalTime departure;
     public final LocalTime arrival;
 
@@ -49,5 +50,13 @@ public class TourStep {
         } else {
             return false;
         }
+    }
+
+    public LocalTime getDeparture() {
+        return departure;
+    }
+
+    public LocalTime getArrival() {
+        return arrival;
     }
 }
