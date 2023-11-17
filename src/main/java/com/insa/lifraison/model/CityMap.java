@@ -422,10 +422,11 @@ public class CityMap extends Observable {
         LinkedList<TourStep> tourSteps = new LinkedList<>();
 
         for(int i = 0; i < deliveries.size(); i++) {
-            int currentNode = solver.getSolution(i), nextNode = graphIndices.get(0), finalNode = 0;
+            int currentNode = solver.getSolution(i), nextNode = graphIndices.get(0);
+            int finalNode = solver.getSolution(0);
             if(i + 1 != deliveries.size()) {
                 nextNode = graphIndices.get(solver.getSolution(i + 1));
-                finalNode = i + 1;
+                finalNode = solver.getSolution(i+1);
             }
 
             // Rebuilds the path between two consecutive deliveries
