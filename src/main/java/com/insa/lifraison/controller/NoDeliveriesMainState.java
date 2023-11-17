@@ -6,6 +6,7 @@ import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourDeserializer;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -70,6 +71,10 @@ public class NoDeliveriesMainState extends EmptyMapMainState {
                 c.setCurrentStateToMain();
             }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
+            String errorMessage = "Invalid XML:\n" + e.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR,errorMessage);
+            alert.showAndWait();
+
             System.out.println(e.getMessage());
         }
     }

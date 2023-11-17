@@ -222,8 +222,8 @@ public class CityMap extends Observable {
     }
 
     /**
-     * Remove a collection of tour in the CityMap
-     * @param tours the collection of tour which will be removed to tours of the CityMap
+     * Remove one tour from the CityMap
+     * @param tour The tour which will be removed of the CityMap
      */
     public boolean removeTour(Tour tour) {
         boolean hasChanged = this.tours.remove(tour);
@@ -231,6 +231,10 @@ public class CityMap extends Observable {
         return hasChanged;
     }
 
+    /**
+     * Remove a collection of tour from the CityMap
+     * @param toursToDelete the collection of tour which will be removed to tours of the CityMap
+     */
     public boolean removeTours(Collection<Tour> toursToDelete) {
         boolean hasChanged = false;
         for(Tour tour : toursToDelete) {
