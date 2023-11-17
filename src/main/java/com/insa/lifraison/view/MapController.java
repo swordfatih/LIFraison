@@ -137,7 +137,7 @@ public class MapController extends ViewController implements Observer {
     }
 
     /**
-     * add the map and the observer for the map
+     * add the map and observes it
      * @param map : the model to observed
      */
     public void setMap(CityMap map) {
@@ -150,8 +150,8 @@ public class MapController extends ViewController implements Observer {
     }
 
     /**
-     *
-     * @param tour
+     * draw a tour
+     * @param tour the tour
      */
     public void drawTour(Tour tour){
         //initialisation of the path
@@ -471,7 +471,6 @@ public class MapController extends ViewController implements Observer {
     }
 
     private Point2D getMousePointInView(ScrollEvent event) {
-        // Assuming mapScrollPane is the viewport for your mapPane
         double mouseX = event.getX();
         double mouseY = event.getY();
 
