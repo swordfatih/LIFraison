@@ -23,7 +23,8 @@ import com.insa.lifraison.model.CityMap;
 
 public class CityMapDeserializer {
     /**
-     * Open an XML file and create CityMap from this file.
+     * Open an XML file and create a CityMap from this file.
+     * @param file The file containing the description of a City Map
      * @throws ParserConfigurationException
      * @throws SAXException
      * @throws IOException

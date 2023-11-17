@@ -20,6 +20,15 @@ import java.util.LinkedList;
 import java.util.Optional;
 
 public class TourDeserializer {
+    /**
+     * Open an XML file and create a CityMap from this file.
+     * @param map_intersections The list of intersections of the city map
+     * @param file The file containing the CityMap.
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws ExceptionXML
+     */
     public static ArrayList<Tour> load(LinkedList<Intersection> map_intersections, File file) throws ParserConfigurationException, SAXException, IOException, ExceptionXML {
         ArrayList<Tour> tours = new ArrayList<>();
         DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();

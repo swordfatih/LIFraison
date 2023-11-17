@@ -19,6 +19,15 @@ import java.time.temporal.TemporalUnit;
 import java.util.Collection;
 
 public class Roadmap {
+    /**
+     * Save the roadmap of a tour to the file
+     * @param tour The tour from which to create the roadmap
+     * @param file The file containing the description of a City Map
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws ExceptionXML
+     */
     public static void save(Tour tour, File file) throws ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, ExceptionXML{
         StreamResult result = new StreamResult(file);
         Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -32,7 +41,13 @@ public class Roadmap {
         xformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         xformer.transform(source, result);
     }
-
+    /**
+     * Builds a CityMap from a XML node tree.
+     * @param tour the tour in which to serialize.
+     * @param doc the document in which insert the nodes.
+     * @throws ExceptionXML
+     * @throws NumberFormatException
+     */
     public static Element createRoadmapElt(Tour tour, Document doc) {
         Element root = doc.createElement("div");
         LocalTime previousArrival = null;
