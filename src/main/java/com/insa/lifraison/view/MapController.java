@@ -160,6 +160,7 @@ public class MapController extends ViewController implements Observer {
         path.setId("Tour" + tour.getId());
         path.setStrokeWidth(5);
         path.setMouseTransparent(true);
+        path.setViewOrder(1);
         if(tour.isSelected()) {
             path.setStroke(map.getSelectionColor());
         } else {
@@ -189,6 +190,7 @@ public class MapController extends ViewController implements Observer {
                 Polygon direction = drawSegmentDirection(segment, tour.getColor().darker().darker(), 5, 10);
                 direction.getProperties().put("tour", tour);
                 direction.setMouseTransparent(true);
+                direction.setViewOrder(1);
             }
         }
 
@@ -295,6 +297,7 @@ public class MapController extends ViewController implements Observer {
         double xCoordinate = scale * intersection.longitude + longitudeOffset;
         CircleIntersection circleIntersection = new CircleIntersection(xCoordinate, yCoordinate, radius, color, intersection);
         circleIntersection.setOnMouseClicked(this::onIntersectionClick);
+        circleIntersection.setViewOrder(2);
 
         this.pane.getChildren().add(circleIntersection);
     }
@@ -383,6 +386,7 @@ public class MapController extends ViewController implements Observer {
         Line segmentLine = new Line(xOrigin, yOrigin, xDest, yDest);
         segmentLine.setStroke(color);
         segmentLine.setStrokeWidth(strokeWidth);
+        segmentLine.setViewOrder(2);
         this.pane.getChildren().add(segmentLine);
     }
 
