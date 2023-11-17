@@ -116,4 +116,18 @@ public class CityMapDeserializerTest {
             assertEquals(e.getMessage(),"Length is not a number: 'three'.");
         }
     }
+
+    @Test
+    void testXMLDeserializerNoWarehouses() throws ParserConfigurationException, SAXException, IOException, ExceptionXML{
+        File XMLFile = new File("./src/test/java/com/insa/lifraison/xml/resources/CityMapInvalidLength.xml");
+        DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = docBuilder.parse(XMLFile);
+        Element root = document.getDocumentElement();
+        try {
+            CityMapDeserializer.buildFromDOMXML(root);
+            fail("Expected exception due to invalid length");
+        } catch(ExceptionXML e){
+            assertEquals(e.getMessage(),"Length is not a number: 'three'.");
+        }
+    }
 }
