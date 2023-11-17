@@ -24,6 +24,14 @@ public class SaveRoadmapState implements State {
         view.<MainController>getController("main").getInformationController().clearInformation();
     }
 
+    /**
+     * Save the roadmap of the tour clicked
+     * @param c the controller
+     * @param m the citymap
+     * @param t the tour clicked
+     * @param v the view
+     * @param l the list of command
+     */
     @Override
     public void tourButtonClicked(Controller c, CityMap m, Tour t, View v, ListOfCommands l) {
         try {

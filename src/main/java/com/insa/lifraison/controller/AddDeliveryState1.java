@@ -39,6 +39,12 @@ public class AddDeliveryState1 implements State {
         c.setCurrentState(c.addDeliveryState2);
     }
 
+    /**
+     * add a new empty tour to the map
+     * @param c the contoller
+     * @param m the map
+     * @param l the list of command
+     */
     @Override
     public void addTour(Controller c, CityMap m, ListOfCommands l) {
         l.add(new AddTourCommand(m, new Tour()));

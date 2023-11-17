@@ -175,11 +175,20 @@ public class Controller {
 
     /**
      * Method called after a click on a "Tour" button
+     * @param tour the tour clicked
      */
     public void tourButtonClicked(Tour tour) { currentState.tourButtonClicked(this, map, tour, view, listOfCommands); }
 
+    /**
+     * Method called when the time window changes
+     * @param timeWindowStart start of the time window
+     * @param timeWindowEnd end of the time window
+     */
     public void timeWindowChanged(LocalTime timeWindowStart, LocalTime timeWindowEnd) {currentState.timeWindowChanged(map, timeWindowStart, timeWindowEnd);}
 
+    /**
+     * Method called when the save roadmap button is clicked
+     */
     public void saveRoadmap(){ currentState.saveRoadmap(this);}
 
 

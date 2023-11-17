@@ -123,6 +123,12 @@ public class EmptyMapMainState implements State {
         }
     }
 
+    /**
+     * undo the last command
+     * @param c the controller
+     * @param m the city map
+     * @param l the list of command
+     */
     @Override
     public void undo(Controller c, CityMap m, ListOfCommands l) {
         m.clearSelection();
@@ -130,6 +136,12 @@ public class EmptyMapMainState implements State {
         c.setCurrentStateToMain();
     }
 
+    /**
+     * redo the last command
+     * @param c the controller
+     * @param m the city map
+     * @param l the list of command
+     */
     @Override
     public void redo(Controller c, CityMap m, ListOfCommands l) {
         m.clearSelection();

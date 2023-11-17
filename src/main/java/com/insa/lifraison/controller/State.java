@@ -13,8 +13,18 @@ import java.time.LocalTime;
  */
 public interface State {
 
+    /**
+     * function launched when entering the state
+     * @param m
+     * @param view
+     */
     default void entryAction(CityMap m, View view) {}
 
+    /**
+     * function launched when exiting the state
+     * @param m
+     * @param view
+     */
     default void exitAction(CityMap m, View view) {}
 
     default void loadMap(Controller c, CityMap m, View view, ListOfCommands l){}

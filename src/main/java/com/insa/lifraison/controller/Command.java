@@ -6,12 +6,12 @@ package com.insa.lifraison.controller;
 public interface Command {
 
     /**
-     * Execute the command this
+     * Execute the command
      */
     void doCommand();
 
     /**
-     * Execute the reverse command of this
+     * Execute the reverse command
      */
     void undoCommand();
 }

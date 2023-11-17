@@ -69,11 +69,23 @@ public class AddDeliveryState2 implements State {
         c.setCurrentState(c.filledMapMainState);
     }
 
+    /**
+     * change the time window of the temporary delivery
+     * @param m the CityMap
+     * @param timeWindowStart the start of the time window
+     * @param timeWindowEnd the start of the time window
+     */
     @Override
     public void timeWindowChanged(CityMap m, LocalTime timeWindowStart, LocalTime timeWindowEnd) {
         m.getTemporaryDelivery().setTimeWindow(timeWindowStart, timeWindowEnd);
     }
 
+    /**
+     * add a new empty tour to the map
+     * @param c the contoller
+     * @param m the map
+     * @param l the list of command
+     */
     @Override
     public void addTour(Controller c, CityMap m, ListOfCommands l) {
         l.add(new AddTourCommand(m, new Tour()));

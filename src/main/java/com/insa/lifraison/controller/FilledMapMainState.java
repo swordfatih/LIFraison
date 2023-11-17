@@ -81,14 +81,18 @@ public class FilledMapMainState extends NoDeliveriesMainState {
     /**
      * Go to deleteDeliveryState1
      * @param c the Controller
-     * @param m the CityMap
-     * @param view the View
      */
     @Override
     public void saveRoadmap(Controller c) {
         c.setCurrentState(c.saveRoadmapState);
     }
 
+    /**
+     * change the controller state to the remove delivery
+     * @param c the controller
+     * @param m the city map
+     * @param view the view
+     */
     @Override
     public void removeDelivery(Controller c, CityMap m, View view){
         c.setCurrentState(c.deleteDeliveryState1);
