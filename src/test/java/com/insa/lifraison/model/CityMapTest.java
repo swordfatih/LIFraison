@@ -238,7 +238,7 @@ public class CityMapTest {
         Intersection intersection2 = new Intersection("intersection2", 0.24, 0.12);
         Intersection intersection3 = new Intersection("intersection3", 0.67, 0.09);
         Intersection intersection4 = new Intersection("intersection4", 0.67, 0.09);
-        LinkedList<Intersection> intersections = new LinkedList<>(List.of(intersection1,intersection2,intersection3));
+        LinkedList<Intersection> intersections = new LinkedList<>(List.of(intersection1,intersection2,intersection3, intersection4));
         Segment segment1 = new Segment(intersection1, intersection2, 0.43, "segment1");
         Segment segment2 = new Segment(intersection2, intersection3, 0.43, "segment2");
         Segment segment3 = new Segment(intersection2, intersection4, 0.43, "segment2");

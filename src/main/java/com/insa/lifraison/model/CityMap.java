@@ -233,7 +233,7 @@ public class CityMap extends Observable {
 
     public boolean removeTours(Collection<Tour> toursToDelete) {
         boolean hasChanged = false;
-        for(Tour tour : tours) {
+        for(Tour tour : toursToDelete) {
             hasChanged = this.removeTour(tour) || hasChanged;
         }
         return hasChanged;
