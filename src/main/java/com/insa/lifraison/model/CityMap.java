@@ -221,24 +221,26 @@ public class CityMap extends Observable {
         }
     }
 
-    /**
-     * Remove one tour from the CityMap
-     * @param tour The tour which will be removed of the CityMap
-     */
     public boolean removeTour(Tour tour) {
         boolean hasChanged = this.tours.remove(tour);
-        if (hasChanged) notifyObservers(NotifType.REMOVE, tour);
+        if (hasChanged) {
+            notifyObservers(NotifType.REMOVE, tour);
+            this.adjList = this.createAdjacencyList();
+        }
         return hasChanged;
     }
 
     /**
-     * Remove a collection of tour from the CityMap
+     * Remove a collection of tour in the CityMap
      * @param toursToDelete the collection of tour which will be removed to tours of the CityMap
      */
     public boolean removeTours(Collection<Tour> toursToDelete) {
         boolean hasChanged = false;
-        for(Tour tour : toursToDelete) {
+        for(Tour tour : tours) {
             hasChanged = this.removeTour(tour) || hasChanged;
+        }
+        if(hasChanged) {
+            this.adjList = this.createAdjacencyList();
         }
         return hasChanged;
     }
@@ -437,7 +439,7 @@ public class CityMap extends Observable {
             }
 
             // Calculate when the delivery will be made
-            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().arrival);
+            LocalTime startTime = (tourSteps.isEmpty() ? LocalTime.of(8, 0) : tourSteps.getLast().arrival.plusMinutes(5));
             int hourDuration = (int)Math.floor(pathLength / Constants.courierSpeed);
             int minutesDuration = (int)Math.ceil(60.0 * (pathLength - Constants.courierSpeed*hourDuration) / Constants.courierSpeed);
             LocalTime endTime = startTime.plusHours(hourDuration).plusMinutes(minutesDuration);
