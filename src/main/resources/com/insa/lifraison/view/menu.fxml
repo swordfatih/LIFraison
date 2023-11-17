@@ -12,7 +12,7 @@
         <Button text="Load Map" fx:id="loadMapButton" onAction="#loadMap" styleClass="menuButton" GridPane.rowIndex="0" GridPane.columnIndex="0" maxWidth="Infinity" />
         <Button text="Load Deliveries" fx:id="loadDeliveriesButton" onAction="#loadDeliveries" styleClass="menuButton" GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="Infinity" />
         <Button text="Add Delivery" fx:id="addDeliveryButton" onAction="#addDelivery" styleClass="menuButton" GridPane.rowIndex="1" GridPane.columnIndex="0" maxWidth="Infinity" />
-        <Button text="Delete Delivery" fx:id="removeDeliveryButton" onAction="#removeDelivery" styleClass="menuButton" GridPane.rowIndex="1" GridPane.columnIndex="1" maxWidth="Infinity" />
+        <Button text="Remove Delivery" fx:id="removeDeliveryButton" onAction="#removeDelivery" styleClass="menuButton" GridPane.rowIndex="1" GridPane.columnIndex="1" maxWidth="Infinity" />
         <Button text="Undo" fx:id="undoButton" onAction="#undo" styleClass="menuButton" GridPane.rowIndex="2" GridPane.columnIndex="0" maxWidth="Infinity" />
         <Button text="Redo" fx:id="redoButton" onAction="#redo" styleClass="menuButton" GridPane.rowIndex="2" GridPane.columnIndex="1" maxWidth="Infinity" />
         <Button text="Add Tour" fx:id="addTourButton" onAction="#addTour" styleClass="menuButton" GridPane.rowIndex="3" GridPane.columnIndex="0" />
