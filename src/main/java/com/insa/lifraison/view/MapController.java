@@ -159,6 +159,7 @@ public class MapController extends ViewController implements Observer {
         path.getProperties().put("tour", tour);
         path.setId("Tour" + tour.getId());
         path.setStrokeWidth(5);
+        path.setMouseTransparent(true);
         if(tour.isSelected()) {
             path.setStroke(map.getSelectionColor());
         } else {
@@ -187,6 +188,7 @@ public class MapController extends ViewController implements Observer {
             for (Segment segment : tourStep.segments) {
                 Polygon direction = drawSegmentDirection(segment, tour.getColor().darker().darker(), 5, 10);
                 direction.getProperties().put("tour", tour);
+                direction.setMouseTransparent(true);
             }
         }
 
