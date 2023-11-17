@@ -112,6 +112,7 @@ public class TextualController extends ViewController implements Observer {
                 });
 
                 TableView<DeliveryRequest> deliveryTable = new TableView<>(deliveries);
+                deliveryTable.setMaxHeight(200);
 
                 TableColumn<DeliveryRequest, String> idCol = new TableColumn<>("Delivery");
                 TableColumn<DeliveryRequest, String> statusCol = new TableColumn<>("Status");
