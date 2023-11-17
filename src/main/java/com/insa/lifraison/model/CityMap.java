@@ -87,8 +87,8 @@ public class CityMap extends Observable {
     }
 
     /**
-     * unselect the selected component {@link com.insa.lifraison.observer.Selectable} and make the
-     * selectComponent to null in the CityMap
+     * Unselect the selected component {@link com.insa.lifraison.observer.Selectable} and make the
+     * selectedComponent null in the CityMap
      */
     public void clearSelection() {
         if(this.selectedComponent != null) {
@@ -125,13 +125,17 @@ public class CityMap extends Observable {
         return selectionColor;
     }
 
+    /**
+     * Return the list of tours in the city map.
+     * @return The list of tours in the city map.
+     */
     public LinkedList<Tour> getTours() { 
         return tours;
     }
 
     /**
      * Give all segments of the CityMap
-     * @return LinkedList<Segment> segments
+     * @return The list of segments of the map
      */
     public LinkedList<Segment> getSegments() {
         return this.segments;
@@ -139,16 +143,25 @@ public class CityMap extends Observable {
 
     /**
      * Give all intersections of the CityMap
-     * @return LinkedList<Intersection> intersections
+     * @return The intersections of the map
      */
     public LinkedList<Intersection> getIntersections() {
         return intersections;
     }
 
+    /**
+     * Returns the longitude of the intersection with the smallest longitude
+     * @return The longitude of the intersection with the smallest longitude
+     */
     public double getMinLongitude(){
         return minLongitude;
     }
 
+
+    /**
+     * Returns the longitude of the intersection with the biggest longitude
+     * @return The longitude of the intersection with the biggest longitude
+     */
     public double getMaxLongitude(){
         return maxLongitude;
     }
@@ -157,7 +170,7 @@ public class CityMap extends Observable {
      * Add a delivery which isn't linked to a tour in the CityMap
      * This delivery is temporary and will be deleted as soon as the user add it to a tour
      * Notify observers {@link com.insa.lifraison.observer.Observer} that a new delivery has been added {@link }
-     * @param newDelivery the temporary delivery
+     * @param newDelivery the temporary delivery to add
      */
     public void setTemporaryDelivery(DeliveryRequest newDelivery){
         if(this.temporaryDelivery != null)
@@ -175,7 +188,7 @@ public class CityMap extends Observable {
     }
 
     /**
-     * Clear the delivery which is temporal
+     * Clear the delivery which is temporary
      */
     public void clearTemporaryDelivery() {
         DeliveryRequest deliveryRequest = this.temporaryDelivery;
@@ -184,9 +197,9 @@ public class CityMap extends Observable {
     }
 
     /**
-     * add a delivery to the uncomputedDeliveries list
-     * @param newDelivery the delivery you want to add
-     * @return succes of the adding
+     * add a delivery to the list of uncomputed deliveries.
+     * @param newDelivery the delivery to add
+     * @return True if the addition was successful, false otherwise.
      */
     public boolean addDelivery(int index, DeliveryRequest newDelivery){
         return tours.get(index).addDelivery(newDelivery);
@@ -195,7 +208,7 @@ public class CityMap extends Observable {
     /**
      * Add a new tour to tours of the CityMap
      * Notify observers {@link com.insa.lifraison.observer.Observer} that a new tour have been added
-     * @param tour the new tour which is added
+     * @param tour the tour to be added.
      */
     public void addTour(Tour tour) {
         int i = 0;
@@ -215,12 +228,21 @@ public class CityMap extends Observable {
         notifyObservers(NotifType.ADD, tour);
     }
 
+    /**
+     * Add all the tours in the collection in the city map.
+     * @param tours The collection containing the tours to be added.
+     */
     public void addTours(Collection<Tour> tours) {
         for(Tour tour : tours) {
             this.addTour(tour);
         }
     }
 
+    /**
+     * Remove a tour from the map
+     * @param tour The tour to remove from the map.
+     * @return True if the tour was in the map, false otherwise.
+     */
     public boolean removeTour(Tour tour) {
         boolean hasChanged = this.tours.remove(tour);
         if (hasChanged) {
@@ -304,16 +326,16 @@ public class CityMap extends Observable {
     }
 
     /**
-     * Give the minLatitude of the CityMap
-     * @return double minLatitude
+     * Returns the latitude of the intersection with the smallest latitude
+     * @return The latitude of the intersection with the smallest latitude
      */
     public double getMinLatitude(){
         return minLatitude;
     }
 
     /**
-     * Give the maxLatitude of the CityMap
-     * @return double maxLatitude
+     * Returns the latitude of the intersection with the biggest latitude
+     * @return The latitude of the intersection with the biggest latitude
      */
     public double getMaxLatitude(){
         return maxLatitude;
@@ -531,7 +553,7 @@ public class CityMap extends Observable {
     }
 
     /**
-     * compute the path of every {@link Tour}
+     * Compute the path of every {@link Tour} in the map.
      */
     public void computePlan() {
         for(Tour tour : this.tours) {
@@ -540,7 +562,7 @@ public class CityMap extends Observable {
     }
 
     /**
-     * clear the path and the delivery state of every tour
+     * Clear the path and the delivery state of every tour
      */
     public void clearPlan() {
         for(Tour tour : this.tours) {
