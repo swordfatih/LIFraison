@@ -122,10 +122,8 @@ public class TextualController extends ViewController implements Observer {
                     LocalTime startTime = p.getValue().getTimeWindowStart();
                     LocalTime endTime = p.getValue().getTimeWindowEnd();
 
-                    if(p.getValue().getState() == DeliveryState.NotCalculated) {
+                    if(startTime == null || endTime == null) {
                         return new ReadOnlyStringWrapper("Not calculated");
-                    } else if(startTime == null || endTime == null) {
-                        return new ReadOnlyStringWrapper("");
                     }
 
                     String start = startTime.format(DateTimeFormatter.ISO_LOCAL_TIME);
