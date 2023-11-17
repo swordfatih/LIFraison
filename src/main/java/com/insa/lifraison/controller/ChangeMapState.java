@@ -5,6 +5,7 @@ import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.CityMapDeserializer;
 import com.insa.lifraison.xml.ExceptionXML;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -55,6 +56,11 @@ public class ChangeMapState implements State {
             }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e){
             System.out.println(e.getMessage());
+
+            String errorMessage = "Invalid XML:\n" + e.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR, errorMessage);
+            alert.showAndWait();
+
             l.reset();
             c.setCurrentState(c.initialState);
         }

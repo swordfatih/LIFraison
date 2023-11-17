@@ -47,7 +47,6 @@ public class CityMapDeserializer {
     /**
      * Builds a CityMap from a XML node tree.
      * @param rootDOMNode The root of the XML file, which must be a <code>map</code> tag.
-     * @param map The map that will hold the information.
      * @throws ExceptionXML
      * @throws NumberFormatException
      */
@@ -68,6 +67,9 @@ public class CityMapDeserializer {
             segmentList.add(currentSegment);
         }
         NodeList warehouseNodes = rootDOMNode.getElementsByTagName("warehouse");
+        if(warehouseNodes.getLength() != 1){
+            throw new ExceptionXML("Invalid number of warehouses: " + warehouseNodes.getLength());
+        }
         Warehouse warehouse= createWarehouse((Element) warehouseNodes.item(0),intersectionMap);
         return new CityMap(intersections, segmentList, warehouse);
     }

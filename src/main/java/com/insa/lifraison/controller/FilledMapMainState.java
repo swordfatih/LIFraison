@@ -8,6 +8,7 @@ import com.insa.lifraison.view.MainController;
 import com.insa.lifraison.view.View;
 import com.insa.lifraison.xml.ExceptionXML;
 import com.insa.lifraison.xml.TourSerializer;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -70,6 +71,9 @@ public class FilledMapMainState extends NoDeliveriesMainState {
                 instance.save(m.getTours(), file);
             }
         }catch (ParserConfigurationException | ExceptionXML |TransformerException e) {
+            String errorMessage = "Invalid XML:\n" + e.getMessage();
+            Alert alert = new Alert(Alert.AlertType.ERROR,errorMessage);
+            alert.showAndWait();
             System.out.println(e.getMessage());
         }
     }

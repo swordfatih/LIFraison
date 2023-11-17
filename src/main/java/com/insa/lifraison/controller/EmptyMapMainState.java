@@ -116,6 +116,10 @@ public class EmptyMapMainState implements State {
             }
         } catch (ParserConfigurationException | SAXException | IOException | ExceptionXML e) {
             System.out.println(e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            alert.showAndWait();
+
+            System.out.println(e.getMessage());
         }
     }
 
