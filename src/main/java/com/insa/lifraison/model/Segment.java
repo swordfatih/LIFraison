@@ -51,6 +51,11 @@ public class Segment {
         }
     }
 
+    /**
+     * Whether or not the given intersection is one of the extremities of segment
+     * @param intersection The intersection to verify
+     * @return True if the given intersection is the origin or the destination of the segment, false otherwise.
+     */
     public boolean contains(Intersection intersection) {
         return origin.equals(intersection) || destination.equals(intersection);
     }

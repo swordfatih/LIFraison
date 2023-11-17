@@ -27,6 +27,7 @@ public class Intersection {
     }
 
     /**
+     * Returns the id of the intersection.
      * @return id of the intersection
      */
     public String getId() {
@@ -34,6 +35,7 @@ public class Intersection {
     }
 
     /**
+     * Returns the longitude of the intersection.
      * @return longitude of the intersection
      */
     public double getLongitude() {
@@ -41,6 +43,7 @@ public class Intersection {
     }
 
     /**
+     * Returns the latitude of the intersection.
      * @return latitude of the intersection
      */
     public double getLatitude() {
@@ -65,6 +68,7 @@ public class Intersection {
     }
 
     /**
+     * Describes an intersection.
      * @return id, latitude and longitude information of the intersection in a string
      */
     @Override

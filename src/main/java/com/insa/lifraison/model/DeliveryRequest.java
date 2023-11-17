@@ -86,25 +86,44 @@ public class DeliveryRequest extends Observable {
         this.notifyObservers(NotifType.UPDATE);
     }
 
+    /**
+     * Change the start of the time window of the delivery request.
+     * @param timeWindowStart The start of the time window.
+     */
     public void setTimeWindowStart(LocalTime timeWindowStart) {
         this.timeWindowStart = timeWindowStart;
         this.notifyObservers(NotifType.UPDATE);
     }
 
+    /**
+     * Change the end of the time window of the delivery request.
+     * @param timeWindowEnd The end of the time window.
+     */
     public void setTimeWindowEnd(LocalTime timeWindowEnd) {
         this.timeWindowEnd = timeWindowEnd;
         this.notifyObservers(NotifType.UPDATE);
     }
 
+    /**
+     * Returns the state of the path calculation of the delivery.
+     * @return The state of the path calculation of the delivery.
+     */
     public DeliveryState getState() {
         return state;
     }
 
+    /**
+     * Set the state of the path calculation of the delivery.
+     */
     public void setState(DeliveryState state) {
         this.state = state;
         notifyObservers(NotifType.UPDATE);
     }
 
+    /**
+     * Description of the delivery request
+     * @return A string containing the description of the delivery request.
+     */
     @Override
     public String toString() {
         return intersection.toString() + " entre " + timeWindowStart + " et " + timeWindowEnd;
