@@ -248,7 +248,8 @@ public class MapController extends ViewController implements Observer {
 
         // adding the warehouse
         Warehouse warehouse = this.map.getWarehouse();
-        drawIntersectionPoint(warehouse.intersection, deliveryPointSize,Color.RED);
+        CircleIntersection warehouseCircle = drawIntersectionPoint(warehouse.intersection, deliveryPointSize,Color.RED);
+        warehouseCircle.setViewOrder(0);
 
         //draw the delivery which is selected
         DeliveryRequest temporaryDelivery = map.getTemporaryDelivery();
@@ -292,7 +293,7 @@ public class MapController extends ViewController implements Observer {
      * @param radius the radius size of the circle
      * @param color the color of the circle
      */
-    public void drawIntersectionPoint(Intersection intersection, double radius, Color color){
+    public CircleIntersection drawIntersectionPoint(Intersection intersection, double radius, Color color){
         double yCoordinate = -scale * intersection.latitude + latitudeOffset;
         double xCoordinate = scale * intersection.longitude + longitudeOffset;
         CircleIntersection circleIntersection = new CircleIntersection(xCoordinate, yCoordinate, radius, color, intersection);
@@ -300,6 +301,7 @@ public class MapController extends ViewController implements Observer {
         circleIntersection.setViewOrder(2);
 
         this.pane.getChildren().add(circleIntersection);
+        return circleIntersection;
     }
 
     /**
