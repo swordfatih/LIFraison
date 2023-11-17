@@ -184,6 +184,10 @@ public class TextualController extends ViewController implements Observer {
         }
     }
 
+    /**
+     * add the map and observes it
+     * @param map : the model to observed
+     */
     public void setMap(CityMap map) {
         this.map = map;
         this.map.addObserver(this);
