@@ -38,7 +38,7 @@ public class SaveRoadmapState implements State {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("HTML files (*.html)", "*.html");
             fileChooser.getExtensionFilters().add(extFilter);
-            fileChooser.setInitialDirectory(new File("src/main/resources/maps"));
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
             File file = fileChooser.showSaveDialog(v.getStage());
 
             if (file != null) {
